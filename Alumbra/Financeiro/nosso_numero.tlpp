@@ -1,0 +1,114 @@
+#include "totvs.ch"
+
+/*/{Protheus.doc} NossoNum
+Rotina para calculo do nosso numero
+@type function
+@version 12.1.33
+@author Valdemir Rabelo
+@since 24/08/2023
+@return variant, NossoNumero
+/*/
+User Function NossoNum(pBanco,pAgencia,pConta)
+    cRET := Nosso033(_cBanco,_cAgencia,_cConta)
+Return cRET
+
+/*/{Protheus.doc} Nosso033
+Rotina para montagem e atualização
+do nosso numero
+@type function
+@version 12.1.33
+@author Valdemir Rabelo
+@since 24/08/2023
+@param _cBanco, variant, Banco
+@param _cAgencia, variant, Agencia
+@param _cConta, variant, Conta
+@return variant, NossoNumero
+/*/
+Static Function Nosso033(_cBanco,_cAgencia,_cConta)
+	Local cNumero2  as character
+    Local _cRet     as character
+
+    Private cNumero as character
+	Private cDig    as character
+
+    // Inicializa Variaveis
+    cNumero  := SPACE(12)
+    cDig     := SPACE(01)
+    cNumero2 := ""
+    _cRet    := ""
+
+	If Empty(SE1->E1_NUMBCO)
+		dbSelectArea("SEE")
+		DbSetOrder(1)
+		if DbSeek(xFilial("SEE")+_cBanco+_cAgencia+_cConta+"R",.T.)
+		
+            cNumero  := Strzero(val(StrZero(Val(SEE->EE_FAXATU),Len(SEE->EE_FAXATU))),12)
+            cDig     := CalcDig(cNumero)
+            cNumero2 := cNumero+cDig
+            
+            dbSelectArea("SEE")
+            RecLock("SEE",.f.)
+                SEE->EE_FAXATU := Soma1(cNumero, Len(SEE->EE_FAXATU))
+            SEE->( MsUnlock() )
+            
+            _cRet := cNumero2
+
+        else 
+           Conout("Não encontrou a chave na tabela: SEE")
+        endif 
+	Else
+		_cRet := SE1->E1_NUMBCO
+	EndIf	
+
+	_cRet := Right(_cRet, 8)
+
+    if (!Empty(_cRet))
+        RecLock("SE1", .F.)
+        SE1->E1_NUMBCO := _cRet
+        MsUnlock()
+    endif
+
+Return(_cRet)
+
+
+/*/{Protheus.doc} CalcDig  
+Rotina Calcula Digito do Nosso Numero
+@type function
+@version 12.1.33
+@author Valdemir Rabelo
+@since 24/08/2023
+@param _cCampo, variant, Faixa
+@return variant, Digito Calculado
+/*/
+Static Function CalcDig(_cCampo)
+	Local _nCnt   as numeric
+	Local _nPeso  as numeric
+	Local _nJ     as numeric
+	Local _nResto as numeric
+
+    // Inicializa as variaveis
+	_nCnt   := 0
+	_nPeso  := 2
+	_nJ     := 1
+	_nResto := 0    
+
+	For _nJ := Len(_cCampo) To 1 Step -1
+		_nCnt  := _nCnt + Val(SUBSTR(_cCampo,_nJ,1))*_nPeso
+		_nPeso := _nPeso+1
+		if _nPeso > 9
+			_nPeso := 2
+		endif
+	Next
+
+	_nResto := (_ncnt%11)
+
+	if ((_nResto == 0) .or. (_nResto==1)) 
+		_nDig :='0'
+	Elseif (_nResto == 10)
+		_nDig :='1'
+	else
+		_nResto := (11-_nResto)
+		_nDig   := Str(_nResto,1)
+	endif
+
+Return(_nDig)

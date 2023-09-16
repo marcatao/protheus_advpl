@@ -1,0 +1,23 @@
+#Include "Protheus.ch"
+#Include "RwMake.ch"
+
+
+User Function RERPA01
+ Local cAlias  := "ZZR"
+ Local cTitulo := "Testando AxCadastro Itens do pedido"
+ AxCadastro(cAlias, cTitulo)
+Return
+
+
+User Function RERPA02
+ Local cAlias  := "ZZQ"
+ Local cTitulo := "Testando AxCadastro Mestre do pedido"
+ AxCadastro(cAlias, cTitulo)
+Return
+
+
+User Function RERPA03
+ Local cAlias  := "ZA1"
+ Local cTitulo := "Testando AxCadastroCliente"
+ AxCadastro(cAlias, cTitulo)
+Return

@@ -1,0 +1,89 @@
+0001#STR0001#ALL#JAN
+0002#STR0002#ALL#FEV
+0003#STR0003#ALL#MAR
+0004#STR0004#ALL#ABR
+0005#STR0005#ALL#MAI
+0006#STR0006#ALL#JUN
+0007#STR0007#ALL#JUL
+0008#STR0008#ALL#AGO
+0009#STR0009#ALL#SET
+0010#STR0010#ALL#OUT
+0011#STR0011#ALL#NOV
+0012#STR0012#ALL#DEZ
+0013#STR0013#ALL#DEMOSTRATIVO DE APURACAO DO SALDO DO IPI
+0014#STR0014#ALL#                                                        SALDO CREDOR NO                     
+0015#STR0015#ALL# MES   PERIODO         DEBITO             CREDITO       PERIODO ANTERIOR    SALDO APURADO   
+0016#STR0016#ALL#TOTAL            ################## ##################                                      
+0017#STR0017#ALL#DADOS DOS REMETENTES
+0018#STR0018#ALL#     C.N.P.J.      CODIGO LOJA                    REMETENTE                                      VALOR      
+0019#STR0019#ALL#TOTAL                                                                                     ##################
+0020#STR0020#ALL#DADOS DAS ENTRADAS
+0021#STR0021#ALL#CODIGO NBM/SH CODIGO DO PRODUTO                       MERCADORIAS/INSUMOS                               VALOR       
+0022#STR0022#ALL#TOTAL                                                                                             ##################
+0023#STR0023#ALL#RESUMO DAS ENTRADAS DE MERCADORIAS
+0024#STR0024#ALL#ENTRADAS DE MERCADORIAS                                        COM CREDITOS       SEM CREDITOS       IPI Creditado  
+0025#STR0025#ALL#                    - INSUMOS                               ################## ################## ##################
+0026#STR0026#ALL#DO MERCADO NACIONAL - MERCADORIAS PARA COMERCIALIZACAO      ################## ################## ##################
+0027#STR0027#ALL#                    - DEVOLUCAO DE VENDAS                   ################## ################## ##################
+0028#STR0028#ALL#                    - OUTRAS ENTRADAS                       ################## ################## ##################
+0029#STR0029#ALL#DO MERCADO EXTERNO  - MERCADORIAS PARA COMERCIALIZACAO      ################## ################## ##################
+0030#STR0030#ALL#TOTAL GERAL DAS OPERACOES:                                  ################## ################## ##################
+0031#STR0031#ALL#NOTAS FISCAIS DE ENTRADA
+0032#STR0032#ALL#              DATA DE    DATA DE   TI CODIGO  LO                                                                                       
+0033#STR0033#ALL#NOTA    SERIE ENTRADA    EMISSAO   PO FORNEC  JA        FORNECEDOR            PRODUTO     TES CFO   VLR MERCADORIA         VLR IPI     
+0034#STR0034#ALL#NOTAS FISCAIS DE SAIDA
+0035#STR0035#ALL#                DATA DE   TI CODIGO  LO                                                                                                
+0036#STR0036#ALL#NOTA    SERIE   EMISSAO   PO CLIENTE JA              CLIENTE                  PRODUTO     TES CFO   VLR MERCADORIA         VLR IPI     
+0037#STR0037#ALL#DADOS DOS DESTINATARIOS
+0038#STR0038#ALL#     C.N.P.J.      CODIGO LOJA                    DESTINATARIO                                   VALOR      
+0039#STR0039#ALL#DADOS DAS SAIDAS
+0040#STR0040#ALL#CODIGO NBM/SH CODIGO DO PRODUTO                   PRODUTOS/MERCADORIAS/INSUMOS                          VALOR       
+0041#STR0041#ALL#RESUMO DAS SAIDAS DE MERCADORIAS
+0042#STR0042#ALL#SAIDAS DE MERCADORIAS                                                         COM DEBITO         SEM DEBITO        IPI Debitado   
+0043#STR0043#ALL#                        - PRODUCAO DO ESTABELECIMENTO                     ################## ################## ##################
+0044#STR0044#ALL#PARA O MERCADO NACIONAL - MERCADORIAS ADQUIRIDAS OU REC.P/COMERCIALIZACAO ################## ################## ##################
+0045#STR0045#ALL#                        - DEVOLUCOES DE COMPRAS                           ################## ################## ##################
+0046#STR0046#ALL#                        - OUTRAS SAIDAS                                   ################## ################## ##################
+0047#STR0047#ALL#                        - PRODUCAO DO ESTABELECIMENTO                                        ################## ##################
+0048#STR0048#ALL#PARA O MERCADO EXTERNO  - MERCADORIAS ADQUIRIDAS OU REC.P/COMERCIALIZACAO                    ################## ##################
+0049#STR0049#ALL#                        - DEVOLUCAO DE COMPRAS                                               ################## ##################
+0050#STR0050#ALL#                        - OUTRAS SAIDAS                                                      ################## ##################
+0051#STR0051#ALL#TOTAL GERAL DAS OPERACOES:                                                ################## ################## ##################
+0052#STR0052#ALL#DEMONSTRATIVO DE CREDITOS
+0053#STR0053#ALL#ENTRADAS DE INSUMOS DO MERCADO NACIONAL                          = ##################
+0054#STR0054#ALL#ENTRADAS DE MERCADORIAS DO MERCADO NACIONAL PARA COMERCIALIZACAO = ##################
+0055#STR0055#ALL#ENTRADAS DE INSUMOS DO MERCADO EXTERNO                           = ##################
+0056#STR0056#ALL#ENTRADAS DE MERCADORIAS DO MERCADO EXTERNO PARA COMERCIALIZACAO  = ##################
+0057#STR0057#ALL#DEVOLUCOES DE VENDAS                                             = ##################
+0058#STR0058#ALL#ESTORNO DE DEBITOS                                               = ##################
+0059#STR0059#ALL#OUTROS CREDITOS                                                  = ##################
+0060#STR0060#ALL#OUTRAS ENTRADAS                                                  = ##################
+0061#STR0061#ALL#TOTAL                                                            = ##################
+0062#STR0062#ALL#DEMONSTRATIVO DE DEBITOS
+0063#STR0063#ALL#SAIDAS PARA O MERCADO NACIONAL DE PRODUCAO DO ESTABELECIMENTO              = ##################
+0064#STR0064#ALL#SAIDAS DE MERCADORIAS PARA O MERCADO NACIONAL ADQ.OU REC.P/COMERCIALIZACAO = ##################
+0065#STR0065#ALL#OUTRAS SAIDAS PARA O MERCADO NACIONAL                                      = ##################
+0066#STR0066#ALL#ESTORNO DE CREDITOS                                                        = ##################
+0067#STR0067#ALL#RESSARCIMENTO DE CREDITOS                                                  = ##################
+0068#STR0068#ALL#OUTROS DEBITOS                                                             = ##################
+0069#STR0069#ALL#DEVOLUCAO DE COMPRAS                                                       = ##################
+0070#STR0070#ALL#TOTAL                                                                      = ##################
+0071#STR0071#ALL#                    - IND.EFETUADA POR OUTRAS EMPRESAS      ################## ################## ##################
+0072#STR0072#ALL#                        - INDUSTRIALIZACAO EFETUADA PARA OUTRAS EMPRESAS  ################## ################## ##################
+0073#STR0073#ALL#ENTRADAS DE INDUSTRIALIZACAO EFETUADA POR OUTRAS EMPRESAS        = ##################
+0074#STR0074#ALL#SAIDAS DE INDUSTRIALIZACAO EFETUADA POR OUTRAS EMPRESAS                    = ##################
+0075#STR0075#ALL#                                             SALDO CREDOR NO                     
+0076#STR0076#ALL# MES        DEBITO             CREDITO       PERIODO ANTERIOR    SALDO APURADO   
+0077#STR0077#ALL#===== ================== ================== ================== ==================
+0078#STR0078#ALL# ###  ################## ################## ################## ##################
+0079#STR0079#ALL#TOTAL RESUMO:                                               ################## ################## ##################
+0080#STR0080#ALL#TOTAL RESUMO:                                                             ################## ################## ##################
+0081#STR0081#ALL# MES   QUINZENA        DEBITO             CREDITO       PERIODO ANTERIOR    SALDO APURADO   
+0082#STR0082#ALL#FICHA 54 - DEMONSTRATIVO DO IMPOSTO DE RENDA E CSLL RETIDOS NA FONTE
+0083#STR0083#ALL#+----+-------------------+-------+--------------------------------------------------+----------------+------------+------------+
+0084#STR0084#ALL#|Seq.|CNPJ Fonte Pagadora|Cód Rec|Nome Empresarial                                  |Rendimento Bruto|   IR Retido| CSLL Retido|
+0085#STR0085#ALL#+----+-------------------+-------+--------------------------------------------------+----------------+------------+------------+
+0086#STR0086#ALL#|####|################## | ####  |##################################################|################|############|############|
+0087#STR0087#ALL#+-----------------------------------------------------------------------------------+----------------+------------+------------+
+0088#STR0088#ALL#|TOTAL                                                                              |################|############|############|
+0089#STR0089#ALL#+-----------------------------------------------------------------------------------+----------------+------------+------------+

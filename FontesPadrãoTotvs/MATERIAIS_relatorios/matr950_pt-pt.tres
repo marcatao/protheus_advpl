@@ -1,0 +1,26 @@
+0001#STR0001#ALL#Emissão De Listagem Para Para Conferencia Da Dipi.
+0002#STR0002#ALL#Irá imprimir os lancamentos fiscais conforme os parâmetros informados.
+0003#STR0003#ALL#Código de barras
+0004#STR0004#ALL#Administração
+0005#STR0005#ALL#A seleccionar registos ... 
+0006#STR0006#ALL#Dados Dos Remetentes
+0007#STR0007#ALL#Código  loja            remetente              data    serie número tipo cfo  valor mercadoria     valor do ipi   
+0008#STR0008#ALL#Total                                                                       ################## ##################
+0009#STR0009#ALL#Dados Dos Destinatarios
+0010#STR0010#ALL#Código  loja          destinatario             data    serie número tipo cfo   valor contabil      valor do ipi   
+0011#STR0011#ALL#Total geral                                                                 ################## ##################
+0012#STR0012#ALL#Total entradas                                                              ################## ##################
+0013#STR0013#ALL#Total saidas                                                                ################## ##################
+0014#STR0014#ALL#Dados Dos Produtos - Por Nbm
+0015#STR0015#ALL#Código  nbm/sh código  do produto       mercadorias/insumos         data           valor          valor do ipi   
+0016#STR0016#ALL#Saldo da nbm  ################                                            ################## ##################
+0017#STR0017#ALL#Total geral                                                               ################## ##################
+0018#STR0018#ALL#Total entrada                                                             ################## ##################
+0019#STR0019#ALL#Total saidas                                                              ################## ##################
+0020#STR0020#ALL#Listagem De Operações - Conferencia Da Dipi
+0021#STR0021#ALL#Empresa #####################################################                                                      pagina #######
+0022#STR0022#ALL#Morada ############################################ cnpj   #####################             período de ########## a ##########
+0023#STR0023#ALL#Cidade #################################### uf ## cep ######### inscrição estadual ################          emissão ############
+0024#STR0024#ALL#Ficha 50 - Comprovativo Do Imposto De Renda E Csll Retidos Na Fonte
+0026#STR0026#ALL#|seq.|cnpj Fonte Pagadora|cód Rec|nome Empresarial                                  |rendimento Bruto|   Ir Retido| Csll Retido|
+0030#STR0030#ALL#|total                                                                              |################|############|############|

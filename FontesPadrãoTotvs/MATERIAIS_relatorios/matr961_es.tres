@@ -1,0 +1,109 @@
+0001#STR0001#BRA#DIPJ
+0002#STR0002#BRA#Emissäo de listagem para auxiliar o preenchimento da DIPJ.
+0003#STR0003#BRA#Imprimira los asientos fiscales de acuerdo con los parametros informados.
+0004#STR0004#BRA#A Rayas
+0005#STR0005#BRA#Administracion
+0006#STR0006#BRA#Indexando computos 
+0007#STR0007#BRA#DEVOLUCIONES DE COMPRA
+0008#STR0008#BRA#DEVOLUCIONES DE VENTA
+0009#STR0009#BRA#Calculo: 
+0010#STR0010#BRA#Resumos DIPJ
+0011#STR0011#BRA#Listagem auxiliar para o preenchimento da DIPJ
+0012#STR0012#BRA#Este informe presentara todos los movimientos necesarios para el rellenado manual de DIPJ.
+0013#STR0013#BRA#Estado de Calculo el Saldo del IPI
+0014#STR0014#BRA#Mes
+0015#STR0015#BRA#Periodo
+0016#STR0016#BRA#Debito
+0017#STR0017#BRA#Credito
+0018#STR0018#BRA#Saldo Acreedor Periodo Anterior
+0019#STR0019#BRA#Saldo Calculado
+0020#STR0020#BRA#Factura
+0021#STR0021#BRA#Serie
+0022#STR0022#BRA#Entrada
+0023#STR0023#BRA#Emision
+0024#STR0024#BRA#Tipo
+0025#STR0025#BRA#Cod.Proveedor
+0026#STR0026#BRA#Tienda
+0027#STR0027#BRA#Proveedor
+0028#STR0028#BRA#Producto
+0029#STR0029#BRA#TES
+0030#STR0030#BRA#CFOP
+0031#STR0031#BRA#Valor Mercaderia
+0032#STR0032#BRA#Valor IPI
+0033#STR0033#BRA#Cod. Cliente
+0034#STR0034#BRA#Cliente
+0035#STR0035#BRA#C.N.P.J.
+0036#STR0036#BRA#Codigo
+0037#STR0037#BRA#Remitente
+0038#STR0038#BRA#Valor
+0039#STR0039#BRA#Facturas de Entrada
+0040#STR0040#BRA#Facturas de Salida
+0041#STR0041#BRA#Datos de los Remitentes
+0042#STR0042#BRA#Datos de las Entradas
+0043#STR0043#BRA#Codigo NBM/SH
+0044#STR0044#BRA#Codigo del Producto
+0045#STR0045#BRA#Mercaderias/Insumos
+0046#STR0046#BRA#Resumen de las Entradas de Mercaderias
+0047#STR0047#BRA#Entradas de Mercaderias
+0048#STR0048#BRA#Con Credito
+0049#STR0049#BRA#Sin Credito
+0050#STR0050#BRA#IPI Acreditado
+0051#STR0051#BRA#Datos de los Destinatarios
+0052#STR0052#BRA#Destinatario
+0053#STR0053#BRA#Datos de las Salidas
+0054#STR0054#BRA#Resumen de las Salidas de Mercaderias
+0055#STR0055#BRA#Salidas de Mercaderias
+0056#STR0056#BRA#Con Débito
+0057#STR0057#BRA#Sin Debito
+0058#STR0058#BRA#IPI Adeudado
+0059#STR0059#BRA#Estado de Creditos y Debitos
+0060#STR0060#BRA#Total
+0061#STR0061#BRA#Insumos
+0062#STR0062#BRA#Mercaderias para Comercializacion
+0063#STR0063#BRA#Industrializacion efectuada por otras Empresas
+0064#STR0064#BRA#Mercado Nacional
+0065#STR0065#BRA#Devolucion de Ventas
+0066#STR0066#BRA#Otras Entradas
+0067#STR0067#BRA#Mercado Externo
+0068#STR0068#BRA#Total del Resumen
+0069#STR0069#BRA#Produccion del Establecimiento
+0070#STR0070#BRA#Mercaderias Adquiridas o Rec.Comercializacion
+0071#STR0071#BRA#Industrializacion efectuada para otras empresas
+0072#STR0072#BRA#Devolucion de Compras
+0073#STR0073#BRA#Otras Salidas
+0074#STR0074#BRA#Resumen de las Salidas de Mercaderias
+0075#STR0075#BRA#Estado de Creditos
+0076#STR0076#BRA#Estado de Debitos
+0077#STR0077#BRA#Entradas de Insumos del Mercado Nacional
+0078#STR0078#BRA#Entradas de Mercaderias del Mercado Nacional para Comercializacion
+0079#STR0079#BRA#Entradas de Industrializacion efectuadas por otras empresas
+0080#STR0080#BRA#Entradas de Insumos del Mercado Externo
+0081#STR0081#BRA#Entradas de Mercaderias del Mercado Externo para Comercializacion
+0082#STR0082#BRA#Reversion de Debitos
+0083#STR0083#BRA#Otros Creditos
+0084#STR0084#BRA#Salidas para el Mercado Nacional de Produccion del Establecimiento
+0085#STR0085#BRA#Salidas de Mercaderias al Mercado Nacional Adq. o Rec. para Comercializacion
+0086#STR0086#BRA#Salidas de Industrializacion efectuada para otras empresas
+0087#STR0087#BRA#Otras salidas para el Mercado Nacional
+0088#STR0088#BRA#Reversion de Creditos
+0089#STR0089#BRA#Resarcimiento de Creditos
+0090#STR0090#BRA#Otros Debitos
+0091#STR0091#BRA#Facturas de Entrada y Salida
+0092#STR0092#BRA#Datos de los Remitentes y Destinatarios
+0093#STR0093#BRA#Indexando computos
+0094#STR0094#BRA#FICHA 50 - ESTADO DEL IMPUESTO A LA RENTA Y CSLL RETENIDOS EN LA FUENTE
+0095#STR0095#BRA#Total
+0096#STR0096#BRA#Sec.
+0097#STR0097#BRA#CNPJ Fuen. Pagadora
+0098#STR0098#BRA#Cod. Rec.
+0099#STR0099#BRA#Nom. Empresarial
+0100#STR0100#BRA#Rendimiento Bruto
+0101#STR0101#BRA#IR Retenido
+0102#STR0102#BRA#CSLL Retenido
+0103#STR0103#BRA#Tipo
+0104#STR0104#BRA#Valor
+0105#STR0105#BRA#Indica si desea seleccionar mas de una sucursal para generacion del informe de forma agrupada.
+0106#STR0106#BRA#Parametro activo solamente para entorno dbAccess.
+0107#STR0107#BRA#Indica si desea validar la seleccion de sucursales por RCPJ Raiz para el procesamiento de mas de una sucursal.
+0108#STR0108#BRA#Selecciona Sucursales
+0109#STR0109#BRA#Agrup.Seleccion por RCPJ Raiz

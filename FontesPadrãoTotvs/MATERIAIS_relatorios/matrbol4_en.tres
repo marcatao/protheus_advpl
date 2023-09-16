@@ -1,0 +1,18 @@
+0001#STR0001#BOL#Amount
+0002#STR0002#BOL#Sale price
+0003#STR0003#BOL#Total sale
+0004#STR0004#BOL#VAT
+0005#STR0005#BOL#Total net sale
+0006#STR0006#BOL#Applied rate
+0007#STR0007#BOL#Bs Tax
+0008#STR0008#BOL#Declared tax
+0009#STR0009#BOL#Difference
+0010#STR0010#BOL#Check tax register: IVA. Number of tax record was not informed.
+0011#STR0011#BOL#Check tax register: ICE. Number of tax record was not informed.
+0012#STR0012#BOL#ANNEX 11 - INFORMATION ON SALES OF PRODUCTS SAVED WITH SPECIFIC RATES           
+0013#STR0013#BOL#This program prints the report 
+0014#STR0014#BOL#according to parameters informed by users.
+0015#STR0015#BOL#Description
+0016#STR0016#BOL#Calculation
+0017#STR0017#BOL#Product
+0018#STR0018#BOL#Total net sales

@@ -1,0 +1,69 @@
+0001#STR0001#BRA#Dipj
+0002#STR0002#BRA#Emissão De Listagem Para Auxiliar O Preenchimento Da Dipj.
+0003#STR0003#BRA#Irá imprimir os lancamentos fiscais conforme os parâmetros informados.
+0004#STR0004#BRA#Código de barras
+0005#STR0005#BRA#Administração
+0006#STR0006#BRA#Indexando apuracoes
+0007#STR0007#BRA#Devoluções De Compra
+0008#STR0008#BRA#Devoluções De Venda
+0009#STR0009#BRA#Apuro: 
+0010#STR0010#BRA#Resumos Dipj
+0011#STR0011#BRA#Listagem Auxiliar Para Preenchimento Da Dipj
+0012#STR0012#BRA#Este Relatório Irá Apresentar Todos Os Movimentos Necessários Para O Preenchimento Manual Da Dipj.
+0013#STR0013#BRA#Comprovativo De Apuro Do Saldo Do Ipi
+0023#STR0023#BRA#Emissão
+0025#STR0025#BRA#Cód. Fornecedor
+0029#STR0029#BRA#Tes
+0030#STR0030#BRA#Cfop
+0031#STR0031#BRA#Valor Da Mercadoria
+0032#STR0032#BRA#Valor Ipi
+0033#STR0033#BRA#Cód. De Cliente
+0035#STR0035#BRA#Nr. contribuinte.
+0039#STR0039#BRA#Notas Fiscais De Entrada
+0040#STR0040#BRA#Notas fiscais de saida
+0041#STR0041#BRA#Dados Dos Remetentes
+0042#STR0042#BRA#Dados Das Entradas
+0043#STR0043#BRA#Código Nbm/sh
+0044#STR0044#BRA#Código do produto
+0045#STR0045#BRA#Mercadorias/recursos
+0046#STR0046#BRA#Resumo Das Entradas De Mercadorias
+0047#STR0047#BRA#Entrada De Mercadorias
+0050#STR0050#BRA#Ipi Creditado
+0051#STR0051#BRA#Dados dos destinatarios
+0053#STR0053#BRA#Dados das saidas
+0054#STR0054#BRA#Resumo das saidas de mercadorias
+0055#STR0055#BRA#Saída De Mercadorias
+0058#STR0058#BRA#Ipi Debitado
+0059#STR0059#BRA#Comprovativo De Créditos E Débitos
+0062#STR0062#BRA#Mercadorias Para Comercialização
+0063#STR0063#BRA#Industrialização Efectuada Por Outras Empresas
+0065#STR0065#BRA#Devolução De Vendas
+0068#STR0068#BRA#Total Do Resumo
+0069#STR0069#BRA#Produção Do Estabelecimento
+0070#STR0070#BRA#Mercadorias Adquiridas Ou Rec. Comercialização
+0071#STR0071#BRA#Industrialização Efectuada Para Outras Empresas
+0072#STR0072#BRA#Devolução De Compras
+0074#STR0074#BRA#Resumo das saidas de mercadorias
+0075#STR0075#BRA#Demonstrativo de créditos
+0076#STR0076#BRA#Demonstrativo de debitos
+0077#STR0077#BRA#Entrada De Recursos Do Mercado Nacional
+0078#STR0078#BRA#Entrada De Mercadorias Do Mercado Nacional Para Comercialização
+0079#STR0079#BRA#Entradas De Industrialização Efectuadas Por Outras Empresas
+0080#STR0080#BRA#Entrada De Recursos Do Mercado Externo
+0081#STR0081#BRA#Entrada De Mercadorias Do Mercado Externo Para Comercialização
+0082#STR0082#BRA#Devolução De Débitos
+0083#STR0083#BRA#Outros créditos
+0084#STR0084#BRA#Saída Para O Mercado Nacional De Produção Do Estabelecimento
+0085#STR0085#BRA#Saída De Mercadorias Para O Mercado Nacional Adq. Ou Rec. Para Comercialização
+0086#STR0086#BRA#Saída De Industrialização Efectuada Para Outras Empresas
+0087#STR0087#BRA#Outras Saídas Para O Mercado Nacional
+0088#STR0088#BRA#Devolução De Créditos
+0089#STR0089#BRA#Indeminização De Créditos
+0090#STR0090#BRA#Outros débitos
+0091#STR0091#BRA#Notas Fiscais De Entrada E Saída
+0092#STR0092#BRA#Dados Dos Remetentes E Destinatários
+0093#STR0093#BRA#Indexando apuracoes
+0094#STR0094#BRA#Ficha 50 - Comprovativo Do Imposto De Renda E Csll Retidos Na Fonte
+0097#STR0097#BRA#Cnpj Fonte Pagadora
+0101#STR0101#BRA#Ir Retido
+0102#STR0102#BRA#Csll Retido

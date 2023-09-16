@@ -1,0 +1,38 @@
+0002#STR0002#ALL#Este programa tem como objetivo imprimir o relatório Livro IVA de Compras/Vendas.
+0004#STR0004#ALL#Cód.Barras
+0005#STR0005#ALL#Administração
+0006#STR0006#ALL#|            | NÚMERO DE CONTR.  |                                          |  NÚMERO DA       |    NÚMERO DE    |     CÓDIGO     |     TOTAL      |      TOTAL     |    VALORES     |     VALOR      |     CRÉDITO    |
+0007#STR0007#ALL#|    DATA    | DO FORNECEDOR   | NOME OU RAZÃO SOCIAL DO FORNECEDOR       |  FACTURA     |   AUTORIZAÇÃO   |  DE CONTROLE   | FACTURA (A)|    I.C.E. (B)  |   ISENTOS (C)  | LÍQUIDO (A-B-C)|  FISCAL I.V.A. |
+0012#STR0012#ALL#Informe a Data Inicial para a criação do
+0016#STR0016#ALL#Data Inicial?
+0017#STR0017#ALL#Data Final?
+0018#STR0018#ALL#Informe a Data Final para a criação do
+0019#STR0019#ALL#Livro de Compras IVA do Período
+0020#STR0020#ALL#Livro de Vendas IVA do Período
+0022#STR0022#ALL#Nome ou Razão Social: 
+0023#STR0023#ALL#NIF: 
+0025#STR0025#ALL#Endereço: 
+0026#STR0026#ALL#Céd.Id.?
+0028#STR0028#ALL#Informe o Número do NIT do Representante 
+0029#STR0029#ALL#Informe o Nome Completo do Repr.
+0030#STR0030#ALL#Nome Completo do Responsável
+0031#STR0031#ALL#|            | NÚMERO DE CONTR.  |                                          |  NÚMERO DA       |    NÚMERO DE    |     CÓDIGO     |     TOTAL      |      TOTAL     |    VALORES     |      VALOR     |     DÉBITO     |
+0032#STR0032#ALL#|    DATA    | DO CLIENTE      | NOME OU RAZÃO SOCIAL DO CLIENTE          |  FACTURA     |   AUTORIZAÇÃO   |  DE CONTROLE   | FACTURA (A)|    I.C.E. (B)  |   ISENTOS (C)  | LÍQUIDO (A-B-C)|  FISCAL I.V.A. |
+0033#STR0033#ALL#Da Filial?
+0034#STR0034#ALL#Informe o código inicial do intervalo.
+0035#STR0035#ALL#de filiais que deseja imprimir.
+0036#STR0036#ALL#Até a Filial?
+0037#STR0037#ALL#Informe o código final do intervalo.
+0038#STR0038#ALL#Iniciar Núm.de Pág.em?
+0039#STR0039#ALL#Informe o número que deseja
+0040#STR0040#ALL#iniciar a numeração de página.
+0041#STR0041#ALL#Imprime excluídos?
+0042#STR0042#ALL#Informe se no relatório serão
+0043#STR0043#ALL#Impressos os documentos excluidos:
+0044#STR0044#ALL#Sim ou Não
+0046#STR0046#ALL#Não
+0048#STR0048#ALL#Informe o número do campo VALIMP que
+0049#STR0049#ALL#Deseja utilizar como TOTAL I.C.E.
+0051#STR0051#ALL#inexistente, o TOTAL I.C.E. será zero.
+0053#STR0053#ALL#Livro?
+0054#STR0054#ALL#Informe se o relatório será ordenado por:

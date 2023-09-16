@@ -1,0 +1,18 @@
+0001#STR0001#BOL#Cantidad
+0002#STR0002#BOL#Precio de venta
+0003#STR0003#BOL#Venta total
+0004#STR0004#BOL#IVA
+0005#STR0005#BOL#Venta neta total
+0006#STR0006#BOL#Tasa aplicada
+0007#STR0007#BOL#Impuesto Bs
+0008#STR0008#BOL#Impuesto declarado
+0009#STR0009#BOL#Diferencia
+0010#STR0010#BOL#Verificar registro de impuestos: IVA. No se informo el numero del libro fiscal
+0011#STR0011#BOL#Verificar registro de impuestos: ICE. No se informo el numero del libro fiscal
+0012#STR0012#BOL#ANEXO 11 - INFORMACION SOBRE LAS VENTAS DE PRODUCTOS TRIBUTADOS CON TASAS ESPECIFICAS
+0013#STR0013#BOL#Este programa tiene el objetivo de imprimir el informe 
+0014#STR0014#BOL#de acuerdo con los parametros informados por el usuario.
+0015#STR0015#BOL#Descripcion
+0016#STR0016#BOL#Calculo
+0017#STR0017#BOL#Producto
+0018#STR0018#BOL#Total ventas netas

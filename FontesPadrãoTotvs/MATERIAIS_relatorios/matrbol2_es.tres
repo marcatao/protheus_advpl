@@ -1,0 +1,58 @@
+0001#STR0001#ALL#Libro IVA de Compras/Ventas
+0002#STR0002#ALL#El objetivo de este programa es imprimir el informe Libro IVA de Compras/Ventas
+0003#STR0003#ALL#                                                                                                                                |                                VALORES EN BOLIVIANOS                               |
+0004#STR0004#ALL#A rayas
+0005#STR0005#ALL#Administracion
+0006#STR0006#ALL#|            | NUMERO DE NIT   |                                          |  NUMERO DE       |    NUMERO DE    |     CODIGO     |     TOTAL      |      TOTAL     |    IMPORTES    |     IMPORTE    |     CREDITO    |
+0007#STR0007#ALL#|    FECHA   | DEL PROVEEDOR   | NOMBRE O RAZON SOCIAL DEL PROVEEDOR      |  FACTURA         |   AUTORIZACION  |  DE CONTROL    | FACTURA (A)    |    I.C.E. (B)  |   EXENTOS (C)  | NETO (A-B-C)   |  FISCAL I.V.A. |
+0008#STR0008#ALL#PARCIALES
+0009#STR0009#ALL#TOTALES
+0010#STR0010#ALL#Informe el Libro que desea imprimir:
+0011#STR0011#ALL#Compras o Ventas
+0012#STR0012#ALL#Informe la Fecha Inicial para generar el
+0013#STR0013#ALL#Libro
+0014#STR0014#ALL#Compras
+0015#STR0015#ALL#Ventas
+0016#STR0016#ALL#¿Fecha Inicial?
+0017#STR0017#ALL#¿Fecha Final?
+0018#STR0018#ALL#Informe la Fecha Final para generar el
+0019#STR0019#ALL#Libro de Compras IVA del Periodo
+0020#STR0020#ALL#Libro de Ventas IVA del Periodo
+0021#STR0021#ALL#Folio: 
+0022#STR0022#ALL#Nombre o Razon Social: 
+0023#STR0023#ALL#NIT:  
+0024#STR0024#ALL#Sucursal:
+0025#STR0025#ALL#Direccion: 
+0026#STR0026#ALL#C.I.  
+0027#STR0027#ALL#¿Representante ?
+0028#STR0028#ALL#Informe el Numero del C.I. del Representante 
+0029#STR0029#ALL#Informe el Nombre Completo del Repr
+0030#STR0030#ALL#Nombre Completo del Representante
+0031#STR0031#ALL#|            | NUMERO DE NIT   |                                          |  NUMERO DE       |    NUMERO DE    |     CODIGO     |     TOTAL      |      TOTAL     |    IMPORTES    |      IMPORTE   |     DEBITO     |
+0032#STR0032#ALL#|    FECHA   | DEL CLIENTE     | NOMBRE O RAZON SOCIAL DEL CLIENTE        |  FACTURA         |   AUTORIZACION  |  DE CONTROL    | FACTURA (A)    |    I.C.E. (B)  |   EXENTOS (C)  | NETO (A-B-C)   |  FISCAL I.V.A. |
+0033#STR0033#ALL#¿De Sucursal?
+0034#STR0034#ALL#Informe el codigo inicial del intervalo
+0035#STR0035#ALL#de sucursales que desea imprimir
+0036#STR0036#ALL#¿A Sucursal?
+0037#STR0037#ALL#Informe el codigo final del intervalo
+0038#STR0038#ALL#¿ Inicia Num. De Pag. En ?
+0039#STR0039#ALL#Informe el numero que desea
+0040#STR0040#ALL#iniciar la numeracion de pagina
+0041#STR0041#ALL#¿Imprime Borrados?
+0042#STR0042#ALL#Informe si en el informe se
+0043#STR0043#ALL#imprimiran los documentos borrados:
+0044#STR0044#ALL#Si o No
+0045#STR0045#ALL#Si
+0046#STR0046#ALL#No
+0047#STR0047#ALL#¿Campo Del Total I.C.E.?
+0048#STR0048#ALL#Informe el numero del campo VALIMP que
+0049#STR0049#ALL#desea utilizar como TOTAL I.C.E.
+0050#STR0050#ALL#Campo F3_VALIMP
+0051#STR0051#ALL#no existe, el TOTAL I.C.E. sera cero
+0052#STR0052#ALL#Anulado
+0053#STR0053#ALL#¿Libro?
+0054#STR0054#ALL#Verifique si el informe se ordenara por:
+0055#STR0055#ALL#Fecha de digitacion o Fecha de emision
+0056#STR0056#ALL#Ordenacion:
+0057#STR0057#ALL#Digitacion
+0058#STR0058#ALL#Emision

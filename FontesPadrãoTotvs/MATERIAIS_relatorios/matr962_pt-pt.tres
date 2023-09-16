@@ -1,0 +1,82 @@
+0001#STR0001#ALL#Jan
+0002#STR0002#ALL#Fev
+0003#STR0003#ALL#Mar
+0004#STR0004#ALL#Abr
+0005#STR0005#ALL#Mai
+0006#STR0006#ALL#Jun
+0007#STR0007#ALL#Jul
+0008#STR0008#ALL#Ago
+0009#STR0009#ALL#Set
+0010#STR0010#ALL#Nov
+0011#STR0011#ALL#Nov
+0012#STR0012#ALL#Dez
+0013#STR0013#ALL#Demostrativo De Apuração Do Saldo Do Ipi
+0014#STR0014#ALL#                                                        saldo credor no                     
+0015#STR0015#ALL# mês   período         debito             crédito       período anterior    saldo apurado   
+0016#STR0016#ALL#Total            ################## ##################                                      
+0017#STR0017#ALL#Dados Dos Remetentes
+0018#STR0018#ALL#     c.n.p.j.      código  loja                    remetente                                      valor      
+0019#STR0019#ALL#Total                                                                                     ##################
+0020#STR0020#ALL#Dados Das Entradas
+0021#STR0021#ALL#Código  nbm/sh código  do produto                       mercadorias/insumos                               valor       
+0022#STR0022#ALL#Total                                                                                             ##################
+0023#STR0023#ALL#Resumo Das Entradas De Mercadorias
+0024#STR0024#ALL#Entradas de mercadorias                                        com créditos       sem créditos       ipi creditado  
+0025#STR0025#ALL#                    - insumos                               ################## ################## ##################
+0026#STR0026#ALL#Do mercado nacional - mercadorias para comercialização      ################## ################## ##################
+0027#STR0027#ALL#                    - devolução de vendas                   ################## ################## ##################
+0028#STR0028#ALL#                    - outras entradas                       ################## ################## ##################
+0029#STR0029#ALL#Do mercado externo  - mercadorias para comercialização      ################## ################## ##################
+0030#STR0030#ALL#Total geral das operações:                                  ################## ################## ##################
+0031#STR0031#ALL#Notas Fiscais De Entrada
+0032#STR0032#ALL#              data de    data de   ti código   lo                                                                                       
+0033#STR0033#ALL#Nota    serie entrada    emissão   po fornec  já        fornecedor            produto     tes cfo   vlr mercadoria         vlr ipi     
+0034#STR0034#ALL#Notas Fiscais De Saida
+0035#STR0035#ALL#                data de   ti código   lo                                                                                                
+0036#STR0036#ALL#Nota    serie   emissão   po cliente já              cliente                  produto     tes cfo   vlr mercadoria         vlr ipi     
+0037#STR0037#ALL#Dados Dos Destinatarios
+0038#STR0038#ALL#     c.n.p.j.      código  loja                    destinatario                                   valor      
+0039#STR0039#ALL#Dados Das Saidas
+0040#STR0040#ALL#Código  nbm/sh código  do produto                   produtos/mercadorias/insumos                          valor       
+0041#STR0041#ALL#Resumo Das Saidas De Mercadorias
+0042#STR0042#ALL#Saidas de mercadorias                                                         com debito         sem debito        ipi debitado   
+0043#STR0043#ALL#                        - produção do estabelecimento                     ################## ################## ##################
+0044#STR0044#ALL#Para o mercado nacional - mercadorias adquiridas ou rec.p/comercialização ################## ################## ##################
+0045#STR0045#ALL#                        - devoluções de compras                           ################## ################## ##################
+0046#STR0046#ALL#                        - outras saidas                                   ################## ################## ##################
+0047#STR0047#ALL#                        - produção do estabelecimento                                        ################## ##################
+0048#STR0048#ALL#Para o mercado externo  - mercadorias adquiridas ou rec.p/comercialização                    ################## ##################
+0049#STR0049#ALL#                        - devolução de compras                                               ################## ##################
+0050#STR0050#ALL#                        - outras saidas                                                      ################## ##################
+0051#STR0051#ALL#Total geral das operações:                                                ################## ################## ##################
+0052#STR0052#ALL#Demonstrativo De Créditos
+0053#STR0053#ALL#Entradas de insumos do mercado nacional                          = ##################
+0054#STR0054#ALL#Entradas de mercadorias do mercado nacional para comercialização = ##################
+0055#STR0055#ALL#Entradas de insumos do mercado externo                           = ##################
+0056#STR0056#ALL#Entradas de mercadorias do mercado externo para comercialização  = ##################
+0057#STR0057#ALL#Devoluções de vendas                                             = ##################
+0058#STR0058#ALL#Estorno de debitos                                               = ##################
+0059#STR0059#ALL#Outros créditos                                                  = ##################
+0060#STR0060#ALL#Outras entradas                                                  = ##################
+0061#STR0061#ALL#Total                                                            = ##################
+0062#STR0062#ALL#Demonstrativo De Debitos
+0063#STR0063#ALL#Saidas para o mercado nacional de produção do estabelecimento              = ##################
+0064#STR0064#ALL#Saidas de mercadorias para o mercado nacional adq.ou rec.p/comercialização = ##################
+0065#STR0065#ALL#Outras saidas para o mercado nacional                                      = ##################
+0066#STR0066#ALL#Estorno de créditos                                                        = ##################
+0067#STR0067#ALL#Ressarcimento de créditos                                                  = ##################
+0068#STR0068#ALL#Outros debitos                                                             = ##################
+0069#STR0069#ALL#Devolução de compras                                                       = ##################
+0070#STR0070#ALL#Total                                                                      = ##################
+0071#STR0071#ALL#                    - ind.efectuada por outras empresas      ################## ################## ##################
+0072#STR0072#ALL#                        - industrialização efectuada para outras empresas  ################## ################## ##################
+0073#STR0073#ALL#Entradas de industrialização efectuada por outras empresas        = ##################
+0074#STR0074#ALL#Saidas de industrialização efectuada por outras empresas                    = ##################
+0075#STR0075#ALL#                                             saldo credor no                     
+0076#STR0076#ALL# mês        debito             crédito       período anterior    saldo apurado   
+0079#STR0079#ALL#Total do resumo:                                               ################## ################## ##################
+0080#STR0080#ALL#Total do resumo:                                                             ################## ################## ##################
+0081#STR0081#ALL# mês   quinzena        débito             crédito       período anterior    saldo apurado   
+0082#STR0082#ALL#Ficha 54 - Comprovativo Do Imposto De Renda E Csll Retidos Na Fonte
+0084#STR0084#ALL#|seq.|cnpj Fonte Pagadora|cód Rec|nome Empresarial                                  |rendimento Bruto|   Ir Retido| Csll Retido|
+0088#STR0088#ALL#|total                                                                              |################|############|############|

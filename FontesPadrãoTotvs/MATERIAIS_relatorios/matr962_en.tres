@@ -1,0 +1,89 @@
+0001#STR0001#ALL#JAN
+0002#STR0002#ALL#FEB
+0003#STR0003#ALL#MAR
+0004#STR0004#ALL#APR
+0005#STR0005#ALL#MAY
+0006#STR0006#ALL#JUN
+0007#STR0007#ALL#JUL
+0008#STR0008#ALL#AUG
+0009#STR0009#ALL#SEP
+0010#STR0010#ALL#OCT
+0011#STR0011#ALL#NOV
+0012#STR0012#ALL#DEC
+0013#STR0013#ALL#IPI BALANCE VERIFICATION STATEMENT
+0014#STR0014#ALL#                                                        CRED.BAL.IN THE                     
+0015#STR0015#ALL# MTH   PERIOD          DEBIT              CREDIT        PREVIOUS PERIOD     CALC. BALANCE   
+0016#STR0016#ALL#MONTH            ################## ##################                                      
+0017#STR0017#ALL#SENDERS DATA
+0018#STR0018#ALL#     C.N.P.J.      CODE   UNIT                    SENDER                                         VALUE      
+0019#STR0019#ALL#TOTAL                                                                                     ##################
+0020#STR0020#ALL#INFLOWS DATA
+0021#STR0021#ALL#CODE   NBM/SH PRODUCT CODE                           GOODS/INPUTS                                       VALUE       
+0022#STR0022#ALL#TOTAL                                                                                             ##################
+0023#STR0023#ALL#GOODS INFLOW SUMMARY
+0024#STR0024#ALL#GOODS INFLOW                                                   WITH CREDITS       NO CREDITS         Credited IPI   
+0025#STR0025#ALL#                    - INPUTS                                ################## ################## ##################
+0026#STR0026#ALL#NATIONAL MARKET     - GOODS FOR COMMERCIALIZATION           ################## ################## ##################
+0027#STR0027#ALL#                    - SALES RETURN                          ################## ################## ##################
+0028#STR0028#ALL#                    - OTHER INFLOWS                         ################## ################## ##################
+0029#STR0029#ALL#EXTERNAL MARKET     - GOODS FOR COMMERCIALIZATION           ################## ################## ##################
+0030#STR0030#ALL#TOTAL                                                       ################## ################## ##################
+0031#STR0031#ALL#INVOICE INFLOW      
+0032#STR0032#ALL#            DATE FROM   DATE FROM  TI CODE    LO                                                                                       
+0033#STR0033#ALL#INVOICE SERIE INFLOW     ISSUE     PO SUPPL.  JA        SUPPLIER              PRODUCT     TIO CFO   VALUE OF GOODS         IPI AMT     
+0034#STR0034#ALL#OUTFLOW INVOICES
+0035#STR0035#ALL#               DATE FROM  TI CODE    LO                                                                                                
+0036#STR0036#ALL#INVOICE SERIE   ISSUE     PO CUSTOM. JA              CUSTOMER                 PRODUCT     TIO CFO   VALUE OF GOODS         IPI AMT     
+0037#STR0037#ALL#ADDRESSEE DATA
+0038#STR0038#ALL#     C.N.P.J.      CODE   UNIT                    ADDRESSEE                                      VALUE      
+0039#STR0039#ALL#OUTFLOWS DATA
+0040#STR0040#ALL#CODE   NBM/SH PRODUCT CODE                        PRODUCTS/GOODS/INPUTS                                 VALUE       
+0041#STR0041#ALL#GOODS OUTFLOW SUMMARY
+0042#STR0042#ALL#GOODS OUTFLOW                                                                 WITH DEBIT        WITHOUT DEBIT      Debited IPI    
+0043#STR0043#ALL#                        - STORE PRODUCTION                                ################## ################## ##################
+0044#STR0044#ALL#FOR THE NATIONAL MARKET - ACQUIRED GOODS OR RECEIVE FOR COMMERCIALIZATION ################## ################## ##################
+0045#STR0045#ALL#                        - GOODS RETURN                                    ################## ################## ##################
+0046#STR0046#ALL#                        - OTHER OUTFLOWS                                  ################## ################## ##################
+0047#STR0047#ALL#                        - STORE PRODUCTION                                                   ################## ##################
+0048#STR0048#ALL#FOR THE EXTERNAL MARKET - ACQUIRED GOODS OR RECEIVE FOR COMMERCIALIZATION                    ################## ##################
+0049#STR0049#ALL#                        - GOODS RETURN                                                       ################## ##################
+0050#STR0050#ALL#                        - OTHER OUTFLOWS                                                     ################## ##################
+0051#STR0051#ALL#TOTAL                                                                     ################## ################## ##################
+0052#STR0052#ALL#CREDITS STATEMENT
+0053#STR0053#ALL#INFLOW OF INPUTS IN THE INTERNAL MARKET                          = ##################
+0054#STR0054#ALL#INFLOW OF GOODS IN THE INTERNAL MARKET FOR COMMERCIALIZATION     = ##################
+0055#STR0055#ALL#INFLOW OF INPUTS FROM THE EXTERNAL MARKET                        = ##################
+0056#STR0056#ALL#INFLOW OF GOODS FROM THE EXTERNAL MARKET FOR COMMERCIALIZATION   = ##################
+0057#STR0057#ALL#SALES RETURN                                                     = ##################
+0058#STR0058#ALL#DEBITS REVERSAL                                                  = ##################
+0059#STR0059#ALL#OTHER CREDITS                                                    = ##################
+0060#STR0060#ALL#OTHER INFLOWS                                                    = ##################
+0061#STR0061#ALL#TOTAL                                                            = ##################
+0062#STR0062#ALL#DEBITS STATEMENT
+0063#STR0063#ALL#OUTFLOWS TO INTERNAL MARKET (PROPER PRODUCTION)                            = ##################
+0064#STR0064#ALL#OUTFLOW OF GOODS TO INTERNAL MARKET PURCHASED OR RECEIP.FOR COMMERCIALIZAT.= ##################
+0065#STR0065#ALL#OTHER OUTFLOWS TO INTERNAL MARKET                                          = ##################
+0066#STR0066#ALL#CREDITS REVERSAL                                                           = ##################
+0067#STR0067#ALL#CREDITS COMPENSATION                                                       = ##################
+0068#STR0068#ALL#OTHER DEBITS                                                               = ##################
+0069#STR0069#ALL#PURCHASES RETURN                                                           = ##################
+0070#STR0070#ALL#TOTAL                                                                      = ##################
+0071#STR0071#ALL#                    - IND.ACCOMPLISHED BY OTHER COMPANIES   ################## ################## ##################
+0072#STR0072#ALL#                        - INDUSTRIALIZATION FOR OTHER COMPANIES           ################## ################## ##################
+0073#STR0073#ALL#INDUSTRIALIZATION ACCOMPLISHED BY OTHER COMPANIES                = ##################
+0074#STR0074#ALL#INDUSTRIALIZATION OUTFLOWS ACCOMPLISHED BY OTHER COMPANIES                 = ##################
+0075#STR0075#ALL#                                             CREDITOR BALANCE                    
+0076#STR0076#ALL# MTH        DEBIT              CREDIT        PREVIOUS PERIOD     CALCULATED BALANCE 
+0077#STR0077#ALL#===== ================== ================== ================== ==================
+0078#STR0078#ALL# ###  ################## ################## ################## ##################
+0079#STR0079#ALL#SUMMARY TOT.:                                               ################## ################## ##################
+0080#STR0080#ALL#SUMMARY TOT.:                                                             ################## ################## ##################
+0081#STR0081#ALL# MTH   FORTNIGHT       DEBIT              CREDIT        PREVIOUS PERIOD     CALCUL.BALANCE  
+0082#STR0082#ALL#FICHA 54 - STATEMENT OF INCOME TAX AND CSLL WITHHELD AT SOURCE      
+0083#STR0083#ALL#+----+-------------------+-------+--------------------------------------------------+----------------+------------+------------+
+0084#STR0084#ALL#|Seq.|CNPJ Source Payer  |Rec Cod|Company Name                                      |Gross Income    | IR Withheld| CSLL Withhe|
+0085#STR0085#ALL#+----+-------------------+-------+--------------------------------------------------+----------------+------------+------------+
+0086#STR0086#ALL#|####|################## | ####  |##################################################|################|############|############|
+0087#STR0087#ALL#+-----------------------------------------------------------------------------------+----------------+------------+------------+
+0088#STR0088#ALL#|TOTAL                                                                              |################|############|############|
+0089#STR0089#ALL#+-----------------------------------------------------------------------------------+----------------+------------+------------+

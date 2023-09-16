@@ -1,0 +1,58 @@
+0001#STR0001#ALL#Sales/Purchases IVA Book
+0002#STR0002#ALL#This program aims at printing Purchases/Sales IVA Book report
+0003#STR0003#ALL#                                                                                                                                |                                VALUES IN BOLIVIANOS                               |
+0004#STR0004#ALL#Z form
+0005#STR0005#ALL#Administration
+0006#STR0006#ALL#|            | CNPJ NUMBER  |                                          |  NUMBER OF       |    NUMBER OF    |     CODE     |     TOTAL      |      TOTAL     |    VALUES     |     VALUE      |     CREDIT    |
+0007#STR0007#ALL#|    DATE    | OF SUPPLIER   | SUPPLIER NAME OR COMPANY NAME       |  INVOICE     |   AUTHORIZATION   |  OF CONTROL   | INVOICE (A)|    I.C.E. (B)  |   EXEMPT (C)  | NET (A-B-C)|  FISCAL I.V.A. |
+0008#STR0008#ALL#PARTIALS
+0009#STR0009#ALL#TOTAL
+0010#STR0010#ALL#Enter book you want to print:
+0011#STR0011#ALL#Sales or Purchases
+0012#STR0012#ALL#Enter initial date to generate
+0013#STR0013#ALL#Book
+0014#STR0014#ALL#Sales
+0015#STR0015#ALL#Purchases
+0016#STR0016#ALL#Initial Date?
+0017#STR0017#ALL#Final Date?
+0018#STR0018#ALL#Enter Final Date to generate
+0019#STR0019#ALL#IVA Purchase Book referring to period
+0020#STR0020#ALL#IVA Sales Book referring to period
+0021#STR0021#ALL#Sheet: 
+0022#STR0022#ALL#Name or Company Name: 
+0023#STR0023#ALL#CNPJ: 
+0024#STR0024#ALL#Branch: 
+0025#STR0025#ALL#Address: 
+0026#STR0026#ALL#R.G. ?
+0027#STR0027#ALL#Representative?
+0028#STR0028#ALL#Enter R.G. (Individual Taxpayer Register) of Representative 
+0029#STR0029#ALL#Enter Representative Full Name
+0030#STR0030#ALL#Responsible full name
+0031#STR0031#ALL#|            | CNPJ NUMBER  |                                          |                NUMBER OF       |    NUMBER OF    |     CODE     |     TOTAL           |      TOTAL     |    VALUES     |     VALUE      |     DEBIT    |
+0032#STR0032#ALL#|    DATE    | OF CUSTOMER   | CUSTOMER NAME OR COMPANY NAME       |  INVOICE     |   AUTHORIZATION   |  OF CONTROL   | INVOICE (A)|    I.C.E. (B)  |   EXEMPT (C)  | NET (A-B-C)|  FISCAL I.V.A. |
+0033#STR0033#ALL#Branch from?
+0034#STR0034#ALL#Enter initial code branches
+0035#STR0035#ALL#interval you want to print
+0036#STR0036#ALL#Branch to?
+0037#STR0037#ALL#Enter final interval code
+0038#STR0038#ALL#Start Paym. Nr. in?
+0039#STR0039#ALL#Enter number you want
+0040#STR0040#ALL#Start page number
+0041#STR0041#ALL#Print the excluded?
+0042#STR0042#ALL#Enter if excluded documents
+0043#STR0043#ALL#will be printed in report:
+0044#STR0044#ALL#Yes or No
+0045#STR0045#ALL#Yes
+0046#STR0046#ALL#No
+0047#STR0047#ALL#I.C.E. Total Field?
+0048#STR0048#ALL#Inform VALIMP field number that
+0049#STR0049#ALL#you want to use as I.C.E. TOTAL
+0050#STR0050#ALL#Field F3_VALIMP
+0051#STR0051#ALL#does not exist, I.C.E. TOTAL will be zero
+0052#STR0052#ALL#Annuled
+0053#STR0053#ALL#Book?
+0054#STR0054#ALL#Indicate if the report will be ordered per:
+0055#STR0055#ALL#Indication date or Issue date
+0056#STR0056#ALL#Order:
+0057#STR0057#ALL#Indication
+0058#STR0058#ALL#Issue

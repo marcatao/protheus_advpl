@@ -1,0 +1,36 @@
+0001#STR0001#BOL#Purchases/Sales Records    
+0002#STR0002#BOL#The purpose of this program is to print the Purchases/Sales IVA Records report  
+0003#STR0003#BOL#                                                                                                                          |                                AMOUNTS IN BOLIVIANOS                               |
+0004#STR0004#BOL#Z. form
+0005#STR0005#BOL#Administration
+0006#STR0006#BOL#|          |                 |                                          |  NUMBER OF   |    NUMBER OF    |      CODE      |     TOTAL      |      TOTAL     |    AMOUNTS     |     AMOUNT     |     CREDIT     |
+0007#STR0007#BOL#|   DATE   |    NIT NUMBER   | NAME OR COMPANY NAME                     |    INVOICE   |  AUTHORIZATION  |  OF CONTROL    |   INVOICE   (A)|    I.C.E. (B)  |   EXEMPT  (C)  |   NET   (A-B-C)|  TAX    I.V.A. |
+0008#STR0008#BOL#PARTIAL
+0009#STR0009#BOL#TOTAL
+0010#STR0010#BOL#Enter the records you want to print:
+0011#STR0011#BOL#Purchases or Sales
+0012#STR0012#BOL#Enter Initial Date for generating     
+0013#STR0013#BOL#Records
+0014#STR0014#BOL#Purchases
+0015#STR0015#BOL#Sales
+0016#STR0016#BOL#Initial date
+0017#STR0017#BOL#Final date
+0018#STR0018#BOL#Enter Final Date for generating     
+0019#STR0019#BOL#IVA Purchase Records of Period 
+0020#STR0020#BOL#IVA Sales Records of Period   
+0021#STR0021#BOL#Page: 
+0022#STR0022#BOL#Name or company name: 
+0023#STR0023#BOL#CNPJ:
+0024#STR0024#BOL#Branch nbr.: 
+0025#STR0025#BOL#Address:  
+0026#STR0026#BOL#ID  
+0027#STR0027#BOL#Responsible
+0028#STR0028#BOL#Enter ID number of person responsible  
+0029#STR0029#BOL#Enter full name of person responsible  
+0030#STR0030#BOL#Full name of person responsible
+0031#STR0031#BOL#Indicate if the report will be ordered per:
+0032#STR0032#BOL#Indication date or Issue date
+0033#STR0033#BOL#Order:
+0034#STR0034#BOL#Indication
+0035#STR0035#BOL#Issue
+0036#STR0036#BOL#|          |                 |                                          |  NUMBE OF   |    NUMBER OF    |     CODE     |     TOTAL      |      TOTAL     |    VALUES     |     VALUE     |     DEBIT   |

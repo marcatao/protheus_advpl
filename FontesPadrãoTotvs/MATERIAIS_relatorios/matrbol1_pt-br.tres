@@ -1,0 +1,36 @@
+0001#STR0001#BOL#Livro IVA de Compras/Vendas
+0002#STR0002#BOL#Este programa tem como objetivo imprimir o relatorio Livro IVA de Compras/Vendas
+0003#STR0003#BOL#                                                                                                                          |                                VALORES EM BOLIVIANOS                               |
+0004#STR0004#BOL#Zebrado
+0005#STR0005#BOL#Administracao
+0006#STR0006#BOL#|          |                 |                                          |  NUMERO DA   |    NUMERO DE    |     CODIGO     |     TOTAL      |      TOTAL     |    VALORES     |     VALOR      |     CREDITO    |
+0007#STR0007#BOL#|   DATA   |  NUMERO DE NIT  | NOME OU RAZAO SOCIAL                     |  NOTA FISCAL |   AUTORIZACAO   |  DE CONTROLE   | NOTA FISCAL (A)|    I.C.E. (B)  |   ISENTOS (C)  | LIQUIDO (A-B-C)|  FISCAL I.V.A. |
+0008#STR0008#BOL#PARCIAIS
+0009#STR0009#BOL#TOTAIS
+0010#STR0010#BOL#Informe o Livro que deseja imprimir:
+0011#STR0011#BOL#Compras ou Vendas
+0012#STR0012#BOL#Informe a Data Inicial para geracao do
+0013#STR0013#BOL#Livro
+0014#STR0014#BOL#Compras
+0015#STR0015#BOL#Vendas
+0016#STR0016#BOL#Data Inicial
+0017#STR0017#BOL#Data Final
+0018#STR0018#BOL#Informe a Data Final para geracao do
+0019#STR0019#BOL#Livro de Compras IVA do Periodo
+0020#STR0020#BOL#Livro de Vendas IVA do Periodo
+0021#STR0021#BOL#Folha: 
+0022#STR0022#BOL#Nome ou Razao Social: 
+0023#STR0023#BOL#CNPJ: 
+0024#STR0024#BOL#No. Filial: 
+0025#STR0025#BOL#Endereco: 
+0026#STR0026#BOL#R.G.
+0027#STR0027#BOL#Responsavel
+0028#STR0028#BOL#Informe o Numero do R.G. do Responsavel
+0029#STR0029#BOL#Informe o Nome Completo do Responsavel
+0030#STR0030#BOL#Nome Completo do Responsavel
+0031#STR0031#BOL#Informe se o relatorio será ordenado por:
+0032#STR0032#BOL#Data de digitação ou Data de emissão
+0033#STR0033#BOL#Ordenação:
+0034#STR0034#BOL#Digitacao
+0035#STR0035#BOL#Emissão
+0036#STR0036#BOL#|          |                 |                                          |  NUMERO DE   |    NUMERO DE    |     CODIGO     |     TOTAL      |      TOTAL     |    VALORES     |     VALOR      |     DEBITO     |

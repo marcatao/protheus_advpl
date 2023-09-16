@@ -1,0 +1,58 @@
+0001#STR0001#ALL#Livro IVA de Compras/Vendas
+0002#STR0002#ALL#Este programa tem como objetivo imprimir o relatorio Livro IVA de Compras/Vendas
+0003#STR0003#ALL#                                                                                                                                |                                VALORES EM BOLIVIANOS                               |
+0004#STR0004#ALL#Zebrado
+0005#STR0005#ALL#Administracao
+0006#STR0006#ALL#|            | NUMERO DE CNPJ  |                                          |  NUMERO DA       |    NUMERO DE    |     CODIGO     |     TOTAL      |      TOTAL     |    VALORES     |     VALOR      |     CREDITO    |
+0007#STR0007#ALL#|    DATA    | DO FORNECEDOR   | NOME OU RAZAO SOCIAL DO FORNECEDOR       |  NOTA FISCAL     |   AUTORIZACAO   |  DE CONTROLE   | NOTA FISCAL (A)|    I.C.E. (B)  |   ISENTOS (C)  | LIQUIDO (A-B-C)|  FISCAL I.V.A. |
+0008#STR0008#ALL#PARCIAIS
+0009#STR0009#ALL#TOTAIS
+0010#STR0010#ALL#Informe o Livro que deseja imprimir:
+0011#STR0011#ALL#Compras ou Vendas
+0012#STR0012#ALL#Informe a Data Inicial para geracao do
+0013#STR0013#ALL#Livro
+0014#STR0014#ALL#Compras
+0015#STR0015#ALL#Vendas
+0016#STR0016#ALL#Data Inicial ?
+0017#STR0017#ALL#Data Final ?
+0018#STR0018#ALL#Informe a Data Final para geracao do
+0019#STR0019#ALL#Livro de Compras IVA do Periodo
+0020#STR0020#ALL#Livro de Vendas IVA do Periodo
+0021#STR0021#ALL#Folha: 
+0022#STR0022#ALL#Nome ou Razao Social: 
+0023#STR0023#ALL#CNPJ: 
+0024#STR0024#ALL#Filial: 
+0025#STR0025#ALL#Endereco: 
+0026#STR0026#ALL#R.G. ?
+0027#STR0027#ALL#Respresentante ?
+0028#STR0028#ALL#Informe o Numero do R.G. do Representante 
+0029#STR0029#ALL#Informe o Nome Completo do Repr
+0030#STR0030#ALL#Nome Completo do Responsavel
+0031#STR0031#ALL#|            | NUMERO DE CNPJ  |                                          |  NUMERO DA       |    NUMERO DE    |     CODIGO     |     TOTAL      |      TOTAL     |    VALORES     |      VALOR     |     DEBITO     |
+0032#STR0032#ALL#|    DATA    | DO CLIENTE      | NOME OU RAZAO SOCIAL DO CLIENTE          |  NOTA FISCAL     |   AUTORIZACAO   |  DE CONTROLE   | NOTA FISCAL (A)|    I.C.E. (B)  |   ISENTOS (C)  | LIQUIDO (A-B-C)|  FISCAL I.V.A. |
+0033#STR0033#ALL#Filial De ?
+0034#STR0034#ALL#Informe o codigo inicial do intervalo
+0035#STR0035#ALL#de filiais que deseja imprimir
+0036#STR0036#ALL#Filial Ate ?
+0037#STR0037#ALL#Informe o codigo final do intervalo
+0038#STR0038#ALL#Iniciar Num. De Pag. Em ?
+0039#STR0039#ALL#Informe o numero que deseja
+0040#STR0040#ALL#iniciar a numeracao de pagina
+0041#STR0041#ALL#Imprime Excluidos ?
+0042#STR0042#ALL#Informe se no relatorio seram
+0043#STR0043#ALL#impressos os documentos excluidos:
+0044#STR0044#ALL#Sim ou Nao
+0045#STR0045#ALL#Sim
+0046#STR0046#ALL#Nao
+0047#STR0047#ALL#Campo Do Total I.C.E. ?
+0048#STR0048#ALL#Informe o numero do campo VALIMP que
+0049#STR0049#ALL#deseja utilizar como TOTAL I.C.E.
+0050#STR0050#ALL#Campo F3_VALIMP
+0051#STR0051#ALL#inexistente, o TOTAL I.C.E. sera zero
+0052#STR0052#ALL#Anulado
+0053#STR0053#ALL#Livro ?
+0054#STR0054#ALL#Informe se o relatorio será ordenado por:
+0055#STR0055#ALL#Data de digitação ou Data de emissão
+0056#STR0056#ALL#Ordenação:
+0057#STR0057#ALL#Digitação
+0058#STR0058#ALL#Emissão

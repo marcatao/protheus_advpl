@@ -1,0 +1,18 @@
+0001#STR0001#BOL#Quantidade
+0002#STR0002#BOL#Preco de venda
+0003#STR0003#BOL#Venda total
+0004#STR0004#BOL#IVA
+0005#STR0005#BOL#Venda liq. total
+0006#STR0006#BOL#Taxa aplicada
+0007#STR0007#BOL#Imposto Bs
+0008#STR0008#BOL#Imposto declarado
+0009#STR0009#BOL#Diferenca
+0010#STR0010#BOL#Verificar cadastro de impostos: IVA. O número do livro fiscal não foi informado
+0011#STR0011#BOL#Verificar cadastro de impostos: ICE. O número do livro fiscal não foi informado
+0012#STR0012#BOL#ANEXO 11 - INFORMAÇÃO SOBRE AS VENDAS DE PRODUTOS GRAVADOS COM TAXAS ESPECÍFICAS
+0013#STR0013#BOL#Este programa tem como objetivo imprimir relatorio 
+0014#STR0014#BOL#de acordo com os parametros informados pelo usuario.
+0015#STR0015#BOL#Descricao
+0016#STR0016#BOL#Calculo
+0017#STR0017#BOL#Produto
+0018#STR0018#BOL#Total vendas liquidas

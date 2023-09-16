@@ -1,0 +1,109 @@
+0001#STR0001#BRA#DIPJ
+0002#STR0002#BRA#Issuance of list to help the filling the DIPJ
+0003#STR0003#BRA#It will print the fiscal entries according to selected parameters.
+0004#STR0004#BRA#Z.Form
+0005#STR0005#BRA#Management
+0006#STR0006#BRA#Indexing verifications
+0007#STR0007#BRA#PURCHASES RETURN
+0008#STR0008#BRA#SALES RETURN
+0009#STR0009#BRA#Calculation: 
+0010#STR0010#BRA#DIPJ Summaries
+0011#STR0011#BRA#Auxiliary list to filling the DIPJ.
+0012#STR0012#BRA#This report will bring all the necessary movements to filling the DIPJ.
+0013#STR0013#BRA#Statement of IPI Balance Calculation
+0014#STR0014#BRA#Month
+0015#STR0015#BRA#Period 
+0016#STR0016#BRA#Debit 
+0017#STR0017#BRA#Credit 
+0018#STR0018#BRA#Credit Balance Previous Period
+0019#STR0019#BRA#Balance Calc.
+0020#STR0020#BRA#Note
+0021#STR0021#BRA#Serie
+0022#STR0022#BRA#Inflow
+0023#STR0023#BRA#Issue  
+0024#STR0024#BRA#Type
+0025#STR0025#BRA#Supplier code 
+0026#STR0026#BRA#Store
+0027#STR0027#BRA#Supplier 
+0028#STR0028#BRA#Product
+0029#STR0029#BRA#TIO
+0030#STR0030#BRA#CFOP
+0031#STR0031#BRA#Value of Goods
+0032#STR0032#BRA#IPI Amount
+0033#STR0033#BRA#Customer Cod.
+0034#STR0034#BRA#Customer
+0035#STR0035#BRA#E.I.N.
+0036#STR0036#BRA#Code
+0037#STR0037#BRA#Sender
+0038#STR0038#BRA#Value
+0039#STR0039#BRA#Inflow Invoices
+0040#STR0040#BRA#Outflow Invoices
+0041#STR0041#BRA#Sender Data
+0042#STR0042#BRA#Inflow Data
+0043#STR0043#BRA#NBM/SH Code
+0044#STR0044#BRA#Product Code
+0045#STR0045#BRA#Goods/Raw materials
+0046#STR0046#BRA#Summary of Inflow of Goods
+0047#STR0047#BRA#Inflow of Goods
+0048#STR0048#BRA#With credit
+0049#STR0049#BRA#W/o credit 
+0050#STR0050#BRA#IPI Credited 
+0051#STR0051#BRA#Recipient Data
+0052#STR0052#BRA#Addressee   
+0053#STR0053#BRA#Outflow Data
+0054#STR0054#BRA#Summary of Goods Outflow
+0055#STR0055#BRA#Goods Outflow
+0056#STR0056#BRA#With debit
+0057#STR0057#BRA#W/o debit 
+0058#STR0058#BRA#IPI Debited 
+0059#STR0059#BRA#Statement of Credits and Debits
+0060#STR0060#BRA#Total
+0061#STR0061#BRA#Inputs 
+0062#STR0062#BRA#Goods for Trade
+0063#STR0063#BRA#Production by other Companies
+0064#STR0064#BRA#National market 
+0065#STR0065#BRA#Sales Return
+0066#STR0066#BRA#Other Inflows
+0067#STR0067#BRA#Foreign market 
+0068#STR0068#BRA#Summary total  
+0069#STR0069#BRA#Establishment Production
+0070#STR0070#BRA#Goods Acquired or Trade Rec.
+0071#STR0071#BRA#Production performed for other Companies
+0072#STR0072#BRA#Purchase Return
+0073#STR0073#BRA#Other Outflows
+0074#STR0074#BRA#Summary of Goods Outflows
+0075#STR0075#BRA#Statement of Credits
+0076#STR0076#BRA#Statement of Debits
+0077#STR0077#BRA#Inflow of National Market Inputs
+0078#STR0078#BRA#Goods Inflow of National Market for Trading
+0079#STR0079#BRA#Production Inflows performed by other Companies
+0080#STR0080#BRA#Inflow of International Market Inputs
+0081#STR0081#BRA#Goods Inflow of International Market for Trading
+0082#STR0082#BRA#Debits Reversal
+0083#STR0083#BRA#Other Credits
+0084#STR0084#BRA#Outflows for International Market of the Establishment Production
+0085#STR0085#BRA#Outflows of Goods for Domestic Market Acq. or Rec. for Sale
+0086#STR0086#BRA#Outflows of production made for Other Companies
+0087#STR0087#BRA#Other Outflows for Domestic Market
+0088#STR0088#BRA#Credit Reversals
+0089#STR0089#BRA#Credit Reimbursement
+0090#STR0090#BRA#Other debits  
+0091#STR0091#BRA#Inflow and Outflow Invoices
+0092#STR0092#BRA#Data of Addressers and Recipients
+0093#STR0093#BRA#Indexing Calculations
+0094#STR0094#BRA#CARD 50 - STATEMENT OF INCOME TAX AND CSLL WITHHELD AT SOURCE
+0095#STR0095#BRA#Total
+0096#STR0096#BRA#Seq.
+0097#STR0097#BRA#CNPJ Source Payer
+0098#STR0098#BRA#Cod. Rec.
+0099#STR0099#BRA#Company Name
+0100#STR0100#BRA#Gross Income
+0101#STR0101#BRA#IR Withheld
+0102#STR0102#BRA#CSLL Withheld
+0103#STR0103#BRA#Type 
+0104#STR0104#BRA#Amnt.
+0105#STR0105#BRA#Enter whether you wish to select more than one branch to generate report in grouped form.
+0106#STR0106#BRA#Parameter active only for dbAccess environment.
+0107#STR0107#BRA#Enter whether you wish to validate the selection of branches by Root CNPJ to process more than one branch.
+0108#STR0108#BRA#Select Branches
+0109#STR0109#BRA#Group Selection by Root CNPJ

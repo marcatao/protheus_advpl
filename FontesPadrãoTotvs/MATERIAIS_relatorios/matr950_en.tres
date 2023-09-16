@@ -1,0 +1,31 @@
+0001#STR0001#ALL#Printing of DIPI checking list.
+0002#STR0002#ALL#It will print the tax entries according to selected parameters.       
+0003#STR0003#ALL#Z.Form
+0004#STR0004#ALL#Management
+0005#STR0005#ALL#Selecting Records ... 
+0006#STR0006#ALL#SENDERS DATA
+0007#STR0007#ALL#CODE   UNIT            SENDER                 DATE   SERIES NUMBER TYPE CFO    GOODS VALUE         IPI VALUE     
+0008#STR0008#ALL#TOTAL                                                                       ################## ##################
+0009#STR0009#ALL#ADDRESSEE DATA
+0010#STR0010#ALL#CODE   UNIT           ADDRESSEE               DATE   SERIES NUMBER TYPE CFO  ACCOUNTING VALUE      IPI VALUE     
+0011#STR0011#ALL#GRAND TOTAL                                                                 ################## ##################
+0012#STR0012#ALL#TOTAL OF INFLOWS                                                            ################## ##################
+0013#STR0013#ALL#TOTAL OF OUTFLOWS                                                           ################## ##################
+0014#STR0014#ALL#PRODUCTS DATA - BY NBM
+0015#STR0015#ALL#CODE NBM/SH   PRODUCT CODE            GOODS/INPUTS                DATE           VALUE           IPI VALUE     
+0016#STR0016#ALL#NBM BALANCE   ################                                            ################## ##################
+0017#STR0017#ALL#GRAND TOTAL                                                               ################## ##################
+0018#STR0018#ALL#TOTAL OF INFLOWS                                                          ################## ##################
+0019#STR0019#ALL#TOTAL OF OUTFLOWS                                                         ################## ##################
+0020#STR0020#ALL#OPERATIONS REPORT - CHECKING OF DIPI
+0021#STR0021#ALL#EMPRESA #####################################################                                                      PAGE   #######
+0022#STR0022#ALL#ADDRESS  ############################################ CNPJ   #####################           PERIOD FROM ########## TO ##########
+0023#STR0023#ALL#CITY   #################################### ST ## ZIP ######### INSCRICAO ESTADUAL ################            ISSUE ############
+0024#STR0024#ALL#FORM 50 - INCOME TAX STATEMENT AND CSLL WITHHELD
+0025#STR0025#ALL#+----+-------------------+-------+--------------------------------------------------+----------------+------------+------------+
+0026#STR0026#ALL#|Seq.|CNPJ Payer Source|Cod Rec|Company Name                                  |Gross Income|   IRS Withheld| CSLL Withheld|
+0027#STR0027#ALL#+----+-------------------+-------+--------------------------------------------------+----------------+------------+------------+
+0028#STR0028#ALL#|####|################## | ####  |##################################################|################|############|############|
+0029#STR0029#ALL#+-----------------------------------------------------------------------------------+----------------+------------+------------+
+0030#STR0030#ALL#|TOTAL                                                                              |################|############|############|
+0031#STR0031#ALL#+-----------------------------------------------------------------------------------+----------------+------------+------------+

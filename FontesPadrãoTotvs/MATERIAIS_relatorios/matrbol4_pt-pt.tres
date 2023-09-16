@@ -1,0 +1,12 @@
+0002#STR0002#BOL#Preço de venda
+0005#STR0005#BOL#Venda líq. total
+0009#STR0009#BOL#Diferença
+0010#STR0010#BOL#Verificar registo de impostos: IVA. O número do livro fiscal não foi informado.
+0011#STR0011#BOL#Verificar registo impostos: ICE. O número do livro fiscal não foi informado.
+0012#STR0012#BOL#ANEXO 11 - INFORMAÇÃO SOBRE AS VENDAS DE ARTIGOS GRAVADOS COM TAXAS ESPECÍFICAS
+0013#STR0013#BOL#Este programa tem como objetivo imprimir relatório 
+0014#STR0014#BOL#de acordo com os parâmetros informados pelo utilizador.
+0015#STR0015#BOL#Descrição
+0016#STR0016#BOL#Cálculo
+0017#STR0017#BOL#Artigo
+0018#STR0018#BOL#Total vendas líquidas

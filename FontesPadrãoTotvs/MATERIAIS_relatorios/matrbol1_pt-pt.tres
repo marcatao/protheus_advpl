@@ -1,0 +1,26 @@
+0001#STR0001#BOL#Livro De Iva De Compras/vendas
+0002#STR0002#BOL#Este Programa Tem Como Objectivo Imprimir O Relatório Do Livro De Iva De Compras/vendas
+0003#STR0003#BOL#                                                                                                                          |                                valores em bolivianos                               |
+0004#STR0004#BOL#Código de barras
+0005#STR0005#BOL#Administração
+0006#STR0006#BOL#|          |                 |                                          |  número da   |    número de    |     código     |     total      |      total     |    valores     |     valor      |     crédito    |
+0007#STR0007#BOL#|   data   |  número de nit  | nome ou razão social                     |  factura |   autorização   |  de controlo   | factura (a)|    i.c.e. (b)  |   isentos (c)  | líquido (a-b-c)|  fiscal i.v.a. |
+0008#STR0008#BOL#Parciais
+0009#STR0009#BOL#Totais
+0010#STR0010#BOL#Indique o livro que deseja imprimir:
+0011#STR0011#BOL#Compras Ou Vendas
+0012#STR0012#BOL#Indique a data inicial para criação do
+0018#STR0018#BOL#Indique a data final para criação do
+0019#STR0019#BOL#Livro De Compras Do Iva Do Período
+0020#STR0020#BOL#Livro De Vendas Do Iva Do Período
+0022#STR0022#BOL#Nome ou razão social: 
+0023#STR0023#BOL#Nif: 
+0024#STR0024#BOL#Núm. filial: 
+0025#STR0025#BOL#Endereço: 
+0026#STR0026#BOL#R.g.
+0027#STR0027#BOL#Responsável
+0028#STR0028#BOL#Indique O Número Do R.g. Do Responsável
+0029#STR0029#BOL#Indique O Nome Completo Do Responsável
+0030#STR0030#BOL#Nome Completo Do Responsável
+0031#STR0031#BOL#Informe se o relatório será ordenado por:
+0034#STR0034#BOL#Digitação
