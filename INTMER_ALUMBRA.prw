@@ -185,11 +185,12 @@ User Function INTMER02(aParam)
 				if !(SA1->(dbSeek(xFilial("SA1") + ZA1->ZA1_CGC)))
 					nOpc := 3
 					aAdd(aDados, {"A1_FILIAL"	, xFilial("SA1")																				,	Nil})
-					aAdd(aDados, {"A1_COD"    	, iif(ZA1->ZA1_PESSOA=="F",SubStr(ZA1->ZA1_CGC,01,09),PADR(SubStr(ZA1->ZA1_CGC,01,08),09," "))	,	Nil})
-					aAdd(aDados, {"A1_LOJA"   	, iif(ZA1->ZA1_PESSOA=="F","0001",SubStr(ZA1->ZA1_CGC,09,04))											,	Nil})
+					//aAdd(aDados, {"A1_COD"    , iif(ZA1->ZA1_PESSOA=="F",SubStr(ZA1->ZA1_CGC,01,09),PADR(SubStr(ZA1->ZA1_CGC,01,08),09," "))	,	Nil})
+					aAdd(aDados, {"A1_COD"    	, GetSXENum("SA1","A1_COD")	,	Nil})
+					aAdd(aDados, {"A1_LOJA"   	, '01'											,	Nil})
 					aAdd(aDados, {"A1_NOME"   	, PADR(UPPER(ZA1->ZA1_NOME)			,TAMSX3("A1_NOME")[1])										,	Nil})
 					aAdd(aDados, {"A1_NREDUZ" 	, PADR(UPPER(ZA1->ZA1_NREDUZ)			,TAMSX3("A1_NREDUZ")[1])									,	Nil})
-					aAdd(aDados, {"A1_TIPO"   	, PADR("R"							,TAMSX3("A1_TIPO")[1])						,	Nil})
+					aAdd(aDados, {"A1_TIPO"   	, PADR("S"							,TAMSX3("A1_TIPO")[1])						,	Nil})
 					aAdd(aDados, {"A1_PESSOA" 	, ZA1->ZA1_PESSOA																		,	Nil})
 					aAdd(aDados, {"A1_CGC"    	, PADR(ZA1->ZA1_CGC				,TAMSX3("A1_CGC")[1])						,	Nil})
 					aAdd(aDados, {"A1_END"    	, PADR(UPPER(ZA1->ZA1_END)			,TAMSX3("A1_END")[1])						,	Nil})
@@ -206,9 +207,7 @@ User Function INTMER02(aParam)
 					aAdd(aDados, {"A1_COND"   	, PADR(ZA1->ZA1_COND				,TAMSX3("A1_COND")[1])						,	Nil})
 					aAdd(aDados, {"A1_MSBLQL" 	, PADR("2"							,TAMSX3("A1_MSBLQL")[1])					,	Nil})
 					aAdd(aDados, {"A1_INSCR"  	, UPPER(ZA1->ZA1_INSCR)														,	Nil})
-					aAdd(aDados, {"A1_LC"		, ZA1->ZA1_LC																,	Nil})
-					aAdd(aDados, {"A1_ENDCOB"	, ZA1->ZA1_ENDCOB																	,	Nil})
-					aAdd(aDados, {"A1_CONTATO"	, ZA1->ZA1_CONTAT																	,	Nil})
+					aAdd(aDados, {"A1_ENDCOB"	, ZA1->ZA1_ENDC																,	Nil})
 					aAdd(aDados, {"A1_BAIRROC"	, ZA1->ZA1_BAIRRC																	,	Nil})
 					aAdd(aDados, {"A1_CEPC"		, ZA1->ZA1_CEPC																,	Nil})
 					aAdd(aDados, {"A1_ESTC"		, ZA1->ZA1_ESTC																	,	Nil})
@@ -669,7 +668,7 @@ Static Function GeraPedido()
 	Local lAuto     := IsBlind()
 	Local xAgeraGP  := getarea() 
 	Local cArquivo  := ""
-	Local cDoc       := ""  
+	PUBLIC cDoc       := ""  
 
 	lMsErroAuto := .F.
 	
@@ -711,6 +710,8 @@ Static Function GeraPedido()
 	aAdd(aCabec2,{"C5_PEDMER"	,ZZQ->ZZQ_PEDMER	,Nil})
 	aAdd(aCabec2,{"C5_TRANSP"	,ZZQ->ZZQ_TRANSP	,Nil})
 	aAdd(aCabec2,{"C5_FECENT"	,W_ENTREGA	        ,Nil})
+	aAdd(aCabec2,{"C5_XSTEX"	,"AX"   	        ,Nil})
+	aAdd(aCabec2,{"C5_COMENT"	,ZZQ->ZZQ_OBS       ,Nil})
  
 
 	dbSelectArea("ZZR")
@@ -734,7 +735,7 @@ Static Function GeraPedido()
 			aAdd(aLinha,{"C6_FILIAL"	,cPedFil			    ,Nil})
 			aAdd(aLinha,{"C6_ITEM"		,STRZERO(val(ZZR->ZZR_ITPMER),2)	,Nil})
 			aAdd(aLinha,{"C6_PRODUTO"	,PadR(AllTrim(ZZR->ZZR_PRODUT),TamSX3("C6_PRODUTO")[1]," "),Nil})   
-			aAdd(aLinha,{"C6_QTDLIB"	,ZZR->ZZR_QTDVEN	    ,Nil}) 
+			aAdd(aLinha,{"C6_QTDLIB"	,0              	    ,Nil}) 
 			aAdd(aLinha,{"C6_QTDVEN"	,ZZR->ZZR_QTDVEN	    ,Nil}) 
 		   	aAdd(aLinha,{"C6_PRCVEN"	,ZZR->ZZR_VLR_LI	    ,Nil}) 
 		   	aAdd(aLinha,{"C6_PRUNIT"	,ZZR->ZZR_VLR_LI	    ,Nil})
@@ -761,7 +762,7 @@ Static Function GeraPedido()
 	dbSelectArea("SM0")
     SM0->(dbSeek(cEmpAnt+cPedFil))    //M0_CODIGO + M0_CODFIL
     
-    cDoc := NextNumero("SC5",1,"C5_NUM",.T.)
+    //cDoc := NextNumero("SC5",1,"C5_NUM",.T.)
     //aadd(aCabec2,{"C5_NUM"    ,cDoc            ,Nil})
     aCabec := aClone(OrdCampos(aCabec2))
 	

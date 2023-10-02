@@ -1,6 +1,5 @@
-#INCLUDE "MATR730.CH" 
 #INCLUDE "PROTHEUS.CH"
-
+#INCLUDE "MATR730.CH" 
 /*ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ±±ÚÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄ¿±±
@@ -12,7 +11,7 @@
 ±±ÀÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ±±
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß*/
-user Function MATR730()
+user Function xMATR730()
 
 Local oReport
 Local aPDFields	:= {"A1_NOME","A1_END","A1_ENDENT","A1_CGC","A1_INSCR","A3_NOME","A1_CEPE","A1_CEP","A2_NOME","A2_CGC","A2_END"}
@@ -79,8 +78,8 @@ Private nTotVal := 0
 //³ExpC5 : Descricao                                                       ³
 //³                                                                        ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-oReport := TReport():New("MATR730",STR0050,"MTR730", {|oReport| ReportPrint(oReport,oPreNota,@nItem,aItemPed,aCabPed)},STR0051 + " " + STR0052)	// "Emissao da Confirmacao do Pedido"###"Emissao da confirmacao dos pedidos de venda, de acordo com"###"intervalo informado na opcaoo Parametros."
-oReport:SetLandscape() 
+oReport := TReport():New("xMATR730",STR0050,"XMATR730", {|oReport| ReportPrint(oReport,oPreNota,@nItem,aItemPed,aCabPed)},STR0051 + " " + STR0052)	// "Emissao da Confirmacao do Pedido"###"Emissao da confirmacao dos pedidos de venda, de acordo com"###"intervalo informado na opcaoo Parametros."
+//oReport:SetLandscape() 
 oReport:SetTotalInLine(.F.)
 
 Pergunte(oReport:uParam,.F.)
@@ -126,31 +125,31 @@ Pergunte(oReport:uParam,.F.)
 oPreNota := TRSection():New(oReport,STR0108,{"SC5","SC6"},/*{Array com as ordens do relatório}*/,/*Campos do SX3*/,/*Campos do SIX*/)	// "Emissao da Confirmacao do Pedido"
 oPreNota:SetTotalInLine(.F.)
 
-TRCell():New(oPreNota,"AITEM01",/*Tabela*/,STR0053					 ,PesqPict("SC6","C6_ITEM"		),TamSx3("C6_ITEM"		)[1],/*lPixel*/,{|| aItemPed[nItem][01] 																	})	// "IT"
-TRCell():New(oPreNota,"AITEM02",/*Tabela*/,RetTitle("C6_PRODUTO"	),PesqPict("SC6","C6_PRODUTO"	),TamSx3("C6_PRODUTO"	)[1],/*lPixel*/,{|| aItemPed[nItem][02] 																	})	// Codigo do Produto
-TRCell():New(oPreNota,"AITEM03",/*Tabela*/,RetTitle("C6_DESCRI"	),PesqPict("SC6","C6_DESCRI"	),TamSx3("C6_DESCRI"	)[1],/*lPixel*/,{|| IIF(Empty(aItemPed[nItem][03]),SB1->B1_DESC, aItemPed[nItem][03])						})	// Descricao do Produto
-TRCell():New(oPreNota,"AITEM04",/*Tabela*/,STR0054					 ,PesqPict("SC6","C6_TES"		),TamSx3("C6_TES"		)[1],/*lPixel*/,{|| aItemPed[nItem][04] 																	})	// "TES"
-TRCell():New(oPreNota,"AITEM05",/*Tabela*/,STR0055					 ,PesqPict("SC6","C6_CF"		),TamSx3("C6_CF"		)[1],/*lPixel*/,{|| aItemPed[nItem][05] 																	})	// "CF"
-TRCell():New(oPreNota,"AITEM06",/*Tabela*/,STR0056					 ,PesqPict("SC6","C6_UM"		),TamSx3("C6_UM"		)[1],/*lPixel*/,{|| aItemPed[nItem][06] 																	})	// "UM"
-TRCell():New(oPreNota,"AITEM07",/*Tabela*/,STR0057					 ,PesqPictQt("C6_QTDVEN"	    ),TamSx3("C6_QTDVEN"	)[1],/*lPixel*/,{|| aItemPed[nItem][07] 																	})	// "Quant."
-TRCell():New(oPreNota,"AITEM08",/*Tabela*/,RetTitle("C6_PRCVEN"	),PesqPict("SC6","C6_PRCVEN"	),TamSx3("C6_PRCVEN"	)[1],/*lPixel*/,{|| aItemPed[nItem][08] 																	})	// Preco Unitario
+TRCell():New(oPreNota,"AITEM01",/*Tabela*/,STR0053				 ,PesqPict("SC6","C6_ITEM"	 ),TamSx3("C6_ITEM"	  )[1],/*lPixel*/,{|| aItemPed[nItem][01] 									    		})	// "IT"
+TRCell():New(oPreNota,"AITEM02",/*Tabela*/,RetTitle("C6_PRODUTO"),PesqPict("SC6","C6_PRODUTO"),TamSx3("C6_PRODUTO")[1],/*lPixel*/,{|| aItemPed[nItem][02] 												})	// Codigo do Produto
+TRCell():New(oPreNota,"AITEM03",/*Tabela*/,RetTitle("C6_DESCRI"	),PesqPict("SC6","C6_DESCRI" ),TamSx3("C6_DESCRI" )[1],/*lPixel*/,{|| IIF(Empty(aItemPed[nItem][03]),SB1->B1_DESC, aItemPed[nItem][03])		})	// Descricao do Produto
+//TRCell():New(oPreNota,"AITEM04",/*Tabela*/,STR0054					 ,PesqPict("SC6","C6_TES"		),TamSx3("C6_TES"		)[1],/*lPixel*/,{|| aItemPed[nItem][04] 											})	// "TES"
+//TRCell():New(oPreNota,"AITEM05",/*Tabela*/,STR0055					 ,PesqPict("SC6","C6_CF"		),TamSx3("C6_CF"		)[1],/*lPixel*/,{|| aItemPed[nItem][05] 									    	})	// "CF"
+TRCell():New(oPreNota,"AITEM06",/*Tabela*/,STR0056					 ,PesqPict("SC6","C6_UM"		),TamSx3("C6_UM"		)[1],/*lPixel*/,{|| aItemPed[nItem][06] 												})	// "UM"
+TRCell():New(oPreNota,"AITEM07",/*Tabela*/,STR0057					 ,PesqPictQt("C6_QTDVEN"	    ),TamSx3("C6_QTDVEN"	)[1],/*lPixel*/,{|| aItemPed[nItem][07] 												})	// "Quant."
+//TRCell():New(oPreNota,"AITEM08",/*Tabela*/,RetTitle("C6_PRCVEN"	),PesqPict("SC6","C6_PRCVEN"	),TamSx3("C6_PRCVEN"	)[1],/*lPixel*/,{|| aItemPed[nItem][08] 												})	// Preco Unitario
 If cPaisLoc == "BRA"
-	TRCell():New(oPreNota,"NALIQIPI",/*Tabela*/	,STR0058,"@e 99.99"				,5,/*lPixel*/,{|| MaFisRet(nItem,"IT_ALIQIPI") 																											})	// "IPI"
-	TRCell():New(oPreNota,"NALIQICM",/*Tabela*/	,STR0059,"@e 99.99"				,5,/*lPixel*/,{|| MaFisRet(nItem,"IT_ALIQICM") 																											})	// "ICM"
-	TRCell():New(oPreNota,"NALIQISS",/*Tabela*/	,STR0060,"@e 99.99"				,5,/*lPixel*/,{|| MaFisRet(nItem,"IT_ALIQISS") 																											})	// "ISS"
+	//TRCell():New(oPreNota,"NALIQIPI",/*Tabela*/	,STR0058,"@e 99.99"				,5,/*lPixel*/,{|| MaFisRet(nItem,"IT_ALIQIPI") 																				    })	// "IPI"
+	//TRCell():New(oPreNota,"NALIQICM",/*Tabela*/	,STR0059,"@e 99.99"				,5,/*lPixel*/,{|| MaFisRet(nItem,"IT_ALIQICM") 																					})	// "ICM"
+	//TRCell():New(oPreNota,"NALIQISS",/*Tabela*/	,STR0060,"@e 99.99"				,5,/*lPixel*/,{|| MaFisRet(nItem,"IT_ALIQISS") 																					})	// "ISS"
 Else
-	TRCell():New(oPreNota,"NVALIMP"	,/*Tabela*/	,STR0058,Tm(nValImp,10,2)	,5,/*lPixel*/,{|| Tm(nValImp,10,2) 																														})	// "IPI"
+	//TRCell():New(oPreNota,"NVALIMP"	,/*Tabela*/	,STR0058,Tm(nValImp,10,2)	,5,/*lPixel*/,{|| Tm(nValImp,10,2) 																									})	// "IPI"
 EndIf
-TRCell():New(oPreNota,"AITEM13",/*Tabela*/,STR0061						,PesqPict("SC6","C6_VALOR"		),TamSx3("C6_VALOR"		)[1],/*lPixel*/,{|| aItemPed[nItem][13]+nValImp 														})	// "Vl.Tot.C/IPI"
-TRCell():New(oPreNota,"AITEM14",/*Tabela*/,RetTitle("C6_ENTREG"	)	,PesqPict("SC6","C6_ENTREG"		),nTamData					,/*lPixel*/,{|| aItemPed[nItem][14] 																},,,,,,.F.)	// Data de Entrega
-TRCell():New(oPreNota,"AITEM15",/*Tabela*/,RetTitle("C6_DESCONT"	)	,PesqPict("SC6","C6_DESCONT"	),TamSx3("C6_DESCONT"	)[1],/*lPixel*/,{|| aItemPed[nItem][15] 																})	// % Desconto
-TRCell():New(oPreNota,"AITEM16",/*Tabela*/,STR0062						,PesqPict("SC6","C6_LOCAL"		),TamSx3("C6_LOCAL"		)[1],/*lPixel*/,{|| aItemPed[nItem][16] 																})	// "Loc."
-TRCell():New(oPreNota,"AITEM17",/*Tabela*/,STR0063						,PesqPictQt("C6_QTDLIB"		    ),TamSx3("C6_QTDLIB"	)[1],/*lPixel*/,{|| aItemPed[nItem][17] 												  				})	// "Qtd.a Fat."
-TRCell():New(oPreNota,"NSALDO" ,/*Tabela*/,STR0064						,PesqPictQt("C6_QTDLIB"		    ),TamSx3("C6_QTDLIB"	)[1],/*lPixel*/,{|| aItemPed[nItem][07]-aItemPed[nItem][17]+aItemPed[nItem][18]-aItemPed[nItem][19]	})	// "Saldo"
-TRCell():New(oPreNota,"NULTLIB",/*Tabela*/,STR0065						,PesqPictQt("D2_QUANT",10	    ),TamSx3("D2_QUANT"		)[1],/*lPixel*/,{|| nUltLib 																			})	// "Ult.Fat."
+//TRCell():New(oPreNota,"AITEM13",/*Tabela*/,STR0061						,PesqPict("SC6","C6_VALOR"		),TamSx3("C6_VALOR"		)[1],/*lPixel*/,{|| aItemPed[nItem][13]+nValImp 								})	// "Vl.Tot.C/IPI"
+//TRCell():New(oPreNota,"AITEM14",/*Tabela*/,RetTitle("C6_ENTREG"	)	,PesqPict("SC6","C6_ENTREG"		),nTamData					,/*lPixel*/,{|| aItemPed[nItem][14] 											},,,,,,.F.)	// Data de Entrega
+//TRCell():New(oPreNota,"AITEM15",/*Tabela*/,RetTitle("C6_DESCONT"	)	,PesqPict("SC6","C6_DESCONT"	),TamSx3("C6_DESCONT"	)[1],/*lPixel*/,{|| aItemPed[nItem][15] 											})	// % Desconto
+//TRCell():New(oPreNota,"AITEM16",/*Tabela*/,STR0062						,PesqPict("SC6","C6_LOCAL"		),TamSx3("C6_LOCAL"		)[1],/*lPixel*/,{|| aItemPed[nItem][16] 										})	// "Loc."
+//TRCell():New(oPreNota,"AITEM17",/*Tabela*/,STR0063						,PesqPictQt("C6_QTDLIB"		    ),TamSx3("C6_QTDLIB"	)[1],/*lPixel*/,{|| aItemPed[nItem][17] 										})	// "Qtd.a Fat."
+//TRCell():New(oPreNota,"NSALDO" ,/*Tabela*/,STR0064						,PesqPictQt("C6_QTDLIB"		    ),TamSx3("C6_QTDLIB"	)[1],/*lPixel*/,{|| aItemPed[nItem][07]-aItemPed[nItem][17]+aItemPed[nItem][18]-aItemPed[nItem][19]	})	// "Saldo"
+//TRCell():New(oPreNota,"NULTLIB",/*Tabela*/,STR0065						,PesqPictQt("D2_QUANT",10	    ),TamSx3("D2_QUANT"		)[1],/*lPixel*/,{|| nUltLib 													})	// "Ult.Fat."
 
-TRFunction():New(oPreNota:Cell("AITEM07"),"AITEM07"/* cID */,"ONPRINT",/*oBreak*/,/*cTitle*/,PesqPict("SC6","C6_QTDVEN",20),{|| nTotQtd }/*uFormula*/,.T./*lEndSection*/,.F./*lEndReport*/,/*lEndPage*/)
-TRFunction():New(oPreNota:Cell("AITEM13"),"AITEM13"/* cID */,"ONPRINT",/*oBreak*/,/*cTitle*/,/*cPicture*/,{|| nTotVal }/*uFormula*/,.T./*lEndSection*/,.F./*lEndReport*/,/*lEndPage*/)
+//TRFunction():New(oPreNota:Cell("AITEM07"),"AITEM07"/* cID */,"ONPRINT",/*oBreak*/,/*cTitle*/,PesqPict("SC6","C6_QTDVEN",20),{|| nTotQtd }/*uFormula*/,.T./*lEndSection*/,.F./*lEndReport*/,/*lEndPage*/)
+//TRFunction():New(oPreNota:Cell("AITEM13"),"AITEM13"/* cID */,"ONPRINT",/*oBreak*/,/*cTitle*/,/*cPicture*/,{|| nTotVal }/*uFormula*/,.T./*lEndSection*/,.F./*lEndReport*/,/*lEndPage*/)
 
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -158,22 +157,22 @@ TRFunction():New(oPreNota:Cell("AITEM13"),"AITEM13"/* cID */,"ONPRINT",/*oBreak*
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 oImpostos := TRSection():New(oReport,STR0109,{"SC5","SC6","SD1","SB1","SD2","SA1","SA2","SA4","SE4","SA3","SX3"},/*{Array com as ordens do relatório}*/,/*Campos do SX3*/,/*Campos do SIX*/)	// "Emissao da Confirmacao do Pedido"
 oImpostos:SetTotalInLine(.F.)
-If cPaisLoc == "BRA"
-	TRCell():New(oImpostos,"NF_BASEICM"	,/*Tabela*/,STR0087,PesqPict("SF2","F2_BASEICM"),TamSx3("F2_BASEICM"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_BASEICM") 	})	// "Base Icms"
-	TRCell():New(oImpostos,"NF_VALICM"	,/*Tabela*/,STR0088,PesqPict("SF2","F2_VALICM") ,TamSx3("F2_VALICM"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_VALICM"	) 	})	// "Valor Icms"
-	TRCell():New(oImpostos,"NF_BASEIPI"	,/*Tabela*/,STR0089,PesqPict("SF2","F2_BASEIPI"),TamSx3("F2_BASEIPI"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_BASEIPI") 	})	// "Base Ipi"
-	TRCell():New(oImpostos,"NF_VALIPI"	,/*Tabela*/,STR0090,PesqPict("SF2","F2_VALIPI") ,TamSx3("F2_VALIPI"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_VALIPI"	) 	})	// "Valor Ipi"
-	TRCell():New(oImpostos,"NF_BASESOL"	,/*Tabela*/,STR0091,PesqPict("SF2","F2_BRICMS") ,TamSx3("F2_BRICMS"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_BASESOL") 	})	// "Base Retido"
-	TRCell():New(oImpostos,"NF_VALSOL"	,/*Tabela*/,STR0092,PesqPict("SF2","F2_ICMSRET"),TamSx3("F2_ICMSRET"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_VALSOL"	) 	})	// "Valor Retido"
-	TRCell():New(oImpostos,"NF_TOTAL"	,/*Tabela*/,STR0093,PesqPict("SF2","F2_VALBRUT"),TamSx3("F2_VALBRUT"	    	)[1],/*lPixel*/,{|| MaFisRet(,"NF_TOTAL"	) 	})	// "Valor Total"
-	TRCell():New(oImpostos,"NF_BASEISS"	,/*Tabela*/,STR0094,PesqPict("SF2","F2_BASEISS"),TamSx3("F2_BASEISS"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_BASEISS") 	})	// "Base Iss"
-	TRCell():New(oImpostos,"NF_VALISS"	,/*Tabela*/,STR0095,PesqPict("SF2","F2_VALISS") ,TamSx3("F2_VALISS"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_VALISS"	) 	})	// "Valor Iss"
-Else
-	TRCell():New(oImpostos,"aCodImps2"	,/*Tabela*/,STR0096,/*Picture*/			,13,/*lPixel*/,{|| aCodImps[nI][2] 		})	// "Imposto"
-	TRCell():New(oImpostos,"aCodImps3"	,/*Tabela*/,STR0097,"@E 99,999,999.99"	,13,/*lPixel*/,{|| aCodImps[nI][3] 		})	// "Base"
-	TRCell():New(oImpostos,"aCodImps4"	,/*Tabela*/,STR0098,"@E 99,999,999.99"	,13,/*lPixel*/,{|| aCodImps[nI][4] 		})	// "Aliquota"
-	TRCell():New(oImpostos,"aCodImps5"	,/*Tabela*/,STR0099,"@E 99,999,999.99"	,13,/*lPixel*/,{|| aCodImps[nI][5]			})	// "Valor"
-EndIf
+//If cPaisLoc == "BRA"
+//	TRCell():New(oImpostos,"NF_BASEICM"	,/*Tabela*/,STR0087,PesqPict("SF2","F2_BASEICM"),TamSx3("F2_BASEICM"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_BASEICM") 	})	// "Base Icms"
+//	TRCell():New(oImpostos,"NF_VALICM"	,/*Tabela*/,STR0088,PesqPict("SF2","F2_VALICM") ,TamSx3("F2_VALICM"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_VALICM"	) 	})	// "Valor Icms"
+//	TRCell():New(oImpostos,"NF_BASEIPI"	,/*Tabela*/,STR0089,PesqPict("SF2","F2_BASEIPI"),TamSx3("F2_BASEIPI"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_BASEIPI") 	})	// "Base Ipi"
+//	TRCell():New(oImpostos,"NF_VALIPI"	,/*Tabela*/,STR0090,PesqPict("SF2","F2_VALIPI") ,TamSx3("F2_VALIPI"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_VALIPI"	) 	})	// "Valor Ipi"
+//	TRCell():New(oImpostos,"NF_BASESOL"	,/*Tabela*/,STR0091,PesqPict("SF2","F2_BRICMS") ,TamSx3("F2_BRICMS"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_BASESOL") 	})	// "Base Retido"
+//	TRCell():New(oImpostos,"NF_VALSOL"	,/*Tabela*/,STR0092,PesqPict("SF2","F2_ICMSRET"),TamSx3("F2_ICMSRET"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_VALSOL"	) 	})	// "Valor Retido"
+//	TRCell():New(oImpostos,"NF_TOTAL"	,/*Tabela*/,STR0093,PesqPict("SF2","F2_VALBRUT"),TamSx3("F2_VALBRUT"	    	)[1],/*lPixel*/,{|| MaFisRet(,"NF_TOTAL"	) 	})	// "Valor Total"
+//	TRCell():New(oImpostos,"NF_BASEISS"	,/*Tabela*/,STR0094,PesqPict("SF2","F2_BASEISS"),TamSx3("F2_BASEISS"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_BASEISS") 	})	// "Base Iss"
+//	TRCell():New(oImpostos,"NF_VALISS"	,/*Tabela*/,STR0095,PesqPict("SF2","F2_VALISS") ,TamSx3("F2_VALISS"		)[1],/*lPixel*/,{|| MaFisRet(,"NF_VALISS"	) 	})	// "Valor Iss"
+//Else
+//	TRCell():New(oImpostos,"aCodImps2"	,/*Tabela*/,STR0096,/*Picture*/			,13,/*lPixel*/,{|| aCodImps[nI][2] 		})	// "Imposto"
+//	TRCell():New(oImpostos,"aCodImps3"	,/*Tabela*/,STR0097,"@E 99,999,999.99"	,13,/*lPixel*/,{|| aCodImps[nI][3] 		})	// "Base"
+//	TRCell():New(oImpostos,"aCodImps4"	,/*Tabela*/,STR0098,"@E 99,999,999.99"	,13,/*lPixel*/,{|| aCodImps[nI][4] 		})	// "Aliquota"
+//	TRCell():New(oImpostos,"aCodImps5"	,/*Tabela*/,STR0099,"@E 99,999,999.99"	,13,/*lPixel*/,{|| aCodImps[nI][5]			})	// "Valor"
+//EndIf
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Troca descricao do total dos itens                                     ³
@@ -190,34 +189,34 @@ oReport:Section(1):SetUseQuery(.F.) // Novo compomente tReport para adcionar cam
 //³ Alinhamento a direita as colunas de valor                              ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 oPreNota:Cell("AITEM07"):SetHeaderAlign("RIGHT")
-oPreNota:Cell("AITEM08"):SetHeaderAlign("RIGHT")
-If cPaisLoc == "BRA"
-	oPreNota:Cell("NALIQIPI"):SetHeaderAlign("RIGHT")
-	oPreNota:Cell("NALIQICM"):SetHeaderAlign("RIGHT")
-	oPreNota:Cell("NALIQISS"):SetHeaderAlign("RIGHT")
+//oPreNota:Cell("AITEM08"):SetHeaderAlign("RIGHT")
+//If cPaisLoc == "BRA"
+//	oPreNota:Cell("NALIQIPI"):SetHeaderAlign("RIGHT")
+//	oPreNota:Cell("NALIQICM"):SetHeaderAlign("RIGHT")
+//	oPreNota:Cell("NALIQISS"):SetHeaderAlign("RIGHT")
+//
+//	oImpostos:Cell("NF_BASEICM"):SetHeaderAlign("RIGHT")
+//	oImpostos:Cell("NF_VALICM"):SetHeaderAlign("RIGHT")
+//	oImpostos:Cell("NF_BASEIPI"):SetHeaderAlign("RIGHT")
+//	oImpostos:Cell("NF_VALIPI"):SetHeaderAlign("RIGHT")
+//	oImpostos:Cell("NF_BASESOL"):SetHeaderAlign("RIGHT")
+//	oImpostos:Cell("NF_VALSOL"):SetHeaderAlign("RIGHT")
+//	oImpostos:Cell("NF_TOTAL"):SetHeaderAlign("RIGHT")
+//	oImpostos:Cell("NF_BASEISS"):SetHeaderAlign("RIGHT")
+//	oImpostos:Cell("NF_VALISS"):SetHeaderAlign("RIGHT")
 
-	oImpostos:Cell("NF_BASEICM"):SetHeaderAlign("RIGHT")
-	oImpostos:Cell("NF_VALICM"):SetHeaderAlign("RIGHT")
-	oImpostos:Cell("NF_BASEIPI"):SetHeaderAlign("RIGHT")
-	oImpostos:Cell("NF_VALIPI"):SetHeaderAlign("RIGHT")
-	oImpostos:Cell("NF_BASESOL"):SetHeaderAlign("RIGHT")
-	oImpostos:Cell("NF_VALSOL"):SetHeaderAlign("RIGHT")
-	oImpostos:Cell("NF_TOTAL"):SetHeaderAlign("RIGHT")
-	oImpostos:Cell("NF_BASEISS"):SetHeaderAlign("RIGHT")
-	oImpostos:Cell("NF_VALISS"):SetHeaderAlign("RIGHT")
+//Else
+//	oPreNota:Cell("NVALIMP"):SetHeaderAlign("RIGHT")	
 
-Else
-	oPreNota:Cell("NVALIMP"):SetHeaderAlign("RIGHT")	
-
-	oImpostos:Cell("aCodImps2"):SetHeaderAlign("RIGHT")	
-	oImpostos:Cell("aCodImps3"):SetHeaderAlign("RIGHT")	
-	oImpostos:Cell("aCodImps4"):SetHeaderAlign("RIGHT")	
-	oImpostos:Cell("aCodImps5"):SetHeaderAlign("RIGHT")	
-EndIf
-oPreNota:Cell("AITEM13"):SetHeaderAlign("RIGHT")	
-oPreNota:Cell("AITEM17"):SetHeaderAlign("RIGHT")	
-oPreNota:Cell("NSALDO"):SetHeaderAlign("RIGHT")	
-oPreNota:Cell("NULTLIB"):SetHeaderAlign("RIGHT")	
+//	oImpostos:Cell("aCodImps2"):SetHeaderAlign("RIGHT")	
+//	oImpostos:Cell("aCodImps3"):SetHeaderAlign("RIGHT")	
+//	oImpostos:Cell("aCodImps4"):SetHeaderAlign("RIGHT")	
+//	oImpostos:Cell("aCodImps5"):SetHeaderAlign("RIGHT")	
+//EndIf
+//oPreNota:Cell("AITEM13"):SetHeaderAlign("RIGHT")	
+//oPreNota:Cell("AITEM17"):SetHeaderAlign("RIGHT")	
+//oPreNota:Cell("NSALDO"):SetHeaderAlign("RIGHT")	
+//oPreNota:Cell("NULTLIB"):SetHeaderAlign("RIGHT")	
 Return(oReport)
 
 /*/
@@ -280,6 +279,7 @@ Local cFilialSB1 := xFilial("SB1")
 Local nPesoTot	 := 0
 Local nVlrPesoUnit:= 0
 Local lPedComp	 := .F.
+local cFt := 'AL'
 
 FisGetInit(@aFisGet,@aFisGetSC5)
 
@@ -303,6 +303,19 @@ cQryAd += "%"
 
 cAliasSC5:= cAliasSC6:= GetNextAlias()
 
+
+if (mv_par01=2)   
+   cFt :='EX' 
+endif
+if (mv_par01=3)   
+   cFt :='AF' 
+endif
+if (mv_par01=4)   
+   cFt :='AX' 
+endif
+
+ 
+
 oReport:Section(1):BeginQuery()
 BeginSql Alias cAliasSC5
 SELECT SC5.R_E_C_N_O_ SC5REC,SC6.R_E_C_N_O_ SC6REC,
@@ -313,23 +326,27 @@ SC5.C5_CONDPAG,SC5.C5_FRETE,SC5.C5_DESPESA,SC5.C5_FRETAUT,SC5.C5_TPFRETE,SC5.C5_
 SC5.C5_VOLUME1,SC5.C5_ESPECI1,SC5.C5_MOEDA,SC5.C5_REAJUST,SC5.C5_BANCO,
 SC5.C5_ACRSFIN,SC5.C5_VEND1,SC5.C5_VEND2,SC5.C5_VEND3,SC5.C5_VEND4,SC5.C5_VEND5,
 SC5.C5_COMIS1,SC5.C5_COMIS2,SC5.C5_COMIS3,SC5.C5_COMIS4,SC5.C5_COMIS5,SC5.C5_PDESCAB,SC5.C5_DESCONT,C5_INCISS,
-SC5.C5_CLIENT,
+SC5.C5_CLIENT,SC5.C5_COMENT,
 SC6.C6_FILIAL,SC6.C6_NUM,SC6.C6_PEDCLI,SC6.C6_PRODUTO,
 SC6.C6_TES,SC6.C6_CF,SC6.C6_QTDVEN,SC6.C6_PRUNIT,SC6.C6_VALDESC,
 SC6.C6_VALOR,SC6.C6_ITEM,SC6.C6_DESCRI,SC6.C6_UM,
 SC6.C6_PRCVEN,SC6.C6_NOTA,SC6.C6_SERIE,SC6.C6_CLI,
 SC6.C6_LOJA,SC6.C6_ENTREG,SC6.C6_DESCONT,SC6.C6_LOCAL,
-SC6.C6_QTDEMP,SC6.C6_QTDLIB,SC6.C6_QTDENT,SC6.C6_NFORI,SC6.C6_SERIORI,SC6.C6_ITEMORI
+SC6.C6_QTDEMP,SC6.C6_QTDLIB,SC6.C6_QTDENT,SC6.C6_NFORI,SC6.C6_SERIORI,SC6.C6_ITEMORI, SB5.B5_EAN141, SB5.B5_EAN141, SB5.B5_EAN142
 %Exp:cQryAd%
-FROM %Table:SC5% SC5, %Table:SC6% SC6
+FROM %Table:SC5% SC5, %Table:SC6% SC6, %Table:SB5% SB5
 WHERE
 SC5.C5_FILIAL = %xFilial:SC5% AND
-SC5.C5_NUM >= %Exp:mv_par01% AND
-SC5.C5_NUM <= %Exp:mv_par02% AND
+//SC5.C5_NUM >= %Exp:mv_par01% AND %Exp:MV_PAR01% 
+//SC5.C5_NUM <= %Exp:mv_par02% AND
+SC5.C5_XSTEX = %Exp:cFt% AND
 SC5.%notdel% AND
 SC6.C6_FILIAL = %xFilial:SC6% AND
 SC6.C6_NUM   = SC5.C5_NUM AND
-SC6.%notdel%
+SC6.%notdel% AND
+SB5.B5_FILIAL =  %xFilial:SB5% AND 
+SC6.C6_PRODUTO = SB5.B5_COD AND
+SB5.%notdel%
 ORDER BY SC5.C5_NUM    
 EndSql
 oReport:section(1):endQuery()
@@ -401,7 +418,8 @@ While !oReport:Cancel() .And. !((cAliasSC5)->(Eof())) .and. xFilial("SC5")==(cAl
 		(cAliasSC5)->C5_MOEDA				,;
 		(cAliasSC5)->C5_REAJUST				,;
 		(cAliasSC5)->C5_BANCO				,;
-		(cAliasSC5)->C5_ACRSFIN				 ;
+		(cAliasSC5)->C5_ACRSFIN				,;
+		(cAliasSC5)->C5_COMENT				 ;
 		}
 	nTotQtd 	:= 0
 	nTotVal 	:= 0
@@ -412,7 +430,7 @@ While !oReport:Cancel() .And. !((cAliasSC5)->(Eof())) .and. xFilial("SC5")==(cAl
 	aC5Rodape	:= {}
 	
 	aadd(aC5Rodape,{(cAliasSC5)->C5_PBRUTO,(cAliasSC5)->C5_PESOL,(cAliasSC5)->C5_DESC1,(cAliasSC5)->C5_DESC2,;
-		(cAliasSC5)->C5_DESC3,(cAliasSC5)->C5_DESC4,(cAliasSC5)->C5_MENNOTA})
+		(cAliasSC5)->C5_DESC3,(cAliasSC5)->C5_DESC4,(cAliasSC5)->C5_MENNOTA, (cAliasSC5)->C5_COMENT})
 
 	aPedCli := Mtr730Cli(cPedido)
 
@@ -441,6 +459,12 @@ While !oReport:Cancel() .And. !((cAliasSC5)->(Eof())) .and. xFilial("SC5")==(cAl
 		SC5->(MsSeek((cAliasSC6)->C6_FILIAL+(cAliasSC6)->C6_NUM))
 		lPedComp := (SC5->C5_TIPO == "C")
 
+		//Altera Stauts caso o pedido seja impresso pela primeira vez
+		IF(SC5->C5_XSTEX = 'AX')
+ 			  RECLOCK("SC5", .F.)
+                SC5->C5_XSTEX := 'AL'
+              MSUNLOCK()     // Destrava o registro
+		ENDIF
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Se o pedido for do tipo Complemento, posiciona na SD2, caso   ³
 		//³contrário, posiciona na SD1									 ³
@@ -501,25 +525,27 @@ While !oReport:Cancel() .And. !((cAliasSC5)->(Eof())) .and. xFilial("SC5")==(cAl
 			0								,;	// 15-RecNo do SB1
 			0								)	// 16-RecNo do SF4
 	
-		aadd(aItemPed,	{	(cAliasSC6)->C6_ITEM	,;
-			(cAliasSC6)->C6_PRODUTO					,;
-			(cAliasSC6)->C6_DESCRI					,;
-			(cAliasSC6)->C6_TES						,;
-			(cAliasSC6)->C6_CF						,;
-			(cAliasSC6)->C6_UM						,;
-			(cAliasSC6)->C6_QTDVEN					,;
-			(cAliasSC6)->C6_PRCVEN					,;
-			(cAliasSC6)->C6_NOTA					,;
-			(cAliasSC6)->C6_SERIE					,;
-			(cAliasSC6)->C6_CLI						,;
-			(cAliasSC6)->C6_LOJA					,;
-			(cAliasSC6)->C6_VALOR					,;
-			(cAliasSC6)->C6_ENTREG					,;
-			(cAliasSC6)->C6_DESCONT					,;
-			(cAliasSC6)->C6_LOCAL					,;
-			(cAliasSC6)->C6_QTDEMP					,;
-			(cAliasSC6)->C6_QTDLIB					,;
-			(cAliasSC6)->C6_QTDENT					,;
+		aadd(aItemPed,	{	(cAliasSC6)->C6_ITEM	,; //1
+			(cAliasSC6)->C6_PRODUTO					,; //2
+			(cAliasSC6)->C6_DESCRI					,; //3
+			(cAliasSC6)->C6_TES						,; //4
+			(cAliasSC6)->C6_CF						,; //5
+			(cAliasSC6)->C6_UM						,; //6
+			(cAliasSC6)->C6_QTDVEN					,; //7
+			(cAliasSC6)->C6_PRCVEN					,; //8
+			(cAliasSC6)->C6_NOTA					,; //9
+			(cAliasSC6)->C6_SERIE					,; //10
+			(cAliasSC6)->C6_CLI						,; //11
+			(cAliasSC6)->C6_LOJA					,; //12
+			(cAliasSC6)->C6_VALOR					,; //13
+			(cAliasSC6)->C6_ENTREG					,; //14
+			(cAliasSC6)->C6_DESCONT					,; //15
+			(cAliasSC6)->C6_LOCAL					,; //16
+			(cAliasSC6)->C6_QTDEMP					,; //17
+			(cAliasSC6)->C6_QTDLIB					,; //18
+			(cAliasSC6)->C6_QTDENT					,; //19	
+			SB5->B5_EAN141       					,; //20	
+			SB5->B5_EAN142       					,; //21			
 			})							
 
 
@@ -728,12 +754,12 @@ IF !(aCabPed[1]$"DB")//C5_TIPO
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³ Informacoes do Quadro 1: Dados da Empresa                   ³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-		oReport:PrintText("",nPrinLin,10)
+		oReport:PrintText("THIAGOOOOOOOOOOs",nPrinLin,10)
 		oReport:PrintText(SubStr(rTrim(SM0->M0_NOME) + IIF(!Empty(SM0->M0_NOMECOM), ' - ' + rTrim(SM0->M0_NOMECOM),''),1,50),nPrinLin,20)
 		nPrinLin += nQrd1
 		oReport:PrintText(SM0->M0_ENDCOB,nPrinLin,20)
 		nPrinLin += nQrd1
-		oReport:PrintText(STR0067+SM0->M0_TEL,nPrinLin,20)	// "TEL: "
+		oReport:PrintText('THIAGOOOOOOOOOO')	// "TEL: "
 		nPrinLin += nQrd1
 		oReport:PrintText(Iif(cPaisLoc=="BRA",STR0071,Alltrim(Posicione('SX3',2,'A1_CGC','SX3->X3_TITULO'))+":")+;	// "CGC: "
 							Transform(SM0->M0_CGC,cPictCgc)+ " " +Subs(SM0->M0_CIDCOB,1,15),nPrinLin,20)
@@ -911,31 +937,31 @@ oReport:SkipLine()
 oReport:PrintText(STR0072+aCabPed[4]+" - "+SA4->A4_NOME,oReport:Row(),20)		// "TRANSP...: "		//C5_TRANSP
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-//³ Vendedores                                                  ³
+//³ Vendedores  Comissão                                               ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-oReport:SkipLine()
-For i := 8 to 12
-    dbSelectArea("SA3")
-    dbSetOrder(1)
-    If dbSeek(xFilial("SA3")+aCabPed[i])                                                                            // C5_VENDi
-        If i == 8
-            oReport:PrintText(STR0073+aCabPed[i] + " - "+ FATPDObfuscate(SA3->A3_NOME,"A3_NOME"),oReport:Row(),20)  // "VENDEDOR.: "
-            oReport:PrintText(STR0074+Transform(aCabPed[i+5],"99.99"),oReport:Row(),nQrd5)                  // "COMISSAO: "
-            oReport:SkipLine()
-        Else
-            oReport:PrintText(Space(Len(STR0073))+aCabPed[i] + " - "+ FATPDObfuscate(SA3->A3_NOME,"A3_NOME"),oReport:Row(),20)
-            oReport:PrintText(Space(Len(STR0074))+Transform(aCabPed[i+5],"99.99"),oReport:Row(),nQrd5)
-            oReport:SkipLine()
-        EndIf
-    EndIf   
-Next
+//oReport:SkipLine()
+//For i := 8 to 12
+//    dbSelectArea("SA3")
+//    dbSetOrder(1)
+//    If dbSeek(xFilial("SA3")+aCabPed[i])                                                                            // C5_VENDi
+//        If i == 8
+//            oReport:PrintText(STR0073+aCabPed[i] + " - "+ FATPDObfuscate(SA3->A3_NOME,"A3_NOME"),oReport:Row(),20)  // "VENDEDOR.: "
+//            oReport:PrintText(STR0074+Transform(aCabPed[i+5],"99.99"),oReport:Row(),nQrd5)                  // "COMISSAO: "
+//            oReport:SkipLine()
+//        Else
+//            oReport:PrintText(Space(Len(STR0073))+aCabPed[i] + " - "+ FATPDObfuscate(SA3->A3_NOME,"A3_NOME"),oReport:Row(),20)
+//            oReport:PrintText(Space(Len(STR0074))+Transform(aCabPed[i+5],"99.99"),oReport:Row(),nQrd5)
+//            oReport:SkipLine()
+//        EndIf
+//    EndIf   
+//Next
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Condicao de Pagto, Frete e Seguro                           ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-oReport:PrintText(STR0075+aCabPed[5]+" - "+SE4->E4_DESCRI,oReport:Row(),20)													// "COND.PGTO: "//C5_CONDPAG
+oReport:PrintText(STR0075+aCabPed[5]+" - "+SE4->E4_DESCRI,oReport:Row(),20)			                    // "COND.PGTO: "//C5_CONDPAG
 oReport:PrintText(STR0076+Alltrim(Transform(aCabPed[18],"@EZ 999,999,999.99")+TipoFrete(aCabPed[19])),oReport:Row(),nQrd4)	// "FRETE...: " // C5_TPFRETE
-oReport:PrintText(STR0077+Alltrim(Transform(aCabPed[20],"@EZ 999,999,999.99")),oReport:Row(),nQrd5)							// "SEGURO: " 	//C5_SEGURO
+//oReport:PrintText(STR0077+Alltrim(Transform(aCabPed[20],"@EZ 999,999,999.99")),oReport:Row(),nQrd5)							// "SEGURO: " 	//C5_SEGURO
 oReport:SkipLine()
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -995,11 +1021,11 @@ Local cChaveD2	:= ""
 //³ como private.                                                          ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 If cPaisLoc <> "BRA"
-	oReport:Section(1):Cell("NVALIMP"):SetBlock({|| nValImp})
+	//oReport:Section(1):Cell("NVALIMP"):SetBlock({|| nValImp})
 Else	
-	oReport:Section(1):Cell("AITEM13"):SetBlock({|| aItemPed[nItem][13]+nValImp})
+	//oReport:Section(1):Cell("AITEM13"):SetBlock({|| aItemPed[nItem][13]+nValImp})
 EndIf
-oReport:Section(1):Cell("NULTLIB"):SetBlock({|| nUltLib})
+//oReport:Section(1):Cell("NULTLIB"):SetBlock({|| nUltLib})
 nValImp := 0
 nUltLib := 0
 If cPaisLoc == "BRA"
@@ -1088,19 +1114,28 @@ If oReport:nFontBody >= 13
 	oReport:EndPage()
 	oReport:PrintText("",10,10) //A primeira linha é default do método PrintText
 EndIF
-
+ 
 oReport:PrintText(STR0100+STR(If(aC5Rodape[1][1] > 0,aC5Rodape[1][1],nPesBru)),1950,30)		// "PESO BRUTO ------>"
+
+oReport:PrintText("OBSERVACOES:",1950,600)		                            // "OBS ------>"
+oReport:PrintText(SUBSTR(aC5Rodape[1][8],  1,80),2000,600)
+oReport:PrintText(SUBSTR(aC5Rodape[1][8], 81,80),2050,600)
+oReport:PrintText(SUBSTR(aC5Rodape[1][8],161,80),2100,600)	
+oReport:PrintText(SUBSTR(aC5Rodape[1][8],241,80),2150,600)	
+ 	
+
+//cop obs
 oReport:PrintText(STR0101+STR(If(aC5Rodape[1][2] > 0,aC5Rodape[1][2],nPesLiq)),2000,30)		// "PESO LIQUIDO ---->"
 oReport:PrintText(STR0102,2050,30)															// "VOLUMES --------->"
 oReport:PrintText(STR0103,2100,30)															// "SEPARADO POR ---->"
 oReport:PrintText(STR0104,2150,30)															// "CONFERIDO POR --->"
 oReport:PrintText(STR0105,2200,30)															// "D A T A --------->"
 
-oReport:PrintText(STR0106,2250,30)															// "DESCONTOS: "
-oReport:PrintText(Transform(aC5Rodape[1][3],"99.99"),2250,320)
-oReport:PrintText(Transform(aC5Rodape[1][4],"99.99"),2250,480)
-oReport:PrintText(Transform(aC5Rodape[1][5],"99.99"),2250,640)
-oReport:PrintText(Transform(aC5Rodape[1][6],"99.99"),2250,800)
+//oReport:PrintText(STR0106,2250,30)															// "DESCONTOS: "
+//oReport:PrintText(Transform(aC5Rodape[1][3],"99.99"),2250,320)
+//oReport:PrintText(Transform(aC5Rodape[1][4],"99.99"),2250,480)
+//oReport:PrintText(Transform(aC5Rodape[1][5],"99.99"),2250,640)
+//oReport:PrintText(Transform(aC5Rodape[1][6],"99.99"),2250,800)
 
 If oReport:nDevice == 4 //TRATATIVA EXCLUSIVA PARA IMPRESSAO DO TIPO PLANILHA (EXCEL)
 	oReport:PrintText(STR0107+AllTrim(aC5Rodape[1][7]),2300,30)
@@ -1139,7 +1174,7 @@ Return( NIL )
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 /*/
 
-Function Matr730R3
+static Function Matr730R3
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Define Variaveis                                                        ³
@@ -1153,7 +1188,7 @@ Local lDic    := .F. // Habilita/Desabilita Dicionario
 Local lComp   := .F. // Habilita/Desabilita o Formato Comprimido/Expandido
 Local lFiltro := .F. // Habilita/Desabilita o Filtro
 Local wnrel   := "MATR730" // Nome do Arquivo utilizado no Spool
-Local nomeprog:= "MATR730"
+Local nomeprog:= "xMATR730"
 Local cPerg   := "MTR730"
 
 Private Tamanho := "G" // P/M/G
@@ -1237,6 +1272,7 @@ Local li         := 100 // Contador de Linhas
 Local lRodape    := .F.
 Local cAliasSC5  := "SC5"
 Local cAliasSC6  := "SC6"
+Local cAliasSB5  := "SB5"
 Local cQuery     := ""
 Local cQryAd     := ""
 Local cName      := ""
@@ -1272,11 +1308,21 @@ Local cFilialSF4 := xFilial("SF4")
 Local cFilialSB1 := xFilial("SB1")
 Local nPesoTot	 := 0
 Local nVlrPesoUnit:= 0
-
+Local cFt := 'AL'
 Private aItemPed := {}
 Private aCabPed	 := {}
 
 FisGetInit(@aFisGet,@aFisGetSC5)
+
+if (mv_par01=2)   
+   cFt :='EX' 
+endif
+if (mv_par01=3)   
+   cFt :='AF' 
+endif
+if (mv_par01=4)   
+   cFt :='AX' 
+endif
 
 cAliasSC5:= "C730Imp"
 cAliasSC6:= "C730Imp"
@@ -1289,7 +1335,7 @@ cQuery += "SC5.C5_DESC2,SC5.C5_DESC3,SC5.C5_DESC4,SC5.C5_MENNOTA,SC5.C5_EMISSAO,
 cQuery += "SC5.C5_CONDPAG,SC5.C5_FRETE,SC5.C5_DESPESA,SC5.C5_FRETAUT,SC5.C5_TPFRETE,SC5.C5_SEGURO,SC5.C5_TABELA,"
 cQuery += "SC5.C5_VOLUME1,SC5.C5_ESPECI1,SC5.C5_MOEDA,SC5.C5_REAJUST,SC5.C5_BANCO,"
 cQuery += "SC5.C5_ACRSFIN,SC5.C5_VEND1,SC5.C5_VEND2,SC5.C5_VEND3,SC5.C5_VEND4,SC5.C5_VEND5,"
-cQuery += "SC5.C5_COMIS1,SC5.C5_COMIS2,SC5.C5_COMIS3,SC5.C5_COMIS4,SC5.C5_COMIS5,SC5.C5_PDESCAB,SC5.C5_DESCONT,C5_INCISS,"
+cQuery += "SC5.C5_COMIS1,SC5.C5_COMIS2,SC5.C5_COMIS3,SC5.C5_COMIS4,SC5.C5_COMIS5,SC5.C5_PDESCAB,SC5.C5_DESCONT,C5_INCISS,C5_COMENT,"
 
 If SC5->(FieldPos("C5_CLIENT"))>0
 	cQuery += "SC5.C5_CLIENT,"			
@@ -1334,8 +1380,9 @@ cQuery += RetSqlName("SC5") + " SC5 ,"
 cQuery += RetSqlName("SC6") + " SC6 "		
 cQuery += "WHERE "
 cQuery += "SC5.C5_FILIAL = '"+xFilial("SC5")+"' AND "		
-cQuery += "SC5.C5_NUM >= '"+mv_par01+"' AND "
-cQuery += "SC5.C5_NUM <= '"+mv_par02+"' AND "
+//cQuery += "SC5.C5_NUM >= '"+mv_par01+"' AND "
+//Query += "SC5.C5_NUM <= '"+mv_par02+"' AND " 
+cQuery += "SC5.C5_XSTEX = '" + cFt + "' AND"
 cQuery += "SC5.D_E_L_E_T_ = ' ' AND "
 cQuery += "SC6.C6_FILIAL = '"+xFilial("SC6")+"' AND "		
 cQuery += "SC6.C6_NUM   = SC5.C5_NUM AND "
@@ -1423,7 +1470,8 @@ While !((cAliasSC5)->(Eof())) .and. xFilial("SC5")==(cAliasSC5)->C5_FILIAL
 			(cAliasSC5)->C5_MOEDA,;
 			(cAliasSC5)->C5_REAJUST,;
 			(cAliasSC5)->C5_BANCO,;
-			(cAliasSC5)->C5_ACRSFIN;
+			(cAliasSC5)->C5_ACRSFIN,;
+			(cAliasSC5)->C5_COMENT;
 			}
 		nTotQtd		:= 0
 		nTotVal		:= 0
@@ -1434,7 +1482,7 @@ While !((cAliasSC5)->(Eof())) .and. xFilial("SC5")==(cAliasSC5)->C5_FILIAL
 		aC5Rodape	:= {}
 		
 		aadd(aC5Rodape,{(cAliasSC5)->C5_PBRUTO,(cAliasSC5)->C5_PESOL,(cAliasSC5)->C5_DESC1,(cAliasSC5)->C5_DESC2,;
-			(cAliasSC5)->C5_DESC3,(cAliasSC5)->C5_DESC4,(cAliasSC5)->C5_MENNOTA})
+			(cAliasSC5)->C5_DESC3,(cAliasSC5)->C5_DESC4,(cAliasSC5)->C5_MENNOTA,(cAliasSC5)->C5_COMENT})
 
 		aPedCli := Mtr730Cli(cPedido)
 
@@ -1528,6 +1576,8 @@ While !((cAliasSC5)->(Eof())) .and. xFilial("SC5")==(cAliasSC5)->C5_FILIAL
 				(cAliasSC6)->C6_QTDEMP,;
 				(cAliasSC6)->C6_QTDLIB,;
 				(cAliasSC6)->C6_QTDENT,;
+				SB5->B5_EAN141,;
+				SB5->B5_EAN142,;
 				})							
 			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 			//³Forca os valores de impostos que foram informados no SC6.              ³
@@ -1792,8 +1842,8 @@ If lFinal
 		li++
 		@ li,022 PSay Transform(MaFisRet(,"NF_BASEICM"),PesqPict("SF2","F2_BASEICM"))
 		@ li,042 PSay Transform(MaFisRet(,"NF_VALICM") ,PesqPict("SF2","F2_VALICM") )
-		@ li,062 PSay Transform(MaFisRet(,"NF_BASEIPI"),PesqPict("SF2","F2_BASEIPI"))
-		@ li,083 PSay Transform(MaFisRet(,"NF_VALIPI") ,PesqPict("SF2","F2_VALIPI") )
+		//@ li,062 PSay Transform(MaFisRet(,"NF_BASEIPI"),PesqPict("SF2","F2_BASEIPI"))
+		//@ li,083 PSay Transform(MaFisRet(,"NF_VALIPI") ,PesqPict("SF2","F2_VALIPI") )
 		@ li,105 PSay Transform(MaFisRet(,"NF_BASESOL"),PesqPict("SF2","F2_ICMSRET"))
 		@ li,127 PSay Transform(MaFisRet(,"NF_VALSOL") ,PesqPict("SF2","F2_VALBRUT"))
 		@ li,147 PSay Transform(MaFisRet(,"NF_TOTAL")  ,PesqPict("SF2","F2_VALBRUT"))
@@ -1824,6 +1874,7 @@ If lFinal
 Endif	
 
 @ 51,005 psay STR0030+STR(If(aC5Rodape[1][1] > 0,aC5Rodape[1][1],nPesBru))	//"PESO BRUTO ------>"
+@ 51,100 psay STR0030+STR(If(aC5Rodape[1][8] > 0,aC5Rodape[1][8],nPesBru))	//"PESO BRUTO ------>"
 @ 52,005 psay STR0031+STR(If(aC5Rodape[1][2] > 0,aC5Rodape[1][2] ,nPesLiq))	//"PESO LIQUIDO ---->"
 @ 53,005 psay STR0032	//"VOLUMES --------->"
 @ 54,005 psay STR0033	//"SEPARADO POR ---->"
@@ -1876,7 +1927,7 @@ Local cMoeda	:= ""
 Local cPedCli   := ""
 Local cPictCgc  := ""
 If cPaisLoc == "BRA"
-	cHeader := STR0008	// It Codigo          Desc. do Material              TES CF   UM        Quant.  Valor Unit. IPI   ICMS   ISS     Vl.Tot.C/IPI Entrega   Desc Loc.    Qtd.a Fat         Saldo      Ult.Fat.
+	cHeader := STR0008	// It Codigo          Desc. do Material              TES CF   UM        Quant.  Valor Unit. IPIs   ICMS   ISS     Vl.Tot.C/IPI Entrega   Desc Loc.    Qtd.a Fat         Saldo      Ult.Fat.
 	//          		   0         1         2         3         4         5         6         7         8         9        10        11        12        13        14
 	//                     0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234
 Else

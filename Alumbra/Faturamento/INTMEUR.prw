@@ -4,8 +4,8 @@
 
 /*/{Protheus.doc} INTMEUR
 Função genérica de cadastro para Modelo 1 em MVC
-@author Carlos Henrique de Oliveira
-@since 08/09/2017
+@author Thiago Marcato
+@since 16/09/2023
 @version 1.0
     @return Nil, Função não tem retorno
     @example
@@ -102,8 +102,8 @@ Return Nil
 
 /*---------------------------------------------------------------------*
 | Func:  MenuDef                                                      |
-| Autor: Carlos Henrique de Oliveira                                  |
-| Data:  08/09/2017                                                   |
+| Autor: Thiago Marcato                                  |
+| Data:  16/09/2023                                                   |
 | Desc:  Criação do menu MVC                                          |
 | Obs.:  /                                                            |
 *---------------------------------------------------------------------*/
@@ -117,15 +117,17 @@ Local aRot := {}
     ADD OPTION aRot TITLE 'Alterar'    ACTION 'VIEWDEF.INTMEUR' OPERATION MODEL_OPERATION_UPDATE ACCESS 0 //OPERATION 4
     ADD OPTION aRot TITLE 'Excluir'    ACTION 'VIEWDEF.INTMEUR' OPERATION MODEL_OPERATION_DELETE ACCESS 0 //OPERATION 5
     ADD OPTION aRot TITLE 'Copiar'     ACTION 'VIEWDEF.INTMEUR' OPERATION 9                      ACCESS 0 //OPERATION 9
-    ADD OPTION aRot TITLE 'sincronizar'ACTION 'u_INTMER01'      OPERATION 8                      ACCESS 0
-    ADD OPTION aRot TITLE 'Reprocessar'ACTION 'u_reproped'      OPERATION 8                      ACCESS 0
+    ADD OPTION aRot TITLE 'Sincronizar'ACTION 'u_INTMER01'      OPERATION 8                      ACCESS 0
+    ADD OPTION aRot TITLE 'Reprocessar'ACTION 'u_reproped'      OPERATION 8                      ACCESS 0 //
+    ADD OPTION aRot TITLE 'Clientes'   ACTION 'u_INTMER02'       OPERATION 8                      ACCESS 0
  
 Return aRot
 
 /*---------------------------------------------------------------------*
+
 | Func:  ModelDef                                                     |
-| Autor: Carlos Henrique de Oliveira                                  |
-| Data:  08/09/2017                                                   |
+| Autor: Thiago Marcato                                  |
+| Data:  16/09/2023                                                   |
 | Desc:  Criação do modelo de dados MVC                               |
 | Obs.:  /                                                            |
 *---------------------------------------------------------------------*/
@@ -181,8 +183,8 @@ Return oModel
 
 /*---------------------------------------------------------------------*
 | Func:  ViewDef                                                      |
-| Autor: Carlos Henrique de Oliveira                                  |
-| Data:  08/09/2017                                                   |
+| Autor: Thiago Marcato                                  |
+| Data:  16/09/2023                                                   |
 | Desc:  Criação da visão MVC                                         |
 | Obs.:  /                                                            |
 *---------------------------------------------------------------------*/
@@ -232,8 +234,8 @@ Return oView
 
 /*---------------------------------------------------------------------*
 | Func:  PrmKeyDef                                                    |
-| Autor: Carlos Henrique de Oliveira                                  |
-| Data:  08/09/2017                                                   |
+| Autor: Thiago Marcato                                  |
+| Data:  16/09/2023                                                   |
 | Desc:  Função para determinar a PrimaryKey da entidade Modelo       |
 | Obs.:  /                                                            |
 *---------------------------------------------------------------------*/
