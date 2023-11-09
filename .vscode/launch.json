@@ -57,7 +57,16 @@
 		},
 		{
 			"label": "u_AtvCli"
+		},
+		{
+			"label": "sigacfg"
+		},
+		{
+			"label": "sigaest"
+		},
+		{
+			"label": "sigamid"
 		}
 	],
-	"lastProgramExecuted": "sigafat"
+	"lastProgramExecuted": "sigamdi"
 }
