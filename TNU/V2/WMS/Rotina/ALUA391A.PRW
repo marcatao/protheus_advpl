@@ -61,7 +61,7 @@ Local oFont22   := TFont():New('Arial',,22,.T.)
 Local cCodMNT   := DCS->DCS_CODMNT
 Local cPedido   := DCS->DCS_PEDIDO
 Local cCodBar  := Space(iIf(TAMSX3("B1_COD")[1] > 14,TAMSX3("B1_COD")[1],14))
-Local oBrowDCT
+Local oBrwDCTA
 Local oBrowDCV
 Local aColsDCV := {}
 Local aColsDCT := {}
@@ -75,19 +75,21 @@ Local cLoteCtl := ""
 Local cSubLote := ""
 Local aBeeps   := {}
 Local nOpc     := 0
-Local aProdutos   := {} 
+Local aProdutos:= {} 
+Local cLocImp  := "" 
 
 //Perguntar o tipo de embalagem e cubatem
 aRetEmb := u_PegCodEmb(cCodEmb)
 
-If Len(aRetEmb) == 3
+If Len(aRetEmb) == 4
 	cCodEmb := aRetEmb[1]
 	nCubag  := aRetEmb[2]
 	nOpc    := aRetEmb[3]
+    cLocImp := aRetEmb[4]
 
 	If nOpc == 2
 
-		u_A391MANU(cProduto,cLoteCtl,cSubLote,nQtd,cCodBar,cCodMNT, cCodVol,cPedido,aBeeps)
+		u_A391MANU(cProduto,cLoteCtl,cSubLote,nQtd,cCodBar,cCodMNT, cCodVol,cPedido,aBeeps, cCodEmb, nCubag, cLocImp)
 		Return //Retornar nil para nao entrar na vieww do padrao
 	EndIf
 EndIf
@@ -157,7 +159,7 @@ DEFINE MSDIALOG oDlgTela TITLE cTitulo FROM nSuperior, nEsquerda TO nInferior, n
 oPanelBAR:= tPanel():New(110,01,"Barra de botoes",oDlgTela,oFont1,.T.,,CLR_HGRAY,CLR_HGRAY,1024,020)
 oPanelBAR:Align :=CONTROL_ALIGN_TOP
 
-oButFechar := TButton():New( 010, 002, "FECHAR EMBALAGEM",oPanelBAR,{||FecharEmb(oBrowDCV, nQtd,oDlgTela,cCodEmb, nCubag, cCodVol,cCodMNT, aProdutos)},;
+oButFechar := TButton():New( 010, 002, "FECHAR EMBALAGEM",oPanelBAR,{||FecharEmb(oBrowDCV, nQtd,oDlgTela,cCodEmb, nCubag, cCodVol,cCodMNT, aProdutos,cLocImp)},;
                         090,020,,oFont16,.F.,.T.,.F.,,.F.,{|| .T.},,.F. )  
 
 oButFechar:SetCss("QPushButton { background: #149FC1; border: 1px solid #096A82;outline:0; border-radius: 5px; font: bold 12px Arial; padding: 6px;color: #FFFFFF;} QPushButton:pressed { background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #dadbde, stop: 1 #149FC1); }")
@@ -168,7 +170,7 @@ oButCancelar := TButton():New( 010, 002, "SAIR",oPanelBAR,{||Cancelar(oDlgTela)}
 oButCancelar:SetCss("QPushButton { background: #F9F9F9; border: 1px solid #096A82;outline:0; border-radius: 5px; font: bold 12px Arial; padding: 6px;color: #4F545E;} QPushButton:pressed { background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #F9F9F9, stop: 1 #F9F9F9); }")
 oButCancelar:Align :=CONTROL_ALIGN_RIGHT
 
-oButExcluir := TButton():New( 010, 002, "Excluir",oPanelBAR,{||Excluir(oBrowDCV)},;
+oButExcluir := TButton():New( 010, 002, "Excluir",oPanelBAR,{||Excluir(oBrowDCV, aBeeps)},;
                         070,020,,oFont16,.F.,.T.,.F.,,.F.,{|| .T.},,.F. )  
 oButExcluir:SetCss("QPushButton { background: #F9F9F9; border: 1px solid #096A82;outline:0; border-radius: 5px; font: bold 12px Arial; padding: 6px;color: #4F545E;} QPushButton:pressed { background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #F9F9F9, stop: 1 #F9F9F9); }")
 oButExcluir:Align :=CONTROL_ALIGN_RIGHT
@@ -184,10 +186,10 @@ oPanelDCU:Align :=CONTROL_ALIGN_TOP
 
 //Objetos do painel
 oSayVol:= TSay():New(002,002,{||'Volume'},oPanelDCU,,oFont2,,,,.T.,CLR_BLUE,CLR_WHITE,50,10)
-oTGetVol := TGet():New( 012,002,{ |u|Iif (PCount()==0,cCodVol,cCodVol:=u)},oPanelDCU,60,012,"@!",{ |u| If(PCount()>0,.T., .T.) },0,,oFont16,.F.,,.T.,,.F.,{|| .T.},.F.,.F.,,.F.,.F.,"","cCodVol",,,, )
+oTGetVol := TGet():New( 012,002,{ |u|Iif (PCount()==0,cCodVol,cCodVol:=u)},oPanelDCU,60,012,"@!",{ |u| If(PCount()>0,VldCodVol(cCodVol, oMntVolItem, oBrowDCV, @cDCVQry, cCodMNT,cPedido,oTGetVol),.T.) },0,,oFont16,.F.,,.T.,,.F.,{|| .T.},.F.,.F.,,.F.,.F.,"","cCodVol",,,, )
 
 oSayTipo:= TSay():New(002,062,{||'Tipo Emb.'},oPanelDCU,,oFont2,,,,.T.,CLR_BLUE,CLR_WHITE,50,10)
-oTGetTipo := TGet():New( 012,062,{ |u|Iif (PCount()==0,cCodEmb,cCodEmb:=u)},oPanelDCU,30,012,"@!", { |u| If(PCount()>0,.T., .T.) },0,,oFont16,.F.,,.T.,,.F.,{|| .T.},.F.,.F.,,.F.,.F.,"","cCodEmb",,,, )
+oTGetTipo := TGet():New( 012,062,{ |u|Iif (PCount()==0,cCodEmb,cCodEmb:=u)},oPanelDCU,30,012,"@!", { |u| If(PCount()>0,VldEmba(cCodEmb, @nCubag, @cEmbaDesc), .T.) },0,,oFont16,.F.,,.T.,,.F.,{|| .T.},.F.,.F.,,.F.,.F.,"","cCodEmb",,,, )
 oTGetTipo:cTooltip   := 'Tipo de embalagem para calculo da cubagem'
 oTGetTipo:cF3        := 'CB3'
 oTGetTipo:bHelp      := {|| ShowHelpCpo( 'Ajuda', {' Informar o codigo do tipo de embalagem. Caso não exista, cadastrar em ACD\Tipos de Embalagens'}, 0 ) }
@@ -209,11 +211,11 @@ oTGetQtd := TGet():New( 042,082,{ |u|Iif (PCount()==0,nQtd,nQtd:=u)},oPanelMNT,4
 //TGet():New( [ nRow ], [ nCol ], [ bSetGet ], [ oWnd ], [ nWidth ], [ nHeight ], [ cPict ], [ bValid ], [ nClrFore ], [ nClrBack ], [ oFont ], [ uParam12 ], [ uParam13 ], [ lPixel ], [ uParam15 ], [ uParam16 ], [ bWhen ], [ uParam18 ], [ uParam19 ], [ bChange ], [ lReadOnly ], [ lPassword ], [ uParam23 ], [ cReadVar ], [ uParam25 ], [ uParam26 ], [ uParam27 ], [ lHasButton ], [ lNoButton ], [ uParam30 ], [ cLabelText ], [ nLabelPos ], [ oLabelFont ], [ nLabelColor ], [ cPlaceHold ], [ lPicturePriority ], [ lFocSel ] )
 
 oSayCod:= TSay():New(070,082,{||'Cod Produto'},oPanelMNT,,oFont16,,,,.T.,CLR_BLUE,CLR_WHITE,50,10)
-oTGetCod := TGet():New( 82,082,{ |u|Iif (PCount()==0,cCodBar,cCodBar:=u)},oPanelMNT,90,022,"@!",{ |u| iIf(PCount()>0,VldPrdLot(@cProduto,@cLoteCtl,@cSubLote,nQtd,cCodBar, oTGetCod, oBrowDCV, cCodMNT, cCodVol,cPedido,aBeeps), .T.) },0,,oFont22,.F.,,.T.,,.F.,{|| .T.},.F.,.F.,,.F.,.F.,"","cCodBar",,,, )
+oTGetCod := TGet():New( 82,082,{ |u|Iif (PCount()==0,cCodBar,cCodBar:=u)},oPanelMNT,90,022,"@!",{ |u| iIf(PCount()>0,VldPrdLot(@cProduto,@cLoteCtl,@cSubLote,nQtd,@cCodBar, oTGetCod, oBrowDCV, cCodMNT, cCodVol,cPedido,aBeeps), .T.) },0,,oFont22,.F.,,.T.,,.F.,{|| .T.},.F.,.F.,,.F.,.F.,"","cCodBar",,,, )
 
 cTpQry   := "DCV"
 aColsDCV := PegColunas(@cQryCpo, cTpQry)
-cDCVQry  := PegQuery(cCodMNT, cPedido, cQryCpo, cProduto, cTpQry, cCodVol)
+cDCVQry  := PegQuery(cCodMNT, cPedido, cQryCpo, cTpQry, cCodVol)
 
 oBrowDCV := FWFormBrowse():New(oPanelDCV)
 oBrowDCV:SetDescription("") 
@@ -244,26 +246,28 @@ oPanelDCT:Align :=CONTROL_ALIGN_BOTTOM
 
 cTpQry := "DCT"
 aColsDCT := PegColunas(@cQryCpo, cTpQry)
-cDCTQry := PegQuery(cCodMNT, cPedido, cQryCpo, cProduto, cTpQry, cCodVol)
+cDCTQry := PegQuery(cCodMNT, cPedido, cQryCpo, cTpQry, cCodVol)
 
-oBrowDCT := FWFormBrowse():New(oPanelDCT)
-oBrowDCT:SetDescription("") 
-oBrowDCT:SetAlias(cAliasDCT)
-oBrowDCT:SetDataQuery()
-oBrowDCT:SetQuery(cDCTQry)
-oBrowDCT:SetOwner(oPanelDCT)
-oBrowDCT:DisableDetails()
-oBrowDCT:SetColumns(aColsDCT)
-oBrowDCT:DisableReports()
-oBrowDCT:DisableFilter()
-oBrowDCT:DisableConfig()
-oBrowDCT:DisableReport()
-oBrowDCT:DisableSeek()
-oBrowDCT:DisableSaveConfig()
+oBrwDCTA := FWFormBrowse():New(oPanelDCT)
+oBrwDCTA:SetDescription("") 
+oBrwDCTA:SetAlias(cAliasDCT)
+oBrwDCTA:SetDataQuery()
+oBrwDCTA:SetQuery(cDCTQry)
+oBrwDCTA:SetOwner(oPanelDCT)
+oBrwDCTA:DisableDetails()
+oBrwDCTA:SetColumns(aColsDCT)
+oBrwDCTA:DisableReports()
+oBrwDCTA:DisableFilter()
+oBrwDCTA:DisableConfig()
+oBrwDCTA:DisableReport()
+oBrwDCTA:DisableSeek()
+oBrwDCTA:DisableSaveConfig()
 
-oBrowDCT:Activate()
+oBrwDCTA:Activate()
 
 ACTIVATE MSDIALOG oDlgTela CENTERED ON INIT (A391Inicio(oTGetCod,aBeeps, oBrowDCV)) 
+
+oBrwDCTA:Destroy()
 
 Return
 
@@ -329,7 +333,7 @@ description
 @since 11/07/2023
 @return variant, return_description
 /*/
-Static Function PegQuery(cCodMNT, cPedido, cQryCpo, cProduto, cTpQry, cCodVol)
+Static Function PegQuery(cCodMNT, cPedido, cQryCpo, cTpQry, cCodVol)
 Local cQry      := ""
 
 If cTpQry == "DCV"
@@ -699,10 +703,18 @@ If oTGetCod:lModified
 
 	EndIf
 
+
 	oBrowDCV:Refresh()
-	oTGetCod:SetFocus()
+	
 
 EndIf
+
+//Voltar para o campo de qualquer jeito mesmo que nao tenha modificado
+cCodBar := Space(iIf(TAMSX3("B1_COD")[1] > 14,TAMSX3("B1_COD")[1],14))
+
+//oTGetCod:Refresh()
+
+oTGetCod:SetFocus()
 
 Return lRet
 
@@ -715,7 +727,7 @@ description
 @since 10/08/2023
 @return variant, return_description
 /*/
-Static Function FecharEmb(oBrowDCV, nQtd, oDlgTela, cCodEmb, nCubag,cCodVol,cCodMNT, aProdutos)
+Static Function FecharEmb(oBrowDCV, nQtd, oDlgTela, cCodEmb, nCubag,cCodVol,cCodMNT, aProdutos,cLocImp)
 Local cAlias      := oBrowDCV:GetAlias()
 Local lRet        := .T.
 Local lIndividual := .F.
@@ -785,10 +797,10 @@ EndIf
 
 If lRet //.And. oMntVolItem:oMntVol:GetStatus() == "3"
 	lIndividual := .T.
-	GerEtqVol(lIndividual) // Se não gerar as etiquetas, não impede a gravação
+	GerEtqVol(lIndividual, cLocImp) // Se não gerar as etiquetas, não impede a gravação
 EndIf
 If lRet //.And. oView != Nil
-	MsgStop("Volume","Inserido com sucesso.")
+	MsgInfo("Volume","Inserido com sucesso.")
 EndIf
 
 
@@ -1200,15 +1212,16 @@ description
 @since 01/04/2023
 @return variant, return_description
 /*/
-Static Function GerEtqVol(lIndividual)
+Static Function GerEtqVol(lIndividual, cLocImp)
 Local aAreaAnt  := GetArea()
 Local lRet      := .T.
-Local cLocImp   := SuperGetMV('MV_WMSLOCI',.F.,'')
 Local lLocImp   := .T.
 Local cQuery    := ""
 Local cAliasDCU := ""
 Local lExecBlc  := !SuperGetMV("MV_WMSNEW",.F.,.F.) .And. ExistBlock("WMSR410A")
-  
+
+Default cLocImp   := SuperGetMV('MV_WMSLOCI',.F.,'')
+
 	// Pergunta se será feita a impressão da Etiqueta
 	If !lIndividual
 		lRet := WmsQuestion("Deseja imprimir as etiquetas de Volume?","SIGAWMS") // Deseja imprimir as etiquetas de Volume?
@@ -1230,7 +1243,7 @@ Local lExecBlc  := !SuperGetMV("MV_WMSNEW",.F.,.F.) .And. ExistBlock("WMSR410A")
 				lLocImp := .F.
 			EndIf
 
-		ElseIf !CB5SetImp(CBRLocImp('MV_WMSLOCI'),IsTelNet())
+		ElseIf !CB5SetImp(cLocImp,IsTelNet())
 			WmsMessage("Local de impressão inválido!",ALUA391A17) // Local de impressão inválido!
 			lLocImp := .F.
 		EndIf
@@ -1376,32 +1389,38 @@ description
 User Function PegCodEmb(cCodEmb)
 Local oGetCodEmb
 Local cEmbPad := SuperGetMV("MV_XEMBPAD",.F.,"CX1")
-Local aRetEmb := {"",0,0}
+Local aRetEmb := {"",0,0,""}
 Local oBtn1
 Local oBtn2
 Local nOpc    := 0 
 Local oDlgLI
+Local nCubag := 0
+Local cEmbaDesc := ""
+Local cLocImp   := SuperGetMV('MV_WMSLOCI',.F.,'')
 
 If Empty(cCodEmb)
 	cCodEmb := Space(TamSX3("DCU_XCODEM")[1]) 
 EndIf	
 
-DEFINE MSDIALOG oDlgLI TITLE "Informe o Tipo de Embalagem" From 50,50 to 150,300 PIXEL
+DEFINE MSDIALOG oDlgLI TITLE "Informe o Tipo de Embalagem" From 50,50 to 200,300 PIXEL
 
 	@ 06,05 SAY "Tipo de Embalagem:" SIZE 50,8 OF oDlgLI PIXEL 
-	@ 05,60 MSGET oGetCodEmb VAR cCodEmb F3 'CB3' SIZE 50,06 WHEN .T. VALID (ExistCpo("CB3",cCodEmb,1) .OR.  Empty(cCodEmb)) PICTURE '@!' OF oDlgLI PIXEL
-
+	@ 05,60 MSGET oGetCodEmb VAR cCodEmb F3 'CB3' SIZE 50,06 WHEN .T. VALID VldEmba(cCodEmb, @nCubag, @cEmbaDesc) PICTURE '@!' OF oDlgLI PIXEL
+	@ 21,05 SAY "Local de Impressão:" SIZE 50,8 OF oDlgLI PIXEL // Local de Impressão:"
+	@ 20,60 MSGET oGetLI VAR cLocImp F3 'CB5' SIZE 50,06 WHEN .T. PICTURE '@!' OF oDlgLI PIXEL
+	
 	//DEFINE SBUTTON FROM 21,083 TYPE 2 ACTION (nOpcLI := 2,oDlgLI:End()) ENABLE Of oDlgLI
 	//DEFINE SBUTTON FROM 21,083 TYPE 1 ACTION (nOpcLI := 1,oDlgLI:End()) ENABLE Of oDlgLI
-	@ 021,010 BUTTON oBtn1 PROMPT "Conf. Manual" SIZE 040,012 OF oDlgLI PIXEL ACTION (oDlgLI:End(), nOpc := 2)
-	@ 021,083 BUTTON oBtn2 PROMPT "Ok" SIZE 040,012 OF oDlgLI PIXEL ACTION (oDlgLI:End(), nOpc := 1)
+	@ 048,010 BUTTON oBtn1 PROMPT "Conf. Manual" SIZE 040,012 OF oDlgLI PIXEL ACTION (oDlgLI:End(), nOpc := 2)
+	@ 048,080 BUTTON oBtn2 PROMPT "Ok" SIZE 040,012 OF oDlgLI PIXEL ACTION (oDlgLI:End(), nOpc := 1)
 
 ACTIVATE DIALOG oDlgLI CENTERED
 
 If !Empty(cCodEmb)
 	aRetEmb[1] := cCodEmb
-	aRetEmb[2] := CB3->CB3_ALTURA * CB3->CB3_LARGUR * CB3->CB3_PROFUN
+	aRetEmb[2] := nCubag //CB3->CB3_ALTURA * CB3->CB3_LARGUR * CB3->CB3_PROFUN
 	aRetEmb[3] := nOpc
+	aRetEmb[4] := cLocImp
 Else
 	WmsMessage("Tipo de embalagem inválido! Será considerado o tipo padrão informado no parametor MV_XEMBPAD = "+ cEmbPad,ALUA391A16,1) 
 	cCodEmb := cEmbPad
@@ -1412,6 +1431,41 @@ EndIf
 Return aRetEmb
 
 
+
+/*/{Protheus.doc} VldEmba
+description
+@type function
+@version  
+@author Deosdete Deo
+@since 10/23/2023
+@param cCodEmb, character, param_description
+@return variant, return_description
+/*/
+Static Function VldEmba(cCodEmb, nCubag, cEmbaDesc)
+Local lRet   := .T.
+
+If !Empty(cCodEmb) 
+
+	DbSelectArea("CB3")
+	DbSetOrder(1) //CB3_FILIAL+CB3_CODEMB
+	If CB3->(DbSeek(xFilial("CB3")+cCodEmb))
+		cEmbaDesc := CB3->CB3_DESCRI
+		nCubag  := CB3->CB3_ALTURA * CB3->CB3_LARGUR * CB3->CB3_PROFUN
+	
+	Else	
+		lRet := .F.
+	EndIf
+Else
+	MsgStop("Embalagem invalida","Erro!!!")
+	lRet := .F.
+EndIf
+
+
+Return lRet
+
+
+
+
 /*/{Protheus.doc} A391MANU
 description
 @type function
@@ -1420,7 +1474,7 @@ description
 @since 18/04/2023
 @return variant, return_description
 /*/
-User Function A391MANU(cProduto,cLoteCtl,cSubLote,nQtd,cCodBar,cCodMNT, cCodVol,cPedido,aBeeps)
+User Function A391MANU(cProduto,cLoteCtl,cSubLote,nQtd,cCodBar,cCodMNT, cCodVol,cPedido,aBeeps, cCodEmb, nCubag, cLocImp)
 Local oGetCodBar
 Local oGetCod
 Local oGetProd
@@ -1430,14 +1484,16 @@ Local oFont20:= TFont():New('Arial',,20,.T.)
 Local cCodPro := Space(TamSX3("B1_COD")[1]+20)
 Local cDesPro := Space(TamSX3("B1_DESC")[1]) 
 Local nQtdEmb := 0
-Local nQtdVol := 0
+Local nQtdVol := 1
 Local nI    := 0
 Local aProdutos := {}
 Local lRet      := .T.
 Local oMntVolManu := WMSDTCMontagemVolumeItens():New()
 Local lIndividual := .T.
-Local oBrwDCT 
+Local oBrwDCTA 
 Local oPanelMNT
+Local nQtdGerado := 0
+Local nOpc      := 0 
 
 
 DEFINE MSDIALOG oDlgTela TITLE "Conferência Manual" From 00,00 to 500,700 PIXEL
@@ -1446,7 +1502,7 @@ DEFINE MSDIALOG oDlgTela TITLE "Conferência Manual" From 00,00 to 500,700 PIXEL
 //Disponibilidade de estoque
 //TGet(): New ( [ nRow], [ nCol], [ bSetGet], [ oWnd], [ nWidth], [ nHeight], [ cPict], [ bValid], [ nClrFore], [ nClrBack], [ oFont], [ uParam12], [ uParam13], [ lPixel], [ uParam15], [ uParam16], [ bWhen], [ uParam18], [ uParam19], [ bChange], [ lReadOnly], [ lPassword], [ uParam23], [ cReadVar], [ uParam25], [ uParam26], [ uParam27], [ lHasButton], [ lNoButton], [cLabelText] ,[nLabelPos], [oLabelFont], [nLabelColor]  ) --> oObjeto
 oSayCodBar  := TSay():New(015,005,{||"Cod de Barras"},oDlgTela,,oFont16,,,,.T.,CLR_GRAY,CLR_WHITE,050,012)
-oGetCodBar	:= TGet():New(015,080		,{|u| if(PCount()>0,cCodBar:=u,cCodBar)},oDlgTela,Len(cCodBar)*10,12,,{|| Empty(cCodBar)  .OR.  VldPrdManu(@cCodPro,@cLoteCtl,@nQtdEmb,cCodBar, oGetCodBar)},,,,,,.T.,,,{|| .T.},,,,,,,'cCodBar')
+oGetCodBar	:= TGet():New(015,080		,{|u| if(PCount()>0,cCodBar:=u,cCodBar)},oDlgTela,Len(cCodBar)*10,12,,{|| Empty(cCodBar)  .OR.  VldPrdManu(@cCodPro,@cLoteCtl,@nQtdEmb,cCodBar, oGetCodBar,oGetQtdVol,@cDesPro)},,,,,,.T.,,,{|| .T.},,,,,,,'cCodBar')
 
 oSayCod     := TSay():New(030,005,{||"Cod Produto"},oDlgTela,,oFont16,,,,.T., CLR_GRAY,CLR_WHITE,50,012)
 oGetCod	    := TGet():New(030,080		,{|u| if(PCount()>0,cCodPro:=u,cCodPro)},oDlgTela,Len(cCodPro),10,,,,,,,,.T.,,,{|| .F.},,,,,,,'cCodPro')
@@ -1456,7 +1512,7 @@ oSayQtdEmb  := TSay():New(045,005,{||"Qtd por Embalagem"},oDlgTela,,oFont16,,,,.
 oGetQtdEmb  := TGet():New(045,080		,{|u| if(PCount()>0,nQtdEmb:=u,nQtdEmb)},oDlgTela,90,10,,,,,,,,.T.,,,{|| .F.},,,,,,,'nQtdEmb')
 
 oSayQtdVol := TSay():New(060,005,{||"Qtd de Volumes"},oDlgTela,,oFont16,,,,.T., CLR_GRAY,CLR_WHITE,075,012)
-oGetQtdVol := TGet():New(060,080,{|u| if(PCount()>0,nQtdVol:=u,nQtdVol)},oDlgTela,90,10,"@E 999,999",,,,,,,.T.,,,{|| .T.},,,,,,,'nQtdVol')
+oGetQtdVol := TGet():New(060,080,{|u| if(PCount()>0,nQtdVol:=u,nQtdVol)},oDlgTela,90,10,"@E 999,999",{||nQtdVol>0},,,,,,.T.,,,{|| .T.},,,,,,,'nQtdVol')
 
 oButConfirmar := TButton():New( 100, 085, "Confirmar",oDlgTela,{||nOpc := 1,oDlgTela:End()}, 040,016,,oFont20,.F.,.T.,.F.,,.F.,,,.F. )
 oButCancelar  := TButton():New( 100, 130, "Sair",oDlgTela,{|| nOpc := 0,oDlgTela:End()}, 040,016,,oFont20,.F.,.T.,.F.,,.F.,,,.F. )
@@ -1467,203 +1523,224 @@ oPanelMNT:Align :=CONTROL_ALIGN_BOTTOM
 
 
 // Define Browse Documento (DCT)
-oBrwDCT := FWMBrowse():New()
-oBrwDCT:SetOwner(oPanelMNT)
-oBrwDCT:SetDescription("Itens dos Docs. na Mont. Volume") 
-oBrwDCT:SetAlias('DCT')
-oBrwDCT:SetFilterDefault("@ DCT_FILIAL = '"+xFilial('DCT')+"' AND DCT_CODMNT = '"+cCodMNT+"'")
-oBrwDCT:SetMenuDef('')
+oBrwDCTA := FWMBrowse():New()
+oBrwDCTA:SetOwner(oPanelMNT)
+oBrwDCTA:SetDescription("Itens dos Docs. na Mont. Volume") 
+oBrwDCTA:SetAlias('DCT')
+oBrwDCTA:SetFilterDefault("@ DCT_FILIAL = '"+xFilial('DCT')+"' AND DCT_CODMNT = '"+cCodMNT+"'")
+oBrwDCTA:SetMenuDef('')
 //If nAcao == 1
-//	oBrwDCT:AddButton(STR0014, {|| oTimer:DeActivate(), WmA391Esto(), oTimer:Activate()},, 4, 0) // Estornar Documento
+//	oBrwDCTA:AddButton(STR0014, {|| oTimer:DeActivate(), WmA391Esto(), oTimer:Activate()},, 4, 0) // Estornar Documento
 //EndIf
-oBrwDCT:AddLegend("DCT->DCT_STATUS=='1'", "RED"   , "Nao Iniciado") 
-oBrwDCT:AddLegend("DCT->DCT_STATUS=='2'", "YELLOW", "Em Andamento") 
-oBrwDCT:AddLegend("DCT->DCT_STATUS=='3'", "GREEN" , "Em Andamento")
-oBrwDCT:SetAmbiente(.F.)
-oBrwDCT:SetWalkThru(.F.)
-oBrwDCT:DisableDetails()
-oBrwDCT:SetFixedBrowse(.T.)
-oBrwDCT:SetProfileID('DCT')
-oBrwDCT:DisableReports()
-oBrwDCT:DisableFilter()
-oBrwDCT:DisableConfig()
-oBrwDCT:DisableReport()
-oBrwDCT:DisableSeek()
-oBrwDCT:DisableSaveConfig()
-oBrwDCT:SetOnlyFields({'DCT_PEDIDO','DCT_CODPRO','DCT_QTORIG','DCT_QTSEPA','DCT_QTEMBA'})
-oBrwDCT:Activate()
+oBrwDCTA:AddLegend("DCT->DCT_STATUS=='1'", "RED"   , "Nao Iniciado") 
+oBrwDCTA:AddLegend("DCT->DCT_STATUS=='2'", "YELLOW", "Em Andamento") 
+oBrwDCTA:AddLegend("DCT->DCT_STATUS=='3'", "GREEN" , "Em Andamento")
+oBrwDCTA:SetAmbiente(.F.)
+oBrwDCTA:SetWalkThru(.F.)
+oBrwDCTA:DisableDetails()
+oBrwDCTA:SetFixedBrowse(.T.)
+oBrwDCTA:SetProfileID('DCT')
+oBrwDCTA:DisableReports()
+oBrwDCTA:DisableFilter()
+oBrwDCTA:DisableConfig()
+oBrwDCTA:DisableReport()
+oBrwDCTA:DisableSeek()
+oBrwDCTA:DisableSaveConfig()
+oBrwDCTA:SetOnlyFields({'DCT_PEDIDO','DCT_CODPRO','DCT_QTORIG','DCT_QTSEPA','DCT_QTEMBA'})
+oBrwDCTA:Activate()
 
 ACTIVATE DIALOG oDlgTela CENTERED
 
-If !Empty(cCodPro) .AND. !Empty(nQtdEmb)
-	
-	//Perguntar o tipo de embalagem e cubatem
-	//aRetEmb := u_PegCodEmb(DCU->DCU_XCODEM)
+If nOpc == 1 
 
-	//Acrescentar volumes usando o componente da montagem de volumes
-	//Alert("Em desenvolvimento")
-	For nI := 1 To nQtdVol
-
-		//Limpara arrray para o proximo volume
-		aProdutos := {}
-
-		//Pegar proximo volume
-		cCodVol  := U_ALUCBProxCod()
-		oMntVolManu:oMntVol:SetCodMnt(cCodMNT)
-		//oMntVolManu:oMntVol:SetCarga(oModelDCU:GetValue("DCU_CARGA"))
-		oMntVolManu:oMntVol:SetPedido(cPedido)
-		oMntVolManu:oVolume:SetCodVol(cCodVol)
-
-		//Validar
-		//VldPrdLot(cProduto,cLoteCtl,cSubLote,nQtd,cCodBar, , , cCodMNT, cCodVol,cPedido,aBeeps)
-		// Deve validar se o produto informado é um produto partes ou componente
-		oMntVolManu:SetProduto(cCodPro)
-		oMntVolManu:SetLoteCtl(cLoteCtl)
-		oMntVolManu:SetNumLote(cSubLote)
-		lAchou := oMntVolManu:VldPrdCmp()
-
-		If !lAchou
-			MsgStop("Produto não pertence a montagem de volumes do documento.","Verifique os dados informados.") 
-			lRet := .F.
-		Else
-			//lRet := oModel:LoadValue("DCV_PRDORI",oMntVolManu:GetPrdOri())
-		EndIf
-
-		If lRet
-			// Carregar as quantidades para o produto
-			oMntVolManu:QtdPrdVol()
-			//Deve validar se o produto possui quantidade para separada para ser embalada
-			If QtdComp(oMntVolManu:GetQtdSep()) == 0
-				MsgStop("Produto não possui quantidade separada para montagem de volumes.","Aguarde a finalização do processo de separação.") 
-				lRet := .F.
-			EndIf
-			//Deve validar se o produto possui quantidade para separada pendente para ser embalada
-			If lRet .And. QtdComp(oMntVolManu:GetQtdOri()-oMntVolManu:GetQtdEmb()) == 0
-				MsgStop("Montagem de volumes do produto finalizada.","Verifique os dados informados.") 
-				lRet := .F.
-			EndIf
-			//Deve validar se o produto possui quantidade para separada pendente para ser embalada
-			If lRet .And. QtdComp(oMntVolManu:GetQtdSep()-oMntVolManu:GetQtdEmb()) == 0
-				MsgStop("Produto não possui quantidade separada pendente para montagem de volumes.","Aguarde a finalização do processo de separação.")
-				lRet := .F.
-			EndIf
-			
-			
-			nSldaEmb := oMntVolManu:GetQtdSep()-oMntVolManu:GetQtdEmb()
-
-			//Deve validar se para este produto a qtd ainda nao confirmada nao ultrapassa o saldo total
-			//nQtdaConfirmar := PegQtdaConfirmar(cProduto,cCodMnt,cCodVol)
-			//nPos := aScan(aBeeps, {|x| x[2] == cCodPro} )
-			//If nPos > 0 
-			nSldaEmb := nSldaEmb - PegSldBeeps(aBeeps,cCodPro) //[nPos][3] aBeeps[nPos][3]
-			//EndIf 
-			
-			If lRet .And. (nSldaEmb - nQtd) < 0
-				MsgStop("Produto não possui quantidade separada pendente suficiente SALDO:" + Transform(nSldaEmb,PesqPict("DCV","DCV_QUANT")) + " QTD LIDA:" + Transform(nQtd,PesqPict("DCV","DCV_QUANT")),"Aguarde a finalização do processo de separação.")
-				lRet := .F.
-			EndIf
-			
-
-		EndIf
+	If !Empty(cCodPro) .AND. !Empty(nQtdEmb)
 		
-		//Fechar embalagem
-		If lRet
+		//Perguntar o tipo de embalagem e cubatem
+		//aRetEmb := u_PegCodEmb(DCU->DCU_XCODEM)
 
+		//Acrescentar volumes usando o componente da montagem de volumes
+		//Alert("Em desenvolvimento")
+		nQtdGerado := 0
+		For nI := 1 To nQtdVol
+
+			//Limpara arrray para o proximo volume
+			aProdutos := {}
+
+			//Pegar proximo volume
+			cCodVol  := U_ALUCBProxCod()
+			oMntVolManu:oMntVol:SetCodMnt(cCodMNT)
+			//oMntVolManu:oMntVol:SetCarga(oModelDCU:GetValue("DCU_CARGA"))
+			oMntVolManu:oMntVol:SetPedido(cPedido)
+			oMntVolManu:oVolume:SetCodVol(cCodVol)
+
+			//Validar
+			//VldPrdLot(cProduto,cLoteCtl,cSubLote,nQtd,cCodBar, , , cCodMNT, cCodVol,cPedido,aBeeps)
+			// Deve validar se o produto informado é um produto partes ou componente
 			oMntVolManu:SetProduto(cCodPro)
-			oMntVolManu:SetLoteCtl("")
-			oMntVolManu:SetNumLote("")
-			oMntVolManu:SetPrdOri(cCodPro)
-			If !oMntVolManu:LoadPrdVol(aProdutos,nQtdEmb)
-				//oModel:SetErrorMessage(oModelDCVG:GetId(),"DCV_CODPRO",,,WMSA391A15,oMntVolManu:GetErro(),STR0016) //
-				MsgStop(oMntVolManu:GetErro() + ".Verifique os dados informados","Erro")
+			oMntVolManu:SetLoteCtl(cLoteCtl)
+			oMntVolManu:SetNumLote(cSubLote)
+			lAchou := oMntVolManu:VldPrdCmp()
+
+			If !lAchou
+				MsgStop("Produto não pertence a montagem de volumes do documento.","Verifique os dados informados.") 
 				lRet := .F.
+			Else
+				//lRet := oModel:LoadValue("DCV_PRDORI",oMntVolManu:GetPrdOri())
+			EndIf
+
+			If lRet
+				// Carregar as quantidades para o produto
+				oMntVolManu:QtdPrdVol()
+				//Deve validar se o produto possui quantidade para separada para ser embalada
+				If QtdComp(oMntVolManu:GetQtdSep()) == 0
+					MsgStop("Produto não possui quantidade separada para montagem de volumes.","Aguarde a finalização do processo de separação.") 
+					lRet := .F.
+				EndIf
+				//Deve validar se o produto possui quantidade para separada pendente para ser embalada
+				If lRet .And. QtdComp(oMntVolManu:GetQtdOri()-oMntVolManu:GetQtdEmb()) == 0
+					MsgStop("Quantidade total conferida ultrapassa a quantidade do item.","Erro!!!") 
+					lRet := .F.
+				EndIf
+				//Deve validar se o produto possui quantidade para separada pendente para ser embalada
+				If lRet .And. QtdComp(oMntVolManu:GetQtdSep()-oMntVolManu:GetQtdEmb()) == 0
+					MsgStop("Produto não possui quantidade separada pendente para montagem de volumes.","Aguarde a finalização do processo de separação.")
+					lRet := .F.
+				EndIf
+				
+				
+				nSldaEmb := oMntVolManu:GetQtdSep()-oMntVolManu:GetQtdEmb()
+
+				//Deve validar se para este produto a qtd ainda nao confirmada nao ultrapassa o saldo total
+				//nQtdaConfirmar := PegQtdaConfirmar(cProduto,cCodMnt,cCodVol)
+				//nPos := aScan(aBeeps, {|x| x[2] == cCodPro} )
+				//If nPos > 0 
+				nSldaEmb := nSldaEmb - PegSldBeeps(aBeeps,cCodPro) //[nPos][3] aBeeps[nPos][3]
+				//EndIf 
+				
+				If lRet .And. (nSldaEmb - nQtd) < 0
+					MsgStop("Produto não possui quantidade separada pendente suficiente SALDO:" + Transform(nSldaEmb,PesqPict("DCV","DCV_QUANT")) + " QTD LIDA:" + Transform(nQtd,PesqPict("DCV","DCV_QUANT")),"Aguarde a finalização do processo de separação.")
+					lRet := .F.
+				EndIf
+				
+
+			EndIf
+			
+			//Fechar embalagem
+			If lRet
+
+				oMntVolManu:SetProduto(cCodPro)
+				oMntVolManu:SetLoteCtl("")
+				oMntVolManu:SetNumLote("")
+				oMntVolManu:SetPrdOri(cCodPro)
+				If !oMntVolManu:LoadPrdVol(aProdutos,nQtdEmb)
+					//oModel:SetErrorMessage(oModelDCVG:GetId(),"DCV_CODPRO",,,WMSA391A15,oMntVolManu:GetErro(),STR0016) //
+					MsgStop(oMntVolManu:GetErro() + ".Verifique os dados informados","Erro")
+					lRet := .F.
+					Exit
+				EndIf
+
+				oMntVolManu:SetStatus("2")
+
+				If oMntVolManu:MntPrdVol(aProdutos)
+					nQtdGerado++ 
+					
+					//pega a DCU gerada 
+					DbSelectArea("DCU")
+					DbSetOrder(1) //DCU_FILIAL+DCU_CODVOL+DCU_CODMNT                                                                                                                                
+					If DCU->(DbSeek(xFilial("DCU")+cCodVol+cCodMNT))
+						RecLock("DCU",.F.)
+						DCU->DCU_XCODEM  := cCodEmb  // oModelDCU:SetValue("DCU_XCODEM",DCU->DCU_XCODEM)
+						DCU->DCU_XCUBAG  := nCubag   //oModelDCU:SetValue("DCU_XCUBAG",DCU->DCU_XCUBAG)
+						DCU->(MsUnlock())
+					EndIf
+
+				Else
+					//oModel:SetErrorMessage(oModelDCVG:GetId(),"DCV_CODPRO",,,WMSA391A21,oMntVolItem:GetErro(),STR0016) // 
+					MsgStop("Verifique os dados informados","Erro!!!")
+					lRet := .F.
+				EndIf
+
+			EndIf
+
+			/*
+				//Poscionar no SC9 correspondente
+				DbSelectArea("SC9")
+				DbSetOrder(1) //C9_FILIAL+C9_PEDIDO
+
+				DbSelectArea("DCV")
+				DCV->(DbSetOrder(1)) // DCV_FILIAL+DCV_CODVOL+DCV_PRDORI+DCV_CODPRO+DCV_LOTE+DCV_SUBLOT+DCV_ITEM+DCV_SEQUEN+DCV_CODMNT
+				lAchou := DCV->(dbSeek(xFilial("DCV")+cCodMNT+cCodVol+cProduto))
+
+				Reclock('DCV',!lAchou)
+				If !lAchou
+					DCV->DCV_Filial := xFilial("DCT")
+					DCV->DCV_CODVOL := cCodVol
+					DCV->DCV_CODMNT := cCodMNT
+					DCV->DCV_CARGA  := cCarga	
+					DCV->DCV_PEDIDO := cPedido
+					DCV->DCV_STATUS := " "
+					DCV->DCV_PRDORI := cProduto
+					DCV->DCV_CODPRO := cProduto
+					DCV->DCV_LOTE   := cLoteCtl
+					DCV->DCV_SUBLOT := cSubLote
+					DCV->DCV_QUANT  := nQtd
+					DCV->DCV_CODOPE := __cUserID
+					//DCV->DCV_ITEM   := Self:cItem
+					//DCV->DCV_SEQUEN := Self:cSequen
+					//DCV->DCV_DATINI := Self:dDtInicio
+					//DCV->DCV_HORINI := Self:cHrInicio
+					DCV->DCV_DATINI := dDataBase
+					DCV->DCV_HORINI := Time()
+				Else
+					//DCV->DCV_STATUS := Self:cStatus
+					//DCV->DCV_DATFIM := dDataBase
+					//DCV->DCV_HORFIM := Time()
+					DCV->DCV_QUANT  += nQtd
+				EndIf
+				DCV->(MsUnLock())	
+
+
+				
+				If nPos > 0
+					aBeeps[nPos][2] += nQtd
+				Else
+					aAdd(aBeeps,{cProduto, nQtd})
+				EndIf
+
+			EndIf
+			*/
+			//oBrowDCV:Refresh()
+			//oTGetCod:SetFocus()
+
+			//EndIf
+
+
+
+
+
+			//Fechar embalagem
+			//FecharEmb(, nQtd,,cCodEmb, nCubag, cCodVol,cCodMNT)
+
+			If lRet //.And. oMntVolItem:oMntVol:GetStatus() == "3"
+				oMntVolItem := oMntVolManu
+				GerEtqVol(lIndividual, cLocImp) // Se não gerar as etiquetas, não impede a gravação
+			Else
 				Exit
 			EndIf
 
-			oMntVolManu:SetStatus("2")
+		Next nI
 
-			If !oMntVolManu:MntPrdVol(aProdutos)
-				//oModel:SetErrorMessage(oModelDCVG:GetId(),"DCV_CODPRO",,,WMSA391A21,oMntVolItem:GetErro(),STR0016) // 
-				MsgStop("Verifique os dados informados","Atencao")
-				lRet := .F.
-			EndIf
-
+		If lRet .AND. nQtdGerado > 0
+			MsgInfo("Volumes","Inserido com sucesso. " + AllTrim(Str(nQtdGerado)) )
 		EndIf
+	Else
+		MsgStop("Volumes","Codigo de barras ou quantidade de volumes nao informado!")
 
-		/*
-			//Poscionar no SC9 correspondente
-			DbSelectArea("SC9")
-			DbSetOrder(1) //C9_FILIAL+C9_PEDIDO
-
-			DbSelectArea("DCV")
-			DCV->(DbSetOrder(1)) // DCV_FILIAL+DCV_CODVOL+DCV_PRDORI+DCV_CODPRO+DCV_LOTE+DCV_SUBLOT+DCV_ITEM+DCV_SEQUEN+DCV_CODMNT
-			lAchou := DCV->(dbSeek(xFilial("DCV")+cCodMNT+cCodVol+cProduto))
-
-			Reclock('DCV',!lAchou)
-			If !lAchou
-				DCV->DCV_Filial := xFilial("DCT")
-				DCV->DCV_CODVOL := cCodVol
-				DCV->DCV_CODMNT := cCodMNT
-				DCV->DCV_CARGA  := cCarga	
-				DCV->DCV_PEDIDO := cPedido
-				DCV->DCV_STATUS := " "
-				DCV->DCV_PRDORI := cProduto
-				DCV->DCV_CODPRO := cProduto
-				DCV->DCV_LOTE   := cLoteCtl
-				DCV->DCV_SUBLOT := cSubLote
-				DCV->DCV_QUANT  := nQtd
-				DCV->DCV_CODOPE := __cUserID
-				//DCV->DCV_ITEM   := Self:cItem
-				//DCV->DCV_SEQUEN := Self:cSequen
-				//DCV->DCV_DATINI := Self:dDtInicio
-				//DCV->DCV_HORINI := Self:cHrInicio
-				DCV->DCV_DATINI := dDataBase
-				DCV->DCV_HORINI := Time()
-			Else
-				//DCV->DCV_STATUS := Self:cStatus
-				//DCV->DCV_DATFIM := dDataBase
-				//DCV->DCV_HORFIM := Time()
-				DCV->DCV_QUANT  += nQtd
-			EndIf
-			DCV->(MsUnLock())	
-
-
-			
-			If nPos > 0
-				aBeeps[nPos][2] += nQtd
-			Else
-				aAdd(aBeeps,{cProduto, nQtd})
-			EndIf
-
-		EndIf
-		*/
-		//oBrowDCV:Refresh()
-		//oTGetCod:SetFocus()
-
-	    //EndIf
-
-
-
-
-
-		//Fechar embalagem
-		//FecharEmb(, nQtd,,cCodEmb, nCubag, cCodVol,cCodMNT)
-
-		If lRet //.And. oMntVolItem:oMntVol:GetStatus() == "3"
-			oMntVolItem := oMntVolManu
-			GerEtqVol(lIndividual) // Se não gerar as etiquetas, não impede a gravação
-		Else
-			Exit
-		EndIf
-
-	Next nI
-
-	If lRet //.And. oView != Nil
-		MsgStop("Volumes","Inserido com sucesso.")
 	EndIf
 
-
 EndIf
+
+oBrwDCTA:Destroy()
 
 Return 
 
@@ -1685,7 +1762,8 @@ description
 @param cCodBar, character, param_description
 @return variant, return_description
 /*/
-Static Function VldPrdManu(cProduto,cLoteCtl,nQtde,cCodBar,oGetCodBar)
+Static Function VldPrdManu(cProduto,cLoteCtl,nQtde,cCodBar,oGetCodBar,oGetQtdVol,cDesPro)
+                
 Local lRet      := .T.
 Local aProduto  := {}
 Local lAchou    := .F.
@@ -1728,45 +1806,13 @@ Local lAchou    := .F.
 			lRet := .F.
 		EndIf
 	EndIf
-/*
-	If lRet
-		// Carregar as quantidades para o produto
-		oMntVolManu:QtdPrdVol()
-		//Deve validar se o produto possui quantidade para separada para ser embalada
-		If QtdComp(oMntVolManu:GetQtdSep()) == 0
-			oModel:GetModel():SetErrorMessage(oModel:GetId(),"DCV_CODPRO",,,ALUA391A18,"Produto não possui quantidade separada para montagem de volumes.","Aguarde a finalização do processo de separação.") // "Produto não possui quantidade separada para montagem de volumes.","Aguarde a finalização do processo de separação."
-			lRet := .F.
-		EndIf
-		//Deve validar se o produto possui quantidade para separada pendente para ser embalada
-		If lRet .And. QtdComp(oMntVolManu:GetQtdOri()-oMntVolManu:GetQtdEmb()) == 0
-			oModel:GetModel():SetErrorMessage(oModel:GetId(),"DCV_CODPRO",,,ALUA391A19,"Montagem de volumes do produto finalizada.","Verifique os dados informados.") // "Montagem de volumes do produto finalizada.","Verifique os dados informados."
-			lRet := .F.
-		EndIf
-		//Deve validar se o produto possui quantidade para separada pendente para ser embalada
-		If lRet .And. QtdComp(oMntVolManu:GetQtdSep()-oMntVolItem:GetQtdEmb()) == 0
-			oModel:GetModel():SetErrorMessage(oModel:GetId(),"DCV_CODPRO",,,ALUA391A20,"Produto não possui quantidade separada pendente para montagem de volumes.","Aguarde a finalização do processo de separação.") // "Produto não possui quantidade separada pendente para montagem de volumes.","Aguarde a finalização do processo de separação."
-			lRet := .F.
-		EndIf
-	EndIf
 
-	If lRet .And. !Empty(cProduto)
-		lRet := oModel:LoadValue("DCV_CODPRO",cProduto)
-	EndIf
-	If lRet .And. !Empty(cLoteCtl)
-		lRet := oModel:SetValue("DCV_LOTE",cLoteCtl)
-	EndIf
-	If lRet .And. !Empty(cSubLote)
-		lRet := oModel:SetValue("DCV_SUBLOT",cSubLote)
-	EndIf
-	If lRet .And. !Empty(nQtde)
-		lRet := oModel:LoadValue("DCV_QUANT",nQtde)
-	EndIf
-*/
-	If !lRet
-		cCodBar := Space(128)
-		//oModel:ClearField("DCV_CODPRO")
-		//oView:Refresh()
-		//oView:GetViewObj("ALUA391ADCVF")[3]:getFWEditCtrl("DCV_CODPRO"):oCtrl:SetFocus()
+	If lRet
+		cCodBar := Space(iIf(TAMSX3("B1_COD")[1] > 14,TAMSX3("B1_COD")[1],14))
+		cDesPro := SB1->B1_DESC   //Considera que o cbretean posicionou no produto
+		oGetQtdVol:SetFocus()
+	Else
+		cCodBar := Space(iIf(TAMSX3("B1_COD")[1] > 14,TAMSX3("B1_COD")[1],14))
 		oGetCodBar:SetFocus()
 	EndIf
 
@@ -2019,19 +2065,40 @@ description
 @param oBrowDCV, object, param_description
 @return variant, return_description
 /*/
-Static Function Excluir(oBrowDCV)
+Static Function Excluir(oBrowDCV, aBeeps)
 Local cAlias := oBrowDCV:getAlias()
 
-If Empty((cAlias)->DCV_STATUS)
-	If Aviso("Atençao!!!","Confirma exclusão do item " + (cAlias)->DCV_CODPRO ,{"SIM","NAO"}) == 1
-		
-		DCV->(DbGoTo((cAlias)->RECNO))	
-		
-		RecLock("DCV",.F.)
-		DCV->(DbDelete())
-		DCV->(MsUnlock())
+If Empty((cAlias)->DCV_STATUS) 
+	If  (cAlias)->RECNO > 0
+		If Aviso("Atençao!!!","Confirma exclusão do item " + (cAlias)->DCV_CODPRO ,{"SIM","NAO"}) == 1
+			
+			DCV->(DbGoTo((cAlias)->RECNO))	
+			
+			RecLock("DCV",.F.)
+			DCV->(DbDelete())
+			DCV->(MsUnlock())
 
-	EndIF
+			//Se excluir da DCV tem que excluir tmbem do array de beeps
+			
+			nPos := aScan(aBeeps, {|x| x[2] == (cAlias)->DCV_CODPRO} )
+			While nPos > 0
+				aDel(aBeeps, nPos)
+				aSize(aBeeps, Len(aBeeps)-1)
+				nPos := aScan(aBeeps, {|x| x[2] == (cAlias)->DCV_CODPRO} )
+			EndDo
+
+
+			If nPos > 0
+
+			EndIf
+			
+			MsgInfo("Excluido com sucesso","EXCLUSAO")
+
+		EndIF
+	Else
+		Alert("Registro Invalido")
+	EndIf
+
 Else
 	MsgStop("O item " + (cAlias)->DCV_CODPRO + " ja foi montado e nao pode ser excluido" ,"Erro")
 EndIf
@@ -2058,6 +2125,7 @@ Local oOk      := LoadBitmap( GetResources(), "CHECKED" )   //CHECKED    //LBOK 
 Local oNo      := LoadBitmap( GetResources(), "UNCHECKED" ) //UNCHECKED  //LBNO
 Local nI 
 Local nOpc   := 0
+Local nEstorno := 0
 
 Private lChk1 := .F.
 Private oLbx
@@ -2093,7 +2161,7 @@ If nOpc == 1
 
 	For nI := 1 To Len(aBeeps)
 		
-		If Len(aBeeps) > 0
+		If ValType(aBeeps[nI]) == "A"
 			
 			If aBeeps[nI][1] //Se estiver maracado
 				
@@ -2108,17 +2176,20 @@ If nOpc == 1
 				EndIf
 
 				aDel(aBeeps, nI)
-				aSize(aBeeps, Len(aBeeps)-1)
+				nEstorno++ //aSize(aBeeps, Len(aBeeps)-1)
 
-				oBrowDCV:Refresh()
-
-				Exit // Vai estornar sempre um de cada vez - sair do laco para nao dar pau por conta do array diminuido
-
+				//If Type(aBeeps) == Nil
+ 				//	Exit // Vai estornar sempre um de cada vez - sair do laco para nao dar pau por conta do array diminuido
+				//EndIf
 			EndIf
 		
 		EndIf
 
 	Next nI
+
+	aSize(aBeeps, Len(aBeeps)-nEstorno)
+	
+	oBrowDCV:Refresh()
 
 EndIf
 
@@ -2136,6 +2207,13 @@ description
 Static Function Marca(aBeeps, oLbx)
 Local nPos := 0
 
+//Marcar todos
+//If oLbx:nColPos == 1
+
+//	aEval(aBeeps,{|x| x[1] := !x[1] })
+
+//EndIf
+
 nPos := AScan( aBeeps, {|x| x[1] == .T. } )
 
 If nPos == 0
@@ -2144,7 +2222,7 @@ Else
 	If nPos == oLbx:nAt
 		aBeeps[ nPos, 1 ] := ! aBeeps[ nPos, 1 ]
 	Else
-		aBeeps[ nPos, 1 ] := .F.
+		//aBeeps[ nPos, 1 ] := .F.
 		aBeeps[ oLbx:nAt, 1 ] := .T.
 	Endif
 Endif
@@ -2170,3 +2248,57 @@ Local nSldBeeps := 0
 aEval(aBeeps,{|x| iIf(x[2] == cProduto, nSldBeeps += x[3], nSldBeeps += 0)})
 
 Return nSldBeeps
+
+
+/*/{Protheus.doc} VldCodVol
+description
+@type function
+@version  
+@author Deosdete Deo
+@since 11/6/2023
+@param cCodVol, character, param_description
+@param oMntVolItem, object, param_description
+@return variant, return_description
+/*/
+Static Function VldCodVol(cCodVol, oMntVolItem, oBrowDCV,cDCVQry, cCodMNT,cPedido, oTGetVol)
+Local lRet       := .T.
+Local nTamCodVol := TamSX3("DCU_CODVOL")[1]
+Local cAlias     := oBrowDCV:GetAlias()
+Local cTpQry     := ""
+Local cQryCpo    := ""
+
+If oTGetVol:lModified
+
+	cTpQry   := "DCV"
+	PegColunas(@cQryCpo, cTpQry)
+	cDCVQry  := PegQuery(cCodMNT, cPedido, cQryCpo, cTpQry, cCodVol)
+	oBrowDCV:SetQuery(cDCVQry)
+	oBrowDCV:Refresh()
+
+	(cAlias)->(DbGoTop())
+	If !(cAlias)->(Eof())
+		MsgStop("Já existe beepagem com o codigo atual")
+
+		//Volta o codigo do volume
+		cCodVol  := U_ALUCBProxCod()
+		cDCVQry  := PegQuery(cCodMNT, cPedido, cQryCpo, cTpQry, cCodVol)
+		oBrowDCV:SetQuery(cDCVQry)
+		oBrowDCV:Refresh()
+
+		lRet := .F.
+	EndIf
+
+	If lRet 
+
+		If nTamCodVol == Len(AllTrim(cCodVol)) 	
+			oMntVolItem:oVolume:SetCodVol(cCodVol)
+		Else	
+			MsgStop("Codigo de Volume Invalido")
+			lRet := .F.
+		EndIf
+
+	EndIf
+
+EndIf
+
+Return lRet

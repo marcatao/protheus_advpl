@@ -44,7 +44,9 @@ EndIf
 
 SB2->(DbSetOrder(1))
 SB2->(DbSeek(xFilial("SB2")+cProduto+cArmOri))
-nSaldo := SaldoMov()
+//SaldoMov(lNecessida, lEmpenho, dDataFim, lConsTerc, nQtdEmp, nQtdPrj, lSaldoSemR, dDtRefSld,lConsEmpSA)
+//nSaldo := SaldoMov(,,,,,,lSaldoSemR)
+nSaldo := Max((SB2->B2_QATU - SB2->B2_RESERVA - SB2->B2_QACLASS),0)
 
 //Considerar o saldo de um item que ja tenha sido digitado neste pedido
 For nI := 1 To Len(aCols)

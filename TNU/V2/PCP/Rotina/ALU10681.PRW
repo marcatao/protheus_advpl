@@ -499,11 +499,12 @@ If lContinua
    
     //(cAlias)->(DbGoBottom())
  
-    AtuTotais(oBrowSZ3,nTipo)
+
  
     //Atualiza o Browse
     AtuBrowse(oBrowSZ3, cDoc, cQryCpo, cProduto, SZ3->Z3_CODETI, nTipo)
 
+    AtuTotais(oBrowSZ3,nTipo)
 
 EndIf
 
@@ -906,10 +907,11 @@ EndIf
 
 u_ALU10Balanca(1, CB1->CB1_XBALAN, @lLeitura) 
 
-//Atualiza os totais do rodape conforme pesagens ja gravadas
-AtuTotais(oBrowSZ3, nTipo)
 
 AtuBrowse(oBrowSZ3, cDoc, cQryCpo, cProduto, cIdUnitz, nTipo)
+
+//Atualiza os totais do rodape conforme pesagens ja gravadas
+AtuTotais(oBrowSZ3, nTipo)
 
 If nTipo == 1
     oTGetDoc:SetFocus()

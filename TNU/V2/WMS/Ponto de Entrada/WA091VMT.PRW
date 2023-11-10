@@ -42,8 +42,11 @@ EndIf
 
 //FWExecView("Montar Volume Alumbra",'ALUA391A',nOpc  ,,{||.T.}, , ,aButtons ,{||.T.}) //== 0 // Montar Volume Alumbra
 
-
-U_ALUA391A()
+//If Aviso("Atenção!","Modo alumbra?", {"Sim","Não"}) == 1
+    U_ALUA391A()
+//Else  
+ //   lRet := .T.
+//EndIf
 
 RestArea(aAreaAnt)
 

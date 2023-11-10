@@ -17,8 +17,9 @@ Local nOpcLI  := 0
 Local cLocImp := Space(TamSX3("CB5_CODIGO")[01])
 Local aArea   := GetArea()
 Local cPicPeso := PesqPict('SZ3', 'Z3_PESO')
-Local cPicQtd := PesqPict('SZ3', 'Z3_QUANT')
+//Local cPicQtd := PesqPict('SZ3', 'Z3_QUANT')
 Local cCodEti := ""
+Local nQtdMov := 0
 
 // Pergunta qual o volume terá a etiqueta impressa
 DbSelectArea("D0Y")
@@ -69,9 +70,9 @@ For nCont := 1 To Len(aItens)
 		//Posicionar no primeiro movimento 
 	    DbSelectArea("D12")
     	DbSetorder(4) //D12_FILIAL+D12_IDDCF+D12_IDMOV+D12_IDOPER+D12_STATUS+D12_SERVIC+D12_TAREFA                                                                                      
-    	If D12->(DbSeek(xFilial("D12")+SZ3->Z3_IDDCF+SZ3->Z3_IDMOV))
+    	If D12->(DbSeek(xFilial("D12")+SZ3->Z3_IDDCF)) //+SZ3->Z3_IDMOV -- IMPRIMIR TODOS os movimentos independente do numero do movimento - deo 16/10/2023
 			
-			While !D12->(Eof()) .AND. xFilial("D12")+SZ3->Z3_IDDCF+SZ3->Z3_IDMOV == D12->(D12_FILIAL+D12_IDDCF+D12_IDMOV)
+			While !D12->(Eof()) .AND. xFilial("D12")+SZ3->Z3_IDDCF == D12->(D12_FILIAL+D12_IDDCF) //+D12_IDMOV
 			
 				cEtiq :="CT~~CD,~CC^~CT~    "
 				cEtiq +="^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD10^JUS^LRN^CI0^XZ    "
@@ -86,6 +87,9 @@ For nCont := 1 To Len(aItens)
 					//cEtiq +="^FD>;123456789012^FS    "
 					cEtiq +="^FD"+cCodEti+"^FS" //		cEtiq +="^FD>;123456789999^FS "
 					cEtiq +="^FT293,592^A0N,28,36^FH\^FD"+cCodEti+"^FS    "
+					nQtdMov := SZ3->Z3_QUANT   // A quantidade na D12 fica 1 por ser 1 unitizador entao mostrar a pesagem na etiqueta
+				Else
+					nQtdMov := D12->D12_QTDORI	//A quantidade da pesagem fica o total, mas quando nao for unitizado o mesmo movimento pode gerar varios itens
 				EndIf	
 				
 				cEtiq +="^FT33,61^A0N,28,33^FH\^FDCodigo:^FS    "
@@ -97,7 +101,10 @@ For nCont := 1 To Len(aItens)
 				cEtiq +="^FT403,155^A0N,28,36^FH\^FDResp.:^FS    "
 				cEtiq +="^FT632,155^ACN,36,20^FH\^FD"+SZ3->Z3_RESP+"^FS    "
 				cEtiq +="^FT33,244^A0N,28,36^FH\^FDQtd:^FS    "
-				cEtiq +="^FT25,255^A0N,39,38^FH\^FD"+Transform(D12->D12_QTDORI, "@E 999,999")+"^FS    "
+				
+				
+				cEtiq +="^FT110,247^A0N,39,38^FH\^FD"+Transform(nQtdMov, "@E 999,999")+"^FS    "
+				
 				cEtiq +="^FT286,247^A0N,37,45^FH\^FDPC^FS    "
 				cEtiq +="^FT33,287^A0N,28,36^FH\^FDTara:^FS    "
 				cEtiq +="^FT38,287^ACN,36,20^FH\^FD"+Transform(SZ3->Z3_TARA,cPicPeso)+"^FS    "

@@ -744,7 +744,7 @@ Static Function GeraPedido()
 			aAdd(aLinha,{"C6_TES"		,ZZR->ZZR_TES		    ,Nil})
 			aAdd(aLinha,{"C6_TPOP"		,'F'	        	    ,Nil})
 			aAdd(aLinha,{"C6_COMIS1"	,ZZR->ZZR_COMIS1	    ,Nil})
-			aAdd(aLinha,{"C6_ENTREG"	,ctod(ZZR->ZZR_ENTREG)	,Nil})
+			aAdd(aLinha,{"C6_ENTREG"	,ctod(INVERDT(ZZR->ZZR_ENTREG))	,Nil})
 			aAdd(aLinha,{"C6_UM"		,Posicione("SB1",1,xFilial("SB1")+ZZR->ZZR_PRODUT,"B1_UM")	,Nil})
 			aAdd(aLinha,{"C6_LOCAL"		,ZZR->ZZR_LOCAL		    ,Nil})				
 
@@ -1085,3 +1085,7 @@ static function AtvClix(cA1Cod,cA1Loja)
     ENDIF
     RestArea(aArea)
 return
+
+static function INVERDT(cdate)
+  cdate := SUBSTR(cdate,7,2) +"/"+SUBSTR(cdate,5,2)+"/"+SUBSTR(cdate,1,4) 
+return cdate
