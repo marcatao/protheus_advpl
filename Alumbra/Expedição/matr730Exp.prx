@@ -9,6 +9,12 @@ RELATORIO - PEDIDOS POR CLIENTES
 */
 //----------------------------------------------------------------------------------------------------------------------
 
+USER FUNCTION MA440MNU()
+
+    AADD(aRotina, {'Imprimir Pedidos', 'U_xMATR730', 0, 0, 0, .F.} )
+
+RETURN NIL
+
 USER FUNCTION xMATR730()
 
     LOCAL oReport := NIL
