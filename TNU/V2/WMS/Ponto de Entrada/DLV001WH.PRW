@@ -10,10 +10,13 @@ description
 /*/
 User Function DLV001WH()
 Local cRecHum    := PARAMIXB[1]
-Local cFuncao    := PARAMIXB[2]
+//Local cFuncao    := PARAMIXB[2]
 Local cQueryAux  :=  ""
 Local aOSMov     := {}
 Local cIDMov     := ""
+Local aArea      := GetArea() 
+Local cStatusMov := ""
+
 
 //cRecHum    := ""
 //cFuncao    := ""
@@ -51,12 +54,28 @@ If _lAluModo_  // Modo alumbra
         //EndIf    
     EndIf
 
+     
    If !Empty(AllTrim(_cDocWMS_))
         cQueryAux += " AND D12_DOC = '" + _cDocWMS_ + "' "
     EndIf
 
     If !Empty(AllTrim(cIDMov))
+ 
+        //Verificar se este movimento ja foi atendido
+        cStatusMov :=  MovStatus(cIDMov)
+        
+        If !Empty(cStatusMov) 
+            If cStatusMov == "1"
+                VTAlert("Movimento Ja Finalizado","MODO ALUMBRA",.T.,2000,3)
+            EndIf 
+            
+        //Se nao encontar emitir alerta de movimento nao encontrado            
+        Else //Se em branco é porque nao encontrou registro   
+            VTAlert("Movimento Não Encontrado","MODO ALUMBRA",.T.,2000,3)    
+        EndIf 
+
         cQueryAux += " AND D12_IDMOV = '" + cIDMov + "' "
+
     EndIf
 
     //Sair da tela e habilitar o abondono da convocaçao
@@ -72,6 +91,7 @@ If _lAluModo_  // Modo alumbra
 
 EndIf
 
+RestArea(aArea)
 
 Return cQueryAux
 
@@ -305,3 +325,32 @@ EndIf
 
 Return lRet
 
+/*/{Protheus.doc} MovStatus
+description
+@type function
+@version  
+@author Deosdete Deo
+@since 11/10/2023
+@param cIDMov, character, param_description
+@return variant, return_description
+/*/
+Static Function MovStatus(cIDMov)
+Local cStatusMov := ""
+Local cQuery     := ""
+Local cQryD12    := GetNextAlias()
+
+cQuery := "SELECT D12_STATUS 
+cQuery += "FROM " + RetSqlName("D12") + " D12 " 
+cQuery += " WHERE D12_IDMOV = '" + cIDMov + "' "
+cQuery += "  AND D12.D_E_L_E_T_ = '' "
+cQuery += "ORDER BY D12_IDMOV "
+
+DbUseArea(.T.,"TOPCONN",TcGenQry(,,cQuery),cQryD12,.T.,.T.)
+
+If !(cQryD12)->(Eof())
+    cStatusMov := (cQryD12)->D12_STATUS
+EndIf
+
+(cQryD12)->(DbCloseArea())
+
+Return cStatusMov
