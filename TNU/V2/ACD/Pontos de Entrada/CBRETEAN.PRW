@@ -222,10 +222,10 @@ If !FunName() == "WMSA391" // MOntagem de volume nao precisa detalhe
 			@ 02,00 VtSay "|" + PadR("SKU: " + SB1->B1_COD,VTMaxCol())
 			@ 02,19 VtSay "|" 
 			@ 03,00 VtSay "|Qt:" 
-			@ 03,07 VtSay  AllTrim(Transform(nSldMov, PesqPict('D12','D12_QTDMOV'))) +"/"+ AllTrim(Transform(oMovimento:GetQtdMov2(), PesqPict('D12','D12_QTDOR2')) )
+			@ 03,07 VtSay  AllTrim(Transform(nSldMov,  "@E 99,999,999" /*PesqPict('D12','D12_QTDMOV')*/)) +"/"+ AllTrim(Transform(oMovimento:GetQtdMov2(), PesqPict('D12','D12_QTDOR2')) )
 			@ 03,19 VtSay "|" 
 			@ 04,00 VtSay "|Qt Lida:" 
-			@ 04,09 VtSay  AllTrim(Transform( nQE, PesqPict('D12','D12_QTDMOV')))
+			@ 04,09 VtSay  AllTrim(Transform( nQE,   "@E 99,999,999" /*PesqPict('D12','D12_QTDMOV')*/))
 			@ 04,19 VtSay "|"  
 			@ 05,00 VtSay "|Qt Mov:" 
 			@ 05,09 VTGet  nQtdUser Picture  "@E 99,999,999" Valid nQE > 0   //PesqPict('D12','D12_QTDMOV')
