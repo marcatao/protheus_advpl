@@ -710,7 +710,7 @@ Static Function GeraPedido()
 	aAdd(aCabec2,{"C5_PEDMER"	,ZZQ->ZZQ_PEDMER	,Nil})
 	aAdd(aCabec2,{"C5_TRANSP"	,ZZQ->ZZQ_TRANSP	,Nil})
 	aAdd(aCabec2,{"C5_FECENT"	,W_ENTREGA	        ,Nil})
-	aAdd(aCabec2,{"C5_XSTEX"	,"AX"   	        ,Nil})
+	aAdd(aCabec2,{"C5_XSTEX"	,'AX'   	        ,Nil})
 	aAdd(aCabec2,{"C5_COMENT"	,ZZQ->ZZQ_OBS       ,Nil})
  
 

@@ -1,21 +1,27 @@
 #INCLUDE "PROTHEUS.CH"
 
-user function PESOVOL 
+user function PESOVOL(cPedido) 
 
-  local cPedido := cValToChar(StrZero(000341,6))
+  //local cPedido := cValToChar(StrZero(000341,6))
   local aPRet  := {0,0}
   local aVlret  := {0,0}
-
+  local Stret  := 0
 
   Local aArea   := GetArea()
     dbSelectArea("SC5")
     dbSetOrder(1) 
     dbSeek(xFilial('SC5')+cPedido)
     IF FOUND() // Avalia o retorno da pesquisa realizada
-      aPRet := PesoTotal(cPedido)
+      aPRet  := PesoTotal(cPedido)
       aVlret := QtdVol(cPedido)
-
+      Stret  := xstex(cPedido)
           RECLOCK("SC5", .F.)
+
+          IF(Stret=0)//AX=AG.IMPRESSAO;AL=IMPRESSO;EX=EM_EXPEDICAO;AF=AG_FATURAMENTO
+            SC5->C5_XSTEX := "AF"
+          ELSE
+            SC5->C5_XSTEX := "EX"
+          END
             SC5->C5_PESOL :=aPRet[2] //peso liquido
             SC5->C5_PBRUTO:=aPRet[1] + aVlret[2] //somando peso dos produtos com as embalagens
             SC5->C5_VOLUME1:=aVlret[1] // quantidade de volumes
@@ -56,22 +62,45 @@ static function QtdVol(cPedido)
 Local cQuery     := ""
 local aVlret  := {0,0}
 
-cQuery      := " Select 
-cQuery      += " count(1) as VOLUMES, SUM(CB3.CB3_PESO) as PESO
-cQuery      += " FROM "+RetSqlName("DCU")+" DCU
-cQuery      += " INNER JOIN "+RetSqlName("CB3")+" CB3 on DCU.DCU_XCODEM = CB3.CB3_CODEMB
+cQuery      := " Select "
+cQuery      += " count(1) as VOLUMES, SUM(CB3.CB3_PESO) as PESO "
+cQuery      += " FROM "+RetSqlName("DCU")+" DCU "
+cQuery      += " INNER JOIN "+RetSqlName("CB3")+" CB3 on DCU.DCU_XCODEM = CB3.CB3_CODEMB "
 cQuery      += " WHERE DCU.DCU_PEDIDO ='"+cPedido+"' "
 cQuery      += " AND DCU.D_E_L_E_T_ = ' ' "
 
     cQuery := ChangeQuery(cQuery)
     cAliasQry := GetNextAlias()
+         
+
+
     DbUseArea(.T.,'TOPCONN',TcGenQry(,,cQuery),cAliasQry,.F.,.T.)
     If (cAliasQry)->(!Eof())
         aVlret[1] := (cAliasQry)->VOLUMES
         aVlret[2] := (cAliasQry)->PESO
     EndIf
 	(cAliasQry)->(dbCloseArea())
-
-
 return aVlret
+
+static function xstex(cPedido)
+Local cQuery     := ""
+local Stret  := 0
+
+cQuery      := " Select "
+cQuery      += " SUM(C6.C6_QTDVEN) - SUM(DCT.DCT_QTEMBA) SALDO "
+cQuery      += " from "+RetSqlName("SC6")+" C6 "
+cQuery      += " INNER JOIN "+RetSqlName("DCT")+" DCT "
+cQuery      += " ON C6_FILIAL = DCT_FILIAL AND C6_NUM = DCT_PEDIDO "
+cQuery      += " where C6.C6_NUM = '"+cPedido+"' "
+cQuery      += " AND DCT.D_E_L_E_T_ = ' ' "
+
+    cQuery := ChangeQuery(cQuery)
+    cAliasQry := GetNextAlias()
+    DbUseArea(.T.,'TOPCONN',TcGenQry(,,cQuery),cAliasQry,.F.,.T.)
+    If (cAliasQry)->(!Eof())
+        Stret  := (cAliasQry)->SALDO
+    EndIf
+	(cAliasQry)->(dbCloseArea())
+return Stret
+
 
