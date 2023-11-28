@@ -1,5 +1,5 @@
 /*/{Protheus.doc} WMSPOSDCF
-//Gravar o ID da DCF e ORDSERV
+//Ponto de entrada para Gravar o ID da DCF e ORDSERV
 @type function
 @version  
 @author Deosdete Deo

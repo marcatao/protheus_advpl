@@ -10,6 +10,8 @@ Impressão de danfe simplificada - Etiqueta
 @param		cUrl			Endereço do Web Wervice no TSS
             cIdEnt			Entidade do TSS para processamento
 			lUsaColab		Totvs Colaboração ou não
+
+            Alterado por Deosdete P. Silva
 /*/
 //-------------------------------------------------------------------
 user function ImpDfEtq(cUrl, cIdEnt, lUsaColab)

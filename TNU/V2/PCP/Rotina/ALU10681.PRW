@@ -159,6 +159,11 @@ cTitulo := "BALANCA"
 //Validar e posicionar operador
 cOperador   := CBRetOpe()
 
+If Empty(CB1->CB1_XBALAN)
+    MsgStop("Balança nao definida. Defina a balança no cadastro de Operador","Erro!")
+    Return
+EndIf
+
 CBVldOpe(cOperador)
 
 aColumns := PegColunas(@cQryCpo)

@@ -1,6 +1,6 @@
 #Include "Protheus.ch"
 /*/{Protheus.doc} WMSA110E
-description
+Emissao de etiqueta a partir da balança e demais pontos onde é chamado o ponto de entrada
 @type function
 @version  
 @author Deosdete Deo

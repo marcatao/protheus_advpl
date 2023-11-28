@@ -1,7 +1,7 @@
 #INCLUDE "PROTHEUS.CH"
 #INCLUDE "FWMVCDEF.CH"
 /*/{Protheus.doc} WA091VMT
-description
+Ponyo de entraa para chamada da Montagem de Volume
 @type function
 @version  
 @author Deosdete Deo

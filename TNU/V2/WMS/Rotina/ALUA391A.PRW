@@ -29,7 +29,7 @@ Static __lHasLot   := SuperGetMV("MV_WMSLOTE",.F.,.T.)
 Static oMntVolItem := WMSDTCMontagemVolumeItens():New()
 
 /*/{Protheus.doc} ALUA391A
-description
+Rotina para Montagem de Volume 
 @type function
 @version  
 @author Deosdete Deo
@@ -791,7 +791,12 @@ If lRet
 		DCU->DCU_XCODEM  := cCodEmb  // oModelDCU:SetValue("DCU_XCODEM",DCU->DCU_XCODEM)
 		DCU->DCU_XCUBAG  := nCubag   //oModelDCU:SetValue("DCU_XCUBAG",DCU->DCU_XCUBAG)
 		DCU->(MsUnlock())
+
+		//Gravar informacoes da montagem no pedido
+		U_PESOVOL(DCU->DCU_PEDIDO)
+
 	EndIf
+
 
 EndIf
 
@@ -1561,6 +1566,8 @@ If nOpc == 1
 		//Acrescentar volumes usando o componente da montagem de volumes
 		//Alert("Em desenvolvimento")
 		nQtdGerado := 0
+		
+		
 		For nI := 1 To nQtdVol
 
 			//Limpara arrray para o proximo volume
@@ -1652,6 +1659,10 @@ If nOpc == 1
 						DCU->DCU_XCODEM  := cCodEmb  // oModelDCU:SetValue("DCU_XCODEM",DCU->DCU_XCODEM)
 						DCU->DCU_XCUBAG  := nCubag   //oModelDCU:SetValue("DCU_XCUBAG",DCU->DCU_XCUBAG)
 						DCU->(MsUnlock())
+
+						//Gravar informacoes da montagem no pedido
+						U_PESOVOL(DCU->DCU_PEDIDO)
+
 					EndIf
 
 				Else

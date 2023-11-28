@@ -90,9 +90,9 @@ cQuery      := " Select "
 cQuery      += " SUM(C6.C6_QTDVEN) - SUM(DCT.DCT_QTEMBA) SALDO "
 cQuery      += " from "+RetSqlName("SC6")+" C6 "
 cQuery      += " INNER JOIN "+RetSqlName("DCT")+" DCT "
-cQuery      += " ON C6_FILIAL = DCT_FILIAL AND C6_NUM = DCT_PEDIDO "
+cQuery      += " ON C6_FILIAL = DCT_FILIAL AND C6_NUM = DCT_PEDIDO and C6.C6_PRODUTO = DCT_CODPRO "
 cQuery      += " where C6.C6_NUM = '"+cPedido+"' "
-cQuery      += " AND DCT.D_E_L_E_T_ = ' ' "
+cQuery      += " AND DCT.D_E_L_E_T_ = ' ' AND C6.D_E_L_E_T_ = ' ' "
 
     cQuery := ChangeQuery(cQuery)
     cAliasQry := GetNextAlias()

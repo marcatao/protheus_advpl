@@ -1,7 +1,7 @@
 #INCLUDE 'Protheus.ch'
 #INCLUDE 'FWMVCDEF.CH'
 /*/{Protheus.doc} WMSA391
-description
+Ponto de entrada para correçao da quantidade embalada
 @type function
 @version  
 @author Deosdete Deo

@@ -186,7 +186,7 @@ If !lAchouPRD
 EndIf //Se não achou por codigo do produto
 
 
-If !FunName() == "WMSA391" // MOntagem de volume nao precisa detalhe
+If !(FunName() == "WMSA391"  .OR. FunName() == "WMSV095") // MOntagem de volume e transferencia nao precisa detalhe
 
 	lDetalhe  := !oMovimento:oMovServic:GetServico() $ SuperGetMv("MV_XWSERDET",.F.,"") //Exececao para nao mostrar a tela de detalhe na bepagem
 

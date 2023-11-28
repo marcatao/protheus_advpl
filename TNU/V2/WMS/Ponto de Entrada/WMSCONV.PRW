@@ -1,6 +1,6 @@
 
 /*/{Protheus.doc} WMSCONV
-description
+Ponto de entrada para ativar o modo alumbra na rotina de convocacao
 @type function
 @version  
 @author Deosdete Deo

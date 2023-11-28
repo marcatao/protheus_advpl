@@ -2,7 +2,7 @@
 #Include "APVT100.CH"
 
 /*/{Protheus.doc} WMSA391E
-description
+Emissão de etiqueta de embalagem no processo de montagem de volume
 @type function
 @version  
 @author Deosdete Deo

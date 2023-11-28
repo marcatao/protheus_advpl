@@ -1,5 +1,5 @@
 /*/{Protheus.doc} MA440VLD
-description
+Chamada na validacao para Analise do pedido de venda antes da geracao da Ordem de Serviço
 @type function
 @version  
 @author Deosdete Deo

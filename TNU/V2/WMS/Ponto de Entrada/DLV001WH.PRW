@@ -1,7 +1,7 @@
 #Include "PROTHEUS.CH"
 #INCLUDE "APVT100.CH"
 /*/{Protheus.doc} DLV001WH
-description
+Ponto de entrada para Filtragem na rotina de conovocacao
 @type function
 @version  
 @author Deosdete Deo
@@ -10,7 +10,7 @@ description
 /*/
 User Function DLV001WH()
 Local cRecHum    := PARAMIXB[1]
-//Local cFuncao    := PARAMIXB[2]
+Local cFuncao    := PARAMIXB[2]
 Local cQueryAux  :=  ""
 Local aOSMov     := {}
 Local cIDMov     := ""
@@ -37,7 +37,7 @@ If _lAluModo_  // Modo alumbra
     EndIf
 
     If Empty(cIDMov) .AND. Empty(_cDocWMS_)  .AND.  !VTLastkey() == 27
-        cIDMov := ALUV001Browse(_cDocWMS_,cRecHum)
+        cIDMov := ALUV001Browse(_cDocWMS_,cRecHum,cFuncao)
     EndIf
 
 
@@ -46,7 +46,7 @@ If _lAluModo_  // Modo alumbra
         */
     
     If !Empty(_cDocWMS_) 
-        cIDMov := ALUV001Browse(_cDocWMS_,cRecHum)
+        cIDMov := ALUV001Browse(_cDocWMS_,cRecHum,cFuncao)
 
         //Se nao econtrar registros com este documento, limpar o documento
         //If Empty(cIDMov)
@@ -104,7 +104,7 @@ description
 @since 16/07/2023
 @return variant, return_description
 /*/
-Static Function ALUV001Browse(cDoc, cRecHum)
+Static Function ALUV001Browse(cDoc, cRecHum,cFuncao)
 Local cIdMov   := Space(TamSX3("D12_IDMOV")[1])
 Local aSave  := VTSave(00, 00, VTMaxRow(), VTMaxCol())
 
@@ -148,8 +148,10 @@ EndIf
 
 cQuery += "  AND (D12_RECHUM = '' OR D12_RECHUM = '" + cRecHum + "') " //Somente movimento do pedido informado
 
+cQuery += "  AND D12_RHFUNC = '" + cFuncao + "' " 
+
 cQuery += "  AND D12.D_E_L_E_T_ = '' "
-cQuery += "ORDER BY D12_PRIORI DESC "
+cQuery += "ORDER BY D12_PRIORI "
 
 DbUseArea(.T.,"TOPCONN",TcGenQry(,,cQuery),cQryD12,.T.,.T.)
 
@@ -260,7 +262,9 @@ Local lRet      := .T.
 
 VTClear()
 
-VtKeyboard(Chr(20))  // zera o get
+//Limpar o buffer
+VTClearBuffer()
+//VtKeyboard(Chr(20))  // zera o get
 
 @ 00,00 VtSay "|---WMS ALUMBRA----|" 
 @ 01,00 VtSay "|"
