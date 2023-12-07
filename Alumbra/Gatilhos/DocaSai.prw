@@ -4,7 +4,7 @@ user function docasai(filial, cli, loja, armazem)
  Local aArea   := GetArea()
    local cret
  
-   cli := cli
+
    filial := ALLTRIM(filial) 
    if(filial == '')
         filial := '010101'

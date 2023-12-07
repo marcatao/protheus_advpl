@@ -712,6 +712,10 @@ Static Function GeraPedido()
 	aAdd(aCabec2,{"C5_FECENT"	,W_ENTREGA	        ,Nil})
 	aAdd(aCabec2,{"C5_XSTEX"	,'AX'   	        ,Nil})
 	aAdd(aCabec2,{"C5_COMENT"	,ZZQ->ZZQ_OBS       ,Nil})
+
+	//aAdd(aCabec2,{"C5_CLIENT"	,ZZQ->ZZQ_CLENTR       ,Nil})
+	aAdd(aCabec2,{"C5_CLIENT"	,ZZQ->ZZQ_CLIENT       ,Nil})
+	aAdd(aCabec2,{"C5_LOJAENT"	,ZZQ->ZZQ_LJENTR       ,Nil})
  
 
 	dbSelectArea("ZZR")

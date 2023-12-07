@@ -31,6 +31,7 @@ User Function INTMEUR(cTab, aLeg, cOpc)
 
     //Declara a variável cTabela como private para manter seu valor durante toda execução da rotina
     Private cTabela := "ZZQ"
+    Private cTbFilho := "ZZR"
 
     //Declara o vetor aLegenda como private para manter seu valor durante toda execução da rotina
     Private aLegenda:= {}
@@ -40,6 +41,7 @@ User Function INTMEUR(cTab, aLeg, cOpc)
 
     //Define a variável cTab com um valor Default
     Default cTab    := "ZZQ"
+    Default cTbF    := "ZZR"
 
     //Define o vetor aLeg com um valor Default
     Default aLeg    := {}
@@ -60,7 +62,9 @@ User Function INTMEUR(cTab, aLeg, cOpc)
     SetFunName("INTMEUR")
 
     //Cria a tabela utilizada no processo
+     
     ChkFile(cTabela)
+    ChkFile(cTbFilho)
 
     //Força posicionamento na tabela no arquivo SX2
     //PosSx2(cTabela)
@@ -137,7 +141,8 @@ Static Function ModelDef()
     Local oModel := Nil
 
     //Cria a estrutura de dados utilizada na interface
-    Local oStru  := FWFormStruct(1, cTabela)
+    Local oStru   := FWFormStruct(1, cTabela)
+    Local oStruF  := FWFormStruct(1, cTbFilho)
 
     //Declara a variável para o verificação de índice único
     Local lIndUnq:= .F.
@@ -150,6 +155,8 @@ Static Function ModelDef()
 
     //Declara o Array para verificar se existe índice único para a tabela
     Local aX2Unico := FwSX2Util():GetSX2data(cTabela, {"X2_UNICO"})
+
+    LOCAL aVinc := {}
 
     //Verifica se existe índice único para o a tabela
     lIndUnq:= IIF(!Vazio(aX2Unico[1][2]),.T.,.F.)
@@ -173,6 +180,12 @@ Static Function ModelDef()
        
     EndIf
 
+    oModel:AddGrid('DETAIL',"FORM"+cTabela,oStruF)
+    aAdd(aVinc , {"ZZR_FILIAL" , "ZZQ_FILIAL"})
+    aAdd(aVinc , {"ZZR_PEDMER" , "ZZQ_PEDMER"})
+   // oModel:setRelation("DETAIL", aVinc, ZZQ->(INDEXKEY( 1 )))
+    oModel:SetRelation("DETAIL",{ {"ZZR_FILIAL","ZZQ_FILIAL"},{"ZZR_PEDMER" , "ZZQ_PEDMER"} }, ZZR->(IndexKey(1)) )
+
     //Adiciona a descrição ao modelo
     oModel:SetDescription(cTitulo)
 
@@ -194,7 +207,8 @@ Static Function ViewDef()
     Local oModel := FWLoadModel("INTMEUR")
 
     //Cria a estrutura de dados utilizada na interface do cadastro de Autor
-    Local oStru := FWFormStruct(2, cTabela)
+    Local oStru   := FWFormStruct(2, cTabela)
+    Local oStruF  := FWFormStruct(2, cTbFilho)
 
     //Cria o objeto oView como nulo
     Local oView := Nil
@@ -217,9 +231,11 @@ Static Function ViewDef()
 
     //Atribui formulários para interface
     oView:AddField("VIEW_"+cTabela, oStru, "FORM"+cTabela)
+    oView:AddGrid("ZZQDETAIL",oStruF,"DETAIL")
 
     //Cria um container com nome tela com 100%
-    oView:CreateHorizontalBox("TELA",100)
+    oView:CreateHorizontalBox("TELA",50)
+    oView:CreateHorizontalBox("TELAGRID",50)
 
     //Adiciona o título do formulário
     oView:EnableTitleView("VIEW_"+cTabela, cTitulo)
@@ -229,6 +245,7 @@ Static Function ViewDef()
 
     //Aloca o formulário da interface dentro do container
     oView:SetOwnerView("VIEW_"+cTabela,"TELA")
+    oView:SetOwnerView("ZZQDETAIL","TELAGRID")
 
 Return oView
 

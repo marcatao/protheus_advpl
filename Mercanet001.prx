@@ -3,14 +3,15 @@
 
 
 User Function RERPA01
- Local cAlias  := "ZZR"
+
+ Local cAlias  := "XX1"
  Local cTitulo := "Testando AxCadastro Itens do pedido"
  AxCadastro(cAlias, cTitulo)
 Return
 
 
 User Function RERPA02
- Local cAlias  := "ZZQ"
+ Local cAlias  := "XX1"
  Local cTitulo := "Testando AxCadastro Mestre do pedido"
  AxCadastro(cAlias, cTitulo)
 Return
