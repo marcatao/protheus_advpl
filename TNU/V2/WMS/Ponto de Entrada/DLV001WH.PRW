@@ -80,7 +80,8 @@ If _lAluModo_  // Modo alumbra
 
     //Sair da tela e habilitar o abondono da convocaçao
     If VTLastkey() == 27
-        __nOpcESC := 1 // FLAG de Abandono   
+        //__nOpcESC := 1 // FLAG de Abandono   
+        WmsOpcESC()
     EndIf
 
     //Se estiver no modo alumbra e nao encontrar registro passar qualquer coisa pra nao encontrar regisro
@@ -132,7 +133,8 @@ cQuery := "SELECT  "
 cQuery += "D12_ENDORI, D12_PRODUT, D12_DOC, D12_QTDORI, D12_QTDLID, D12_TAREFA, D12_ATIVID, D12_DTGERA, D12.R_E_C_N_O_ AS RECNO, D12_IDMOV, D12_STATUS, D12_QTDLID "
 cQuery += "FROM "+RetSqlName("D12")+" D12 "
 //cQuery += "JOIN "+RetSqlName("SB1")+" SB1 "
-//cQuery += "  ON B1_FILIAL = '"+xFilial("SB1")+"' "
+//cQu
+ery += "  ON B1_FILIAL = '"+xFilial("SB1")+"' "
 //cQuery += "  AND B1_COD = D12_PRODUT "
 //cQuery += "  AND SB1.D_E_L_E_T_ = '' "
 cQuery += "WHERE D12_FILIAL = '"+xFilial("D12")+"' " 

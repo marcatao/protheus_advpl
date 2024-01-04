@@ -323,9 +323,9 @@ oBrowSZ3:SetSeek({||.T.},aSeek)
 If !lVisual
 
   oBrowSZ3:AddButton( OemTOAnsi("Reprocessar"), {|| Pesar(oBrowSZ3,,oButPesar, nPeso, nTara,nPesoLiq, cDoc, cProduto, cLocal, cLote, nTipo, nQtd, cOperacao, cRecurso, cOperador,cEndEnt, cResp, cQryCpo, .T., lManual, cLocOri,cEndDes ) },, 2 ) 
-  oBrowSZ3:AddButton( OemTOAnsi("Reimprimir"), {|| ImpEtiq((cAlias)->Z3_CODETI) },, 2 ) 
+  oBrowSZ3:AddButton( OemTOAnsi("Reimprimir"), {|| Alert((oBrowSZ3:GetAlias())->Z3_CODETI),ImpEtiq((oBrowSZ3:GetAlias())->Z3_CODETI) },, 2 ) 
   oBrowSZ3:AddButton( OemTOAnsi("Estornar"), {|| Alert("Estorne pelo processo padrão do sistema na seguinte sequencia: MOVIMENTO WMS, OS, APONTAMENTO") },, 2 ) 
-  oBrowSZ3:AddButton( OemTOAnsi("Excluir"), {|| ExcluirPesag(cAlias, oBrowSZ3, cDoc, cQryCpo,nTipo, cProduto) },, 2 ) //"Cancelar"
+  oBrowSZ3:AddButton( OemTOAnsi("Excluir"), {|| ExcluirPesag(oBrowSZ3:GetAlias(), oBrowSZ3, cDoc, cQryCpo,nTipo, cProduto) },, 2 ) //"Cancelar"
   oBrowSZ3:AddButton( OemTOAnsi("Reconectar"), {|| u_ALU10Balanca(1, cBalanca,@lLeitura), oGetPeso:Refresh()},, 2 ) 
 
 EndIf
@@ -405,6 +405,7 @@ If lReprocesso
         MsgStop("Sem registro para reprocessar","Atençao!!!")
         lContinua := .F.
     EndIf
+
 EndIf
 
 if !lReprocesso .AND. !lManual .AND. (nTara <= 0 .OR. nPeso <= 0 )
@@ -414,22 +415,44 @@ EndIf
 
 nPesoLiq := nPeso - nTara
 
-if !lReprocesso .AND. !lManual .AND. nQtd <= 0
+if !lReprocesso  .AND. nQtd <= 0 //.AND. !lManual
     Aviso(OemToAnsi("Atençao!!!"),OemToAnsi("Sem quantidadde para registrar. Verifique a balança"),{"Ok"})
     lContinua := .F.
 EndIf
 
-
+//Validar etiqueta origem da divisao
 //Ver se a etiqueta ja teve o movimento finalizado - se nao nao deixar dividr
-If !Empty(SZ3->Z3_IDMOV) .AND. nTipo == 2
-    DbSelectArea("D12")
-    DbSetorder(4) //D12_FILIAL+D12_IDDCF+D12_IDMOV+D12_IDOPER+D12_STATUS+D12_SERVIC+D12_TAREFA                                                                                      
-    If D12->(DbSeek(xFilial("D12")+SZ3->Z3_IDDCF+SZ3->Z3_IDMOV))
-        If D12->D12_STATUS <> "1"
-            MsgStop("Endereçamento da etiqueta pendente de execução/beep","Erro!!!")
-            lContinua := .F.   
-        EndIf
+If nTipo == 2
+    
+    If Empty((cAlias)->Z3_CODETI) 
+        MsgStop("Nenhuma etiqueta selecionada.Selecine uma etiqueta")
+        lContinua := .F.
     EndIf
+
+    If lContinua
+        lContinua :=  Aviso(ProcName(),"Confirma divisão da etiqueta " + (cAlias)->Z3_CODETI + "?",{"Sim","Não"}) == 1
+    EndIf
+
+    If lContinua 
+        
+        If !Empty(SZ3->Z3_IDMOV) 
+
+            DbSelectArea("D12")
+            DbSetorder(4) //D12_FILIAL+D12_IDDCF+D12_IDMOV+D12_IDOPER+D12_STATUS+D12_SERVIC+D12_TAREFA                                                                                      
+            If D12->(DbSeek(xFilial("D12")+SZ3->Z3_IDDCF+SZ3->Z3_IDMOV))
+                If D12->D12_STATUS <> "1"
+                        MsgStop("Endereçamento da etiqueta pendente de execução/beep","Erro!!!")
+                        lContinua := .F.   
+                EndIf
+            EndIf
+        Else
+            MsgStop("Etiqueta não unitizada","Erro!!!")
+            lContinua := .F.   
+
+        EndIf
+   
+    EndIf
+
 EndIf
 
 If lContinua
@@ -888,6 +911,11 @@ ElseIf nTipo == 2
     cUM        := Space(TamSX3("B1_UM")[1]) 
     cDesc      := Space(TamSX3("B1_DESC")[1]) 
 
+    //Carregar a etiqueta posicionada
+    cIdUnitz   := (oBrowSZ3:GetAlias())->Z3_IDUNITZ
+
+
+
 ElseIf nTipo == 3
     oTGetDoc:lReadOnly := .T.
     oTGetOper:lReadOnly := .T.
@@ -1311,14 +1339,30 @@ description
 /*/
 Static Function AtuBrowse(oBrowSZ3, cDoc, cQryCpo, cProduto, cEtiqueta, nTipo)
 Local cSZ3Qry := PegQuery(cDoc, cQryCpo, cProduto, cEtiqueta, nTipo)
+Local cAlias  := oBrowSZ3:GetAlias()
 
 oBrowSZ3:SetQuery(cSZ3Qry)
 
 oBrowSZ3:Refresh()
-oBrowSZ3:oBrowse:Refresh()
+
+(cAlias)->(DbGoTop())
+While !(cAlias)->(Eof())
+    
+    If (cAlias)->Z3_CODETI == cEtiqueta
+        Exit
+    EndIf
+    
+    (cAlias)->(DbSkip())
+
+EndDo
+
+//oBrowSZ3:Refresh()
+//oBrowSZ3:oBrowse:Refresh()
+
 //(oBrowSZ3:GetAlias())->(dbGoBottom())
 
-oBrowSZ3:GoBottom()
+//oBrowSZ3:GoBottom()
+
 
 Return
 
@@ -1423,7 +1467,9 @@ If nTipo == 3
     cSZ3Qry +=  "AND Z3_DOC = '' AND Z3_COD = '" + cProduto + "' " 
 EndIf
 
+cSZ3Qry +=  "AND Z3_TIPO <> '9' "
 cSZ3Qry +=  "AND SZ3.D_E_L_E_T_ = ' ' "
+
 cSZ3Qry += "ORDER BY " + aIndex[1] + ", " + aIndex[2]
 
 Return cSZ3Qry
@@ -1774,7 +1820,7 @@ Default cEtiqueta := ""
 If !Empty(cEtiqueta) 
     aAdd(aItens,{cEtiqueta})    
 Else
-    MsgStop("A pesagem não possui unitizador","Erro")
+    MsgStop("Selecione alguma etiqueta","Erro")
 EndIf
 
 //Imprimir a etiqueta gerada
@@ -1787,7 +1833,7 @@ EndIf
 Return lRet
 
 
-/*/{Protheus.doc} ExcluirPesag
+/*/{Protheus.doc} ExcluirPesag10
 description
 @type function
 @version  
@@ -1797,8 +1843,13 @@ description
 @return variant, return_description
 /*/
 Static Function ExcluirPesag(cAlias, oBrowSZ3, cDoc, cQryCpo, nTipo, cProduto)
+Local lContinua := .T. 
 
-If Empty((cAlias)->Z3_IDUNITZ)
+lContinua :=  Aviso(ProcName(),"Confirma exclusão da etiqueta " + (cAlias)->Z3_CODETI + " RECNO = " + Str((cAlias)->RECNO) + "?",{"Sim","Não"}) == 1
+
+If lContinua 
+    
+    If Empty((cAlias)->Z3_IDUNITZ)
        
         SZ3->(DbGoTo((cAlias)->RECNO))
         
@@ -1814,10 +1865,10 @@ If Empty((cAlias)->Z3_IDUNITZ)
         AtuTotais(oBrowSZ3, 1) 
 
         AtuBrowse(oBrowSZ3, cDoc, cQryCpo, cProduto, "", nTipo)
-Else
-    MsgStop("A pesagem tem Unitizador, para exlcuir estorne antes a montagem de unitizador","Erro")    
-EndIf    
-
+    Else
+        MsgStop("A pesagem tem Unitizador, para exlcuir estorne antes a montagem de unitizador","Erro")    
+    EndIf    
+EndIf
 
 Return
 
@@ -1936,6 +1987,7 @@ Local lRet      := .T.
 Local cEtiqueta :=  ""
 Local nPeso     := 0
 Local nQuant    := 0
+Local lAtendeu  := .F.
 
 cEtiqueta := PegProxEtiq()
 
@@ -1949,7 +2001,7 @@ If WmsArmUnit(SZ3->Z3_LOCAL) //Armazem unitiazado
         
         oSay:SetText("Montando Transferencia..." + SZ3->Z3_IDUZORI + " para novo") // ALTERA O TEXTO CORRETO
         ProcessMessages() // FORÇA O DESCONGELAMENTO DO SMARTCLIENT
-        lRet := DivEtiq(@cEtiqueta, cAlias)
+        lRet := DivEtiq(@cEtiqueta, cAlias, @lAtendeu)
     
     Else
         //MsgStop("Armazem unitizado não permite entrada sem Ordem de Producao. A etiqueta de ve ser direcionada para outro armazem que nao seja unitizado","Erro!")
@@ -1958,17 +2010,22 @@ If WmsArmUnit(SZ3->Z3_LOCAL) //Armazem unitiazado
         ProcessMessages() // FORÇA O DESCONGELAMENTO DO SMARTCLIENT
         lRet := MontagUnitz(@cEtiqueta) //Unitizar muda a etiqueta
   
-    EndIf
+    EndIf 
 
 EndIf //Se o armazem nao for unitizado, apenas gerar a etiqueta com um sequencial comum
 
 If lRet 
-    
+  
     RecLock("SZ3",.F.)
+    
+    If lAtendeu
+        SZ3->Z3_TIPO   := '9' //Ajusta o tipo da pesagem para atendimento da rquisicao
+        SZ3->Z3_QUANT  := D12->D12_QTDMOV 
+    EndIf
+    
     SZ3->Z3_CODETI  := cEtiqueta
     SZ3->(MsUnlock())
-    //!Empty(SZ3->Z3_ENDDES) .OR. (Empty(SZ3->Z3_ENDDES) .AND. Z3_TIPO == "3") 
-    
+        
     oSay:SetText("Imprimindo etiqueta..." + cEtiqueta) // ALTERA O TEXTO CORRETO
     ProcessMessages() // FORÇA O DESCONGELAMENTO DO SMARTCLIENT
 
@@ -1977,8 +2034,8 @@ If lRet
     EndIf
 
     //Posicionar na etiqueta original, atualizar os dados e imprimir
-    
-    If SZ3->Z3_TIPO == "2" //SOMENTE PARA DIVISAO
+    If SZ3->Z3_TIPO $ "29"  //SOMENTE PARA DIVISAO 
+        
         If !Empty((cAlias)->RECNO)
 
             //Pegar a nova pesagem
@@ -2183,6 +2240,13 @@ Static Function VldUnitz(cIdUnitz,oTGetEtiq, oBrowSZ3, cQryCpo, oDlgTela,cDoc,cP
 Local lRet      := .T.
 Local cAlias    := ""
 
+//Garantir posicionamento da etiqueta
+DbSelectArea("SZ3")
+DbSetOrder(2) //Z3_FILIAL+Z3_IDUNITZ                                                                                                                                            
+If !SZ3->(DbSeek(xFilial("SZ3")+cIdUnitz)) 
+    Alert("Pesagem inexistente")
+EndIf
+
 If !Empty(cIdUnitz)
     DbSelectArea("D0R")
     DbSetorder(3)//D0R_FILIAL+D0R_IDUNIT                                                                                                                                           
@@ -2236,7 +2300,7 @@ Para isto no WMS Protheus faz se necessario transferir o saldo de uma para o out
 @since 20/07/2023
 @return variant, return_description
 /*/
-Static Function DivEtiq(cEtiqueta,cAlias)
+Static Function DivEtiq(cEtiqueta,cAlias,lAtendeu )
 //-------------------------------------------------------
 Local lRet      := .T.
 Local oMovimento
@@ -2250,305 +2314,308 @@ Local nRecD12 := 0
 Local nRecD14  := 0
 Local nRecD12Atu := 0
 
-// Criação das tabelas temporárias para validação do unitizador
-WMSCTPENDU()
+//Verifique e atende requisicoes
+lAtendeu :=  AtendReq(cAlias,@cEtiqueta)
 
-DbSelectArea("DC3")
-DbSetOrder(1) //DC3_FILIAL+DC3_CODPRO+DC3_LOCAL+DC3_ORDEM
-If DC3->(DbSeek(xFilial("DC3")+SZ3->Z3_COD+SZ3->Z3_LOCAL))
-    DbSelectArea("DC2")
-    DbSetOrder(1) //DC2_FILIAL+DC2_CODNOR
-    If DC2->(DbSeek(xFilial("DC2")+DC3->DC3_CODNOR))
-        cTipUni := DC2_CODUNI
+//Se nao atendeu, continua e divide
+If !lAtendeu
+    // Criação das tabelas temporárias para validação do unitizador
+    WMSCTPENDU()
+
+    DbSelectArea("DC3")
+    DbSetOrder(1) //DC3_FILIAL+DC3_CODPRO+DC3_LOCAL+DC3_ORDEM
+    If DC3->(DbSeek(xFilial("DC3")+SZ3->Z3_COD+SZ3->Z3_LOCAL))
+        DbSelectArea("DC2")
+        DbSetOrder(1) //DC2_FILIAL+DC2_CODNOR
+        If DC2->(DbSeek(xFilial("DC2")+DC3->DC3_CODNOR))
+            cTipUni := DC2->DC2_CODUNI
+        EndIf
     EndIf
-EndIf
 
-oMovRequis := WMSBCCTransferencia():New()
-oMovimento := WMSBCCTransferencia():New()
-oOrdServ   := WMSDTCOrdemServicoCreate():New()
-oEtiqUnit  := WMSDTCEtiquetaUnitizador():New()
-//oModelDCF  := oModel:GetModel("DCFMASTER")
-//oModelSel  := oModel:GetModel("SELECAO")
+    oMovRequis := WMSBCCTransferencia():New()
+    oMovimento := WMSBCCTransferencia():New()
+    oOrdServ   := WMSDTCOrdemServicoCreate():New()
+    oEtiqUnit  := WMSDTCEtiquetaUnitizador():New()
+    //oModelDCF  := oModel:GetModel("DCFMASTER")
+    //oModelSel  := oModel:GetModel("SELECAO")
 
-WmsOrdSer(oOrdServ)
+    WmsOrdSer(oOrdServ)
 
-Begin Transaction
+    Begin Transaction
 
-// Criação do serviço com origem DCF quando o armazém destino é o mesmo
+    // Criação do serviço com origem DCF quando o armazém destino é o mesmo
 
-// Atribui produto/Lote/Sublote
-oOrdServ:oProdLote:SetArmazem(SZ3->Z3_LOCAL)
-oOrdServ:oProdLote:SetProduto(SZ3->Z3_COD)
-oOrdServ:oProdLote:SetPrdOri(SZ3->Z3_COD)
-//oOrdServ:oProdLote:SetLoteCtl(SZ3->Z3_LOTECTL)
-//oOrdServ:oProdLote:SetNumLote(oModelSel:GetValue("NUMLOTE"))
-//oOrdServ:oProdLote:SetDtValid(oModelSel:GetValue("DTVALD"))
-oOrdServ:oProdLote:LoadData()
-//oOrdServ:oProdLote:SetNumSer("")
+    // Atribui produto/Lote/Sublote
+    oOrdServ:oProdLote:SetArmazem(SZ3->Z3_LOCAL)
+    oOrdServ:oProdLote:SetProduto(SZ3->Z3_COD)
+    oOrdServ:oProdLote:SetPrdOri(SZ3->Z3_COD)
+    //oOrdServ:oProdLote:SetLoteCtl(SZ3->Z3_LOTECTL)
+    //oOrdServ:oProdLote:SetNumLote(oModelSel:GetValue("NUMLOTE"))
+    //oOrdServ:oProdLote:SetDtValid(oModelSel:GetValue("DTVALD"))
+    oOrdServ:oProdLote:LoadData()
+    //oOrdServ:oProdLote:SetNumSer("")
 
-// Atribui endereco origem
-oOrdServ:oOrdEndOri:SetArmazem(SZ3->Z3_LOCAL)
-oOrdServ:oOrdEndOri:SetEnder(SZ3->Z3_ENDENT)
-// Atribui endereco destino
-//Definir destino somente se tiver endreço livre
-If  .T. //Ver quantidade de unitizar contido no endreço 
-    oOrdServ:oOrdEndDes:SetArmazem(SZ3->Z3_LOCAL)
-    oOrdServ:oOrdEndDes:SetEnder(SZ3->Z3_ENDDES)
-EndIf
-// Atribui quantidade
-oOrdServ:SetQuant(SZ3->Z3_QUANT)
-oOrdServ:SetOrigem("DCF")
-oOrdServ:SetDocto(SZ3->Z3_DOC)
-// Atribui servico
-oOrdServ:oServico:SetServico("014")
-oOrdServ:oServico:LoadData()
-// Criação do serviço com origem DH1 quando o armazém é diferente
+    // Atribui endereco origem
+    oOrdServ:oOrdEndOri:SetArmazem(SZ3->Z3_LOCAL)
+    oOrdServ:oOrdEndOri:SetEnder(SZ3->Z3_ENDENT)
+    // Atribui endereco destino
+    //Definir destino somente se tiver endreço livre
+    If  .T. //Ver quantidade de unitizar contido no endreço 
+        oOrdServ:oOrdEndDes:SetArmazem(SZ3->Z3_LOCAL)
+        oOrdServ:oOrdEndDes:SetEnder("BALANCA")   //oOrdServ:oOrdEndDes:SetEnder(SZ3->Z3_ENDDES)  Mandar tudo pra balanca
+    EndIf
+    // Atribui quantidade
+    oOrdServ:SetQuant(SZ3->Z3_QUANT)
+    oOrdServ:SetOrigem("DCF")
+    oOrdServ:SetDocto(SZ3->Z3_DOC)
+    // Atribui servico
+    oOrdServ:oServico:SetServico("014")
+    oOrdServ:oServico:LoadData()
+    // Criação do serviço com origem DH1 quando o armazém é diferente
 
-If GeraEtiq(1,@cIdUnitiz)
+    If GeraEtiq(1,@cIdUnitiz)
 
-    // Atribui informações do unitizador
-    oOrdServ:SetIdUnit(SZ3->Z3_IDUZORI) //Aqui precisa ser o unitizador autal
+        // Atribui informações do unitizador
+        oOrdServ:SetIdUnit(SZ3->Z3_IDUZORI) //Aqui precisa ser o unitizador autal
 
-    If WmsArmUnit(SZ3->Z3_LOCAL)
-        oOrdServ:oOrdEndDes:LoadData()
-        If !( cValtoChar(oOrdServ:oOrdEndDes:GetTipoEst()) $ "2|7|8" )
-            oOrdServ:SetUniDes(cIdUnitiz)  //Novo unitizador
-            oOrdServ:SetTipUni(cTipUni)
-            
-            // Atualiza dados da etiqueta do unitizador
-            oEtiqUnit:SetIdUnit(cIdUnitiz)
-            If oEtiqUnit:LoadData()
-                If !oEtiqUnit:GetIsUsed()
-                    oEtiqUnit:SetUsado("1")
-                    oEtiqUnit:SetTipUni(cTipUni)
-                    oEtiqUnit:UpdateD0Y()
+        If WmsArmUnit(SZ3->Z3_LOCAL)
+            oOrdServ:oOrdEndDes:LoadData()
+            If !( cValtoChar(oOrdServ:oOrdEndDes:GetTipoEst()) $ "2|7|8" )
+                oOrdServ:SetUniDes(cIdUnitiz)  //Novo unitizador
+                oOrdServ:SetTipUni(cTipUni)
+                
+                // Atualiza dados da etiqueta do unitizador
+                oEtiqUnit:SetIdUnit(cIdUnitiz)
+                If oEtiqUnit:LoadData()
+                    If !oEtiqUnit:GetIsUsed()
+                        oEtiqUnit:SetUsado("1")
+                        oEtiqUnit:SetTipUni(cTipUni)
+                        oEtiqUnit:UpdateD0Y()
+                    EndIf
                 EndIf
             EndIf
+        Else
+            MsgStop("Impossivel DIVIDIR etqueta, o aramzem nao é unitizador","Erro")    
         EndIf
-    Else
-        MsgStop("Impossivel DIVIDIR etqueta, o aramzem nao é unitizador","Erro")    
-    EndIf
-    // Endereco Origem
-    oMovimento:SetIdUnit(oOrdServ:GetIdUnit())
-    oMovimento:oMovEndOri:SetArmazem(oOrdServ:oOrdEndOri:GetArmazem())
-    oMovimento:oMovEndOri:SetEnder(oOrdServ:oOrdEndOri:GetEnder())
-    // Endereco Destino
-    oMovimento:SetUniDes(oOrdServ:GetUniDes())
-    oMovimento:SetTipUni(oOrdServ:GetTipUni())
-    oMovimento:oMovEndDes:SetArmazem(oOrdServ:oOrdEndDes:GetArmazem())
-    oMovimento:oMovEndDes:SetEnder(oOrdServ:oOrdEndDes:GetEnder())
+        // Endereco Origem
+        oMovimento:SetIdUnit(oOrdServ:GetIdUnit())
+        oMovimento:oMovEndOri:SetArmazem(oOrdServ:oOrdEndOri:GetArmazem())
+        oMovimento:oMovEndOri:SetEnder(oOrdServ:oOrdEndOri:GetEnder())
+        // Endereco Destino
+        oMovimento:SetUniDes(oOrdServ:GetUniDes())
+        oMovimento:SetTipUni(oOrdServ:GetTipUni())
+        oMovimento:oMovEndDes:SetArmazem(oOrdServ:oOrdEndDes:GetArmazem())
+        oMovimento:oMovEndDes:SetEnder(oOrdServ:oOrdEndDes:GetEnder())
 
-    // Produto/Lote
-    oMovimento:oMovPrdLot:SetArmazem(oOrdServ:oProdLote:GetArmazem())
-    oMovimento:oMovPrdLot:SetPrdOri(oOrdServ:oProdLote:GetPrdOri())
-    oMovimento:oMovPrdLot:SetProduto(oOrdServ:oProdLote:GetProduto())
-    oMovimento:oMovPrdLot:SetLoteCtl(oOrdServ:oProdLote:GetLoteCtl())
-    oMovimento:oMovPrdLot:SetNumLote(oOrdServ:oProdLote:GetNumLote())
-    oMovimento:oMovPrdLot:SetNumSer(oOrdServ:oProdLote:GetNumSer())
-    oMovimento:oMovPrdLot:LoadData()
+        // Produto/Lote
+        oMovimento:oMovPrdLot:SetArmazem(oOrdServ:oProdLote:GetArmazem())
+        oMovimento:oMovPrdLot:SetPrdOri(oOrdServ:oProdLote:GetPrdOri())
+        oMovimento:oMovPrdLot:SetProduto(oOrdServ:oProdLote:GetProduto())
+        oMovimento:oMovPrdLot:SetLoteCtl(oOrdServ:oProdLote:GetLoteCtl())
+        oMovimento:oMovPrdLot:SetNumLote(oOrdServ:oProdLote:GetNumLote())
+        oMovimento:oMovPrdLot:SetNumSer(oOrdServ:oProdLote:GetNumSer())
+        oMovimento:oMovPrdLot:LoadData()
 
-    oMovimento:oMovServic:SetServico(oOrdServ:oServico:GetServico())
-    oMovimento:oOrdServ:SetDocto(oOrdServ:GetDocto())
-    oMovimento:SetQuant(oOrdServ:GetQuant())
-    If !oMovimento:ChkEndOri()
-        //oModel:GetModel():SetErrorMessage( , , oModel:GetId() , "", "", oMovimento:GetErro(), "", "", "")
-        MsgStop("Endereço origem invalido " + oMovimento:GetErro() ,"Erro!!!")
-        lRet := .F.
-    EndIf
-    If lRet .And. !Empty(oOrdServ:oOrdEndDes:GetEnder())
-        If !oMovimento:ChkEndDes()
-
-            MsgStop("Endereço de destino " + SZ3->Z3_ENDDES + " invalido. " + oMovimento:GetErro() + ". Endereçando para BALANCA ", "Atencao!!!")
-
-            oMovimento:oMovEndDes:SetEnder("BALANCA")        
-
-            If oMovimento:ChkEndDes()
-                oOrdServ:oOrdEndDes:SetEnder("BALANCA")     
-            Else
-                MsgStop("Endereco BALANCA invalido, verifique e reprocesse a pesagem" + oMovimento:GetErro()  ,"Erro!")  
-                Disarmtransaction()
-                lRet := .F.    
-            EndIf       
-        EndIf      
-    EndIf
-
-    If lRet
-        If !oOrdServ:CreateDCF()
-            MsgStop("Erro ao criar/executar ordem de serviço no endereço " + SZ3->Z3_ENDDES + " " + oOrdServ:GetErro() + " tentr outro endereço? ")
-            Disarmtransaction()
+        oMovimento:oMovServic:SetServico(oOrdServ:oServico:GetServico())
+        oMovimento:oOrdServ:SetDocto(oOrdServ:GetDocto())
+        oMovimento:SetQuant(oOrdServ:GetQuant())
+        If !oMovimento:ChkEndOri()
+            //oModel:GetModel():SetErrorMessage( , , oModel:GetId() , "", "", oMovimento:GetErro(), "", "", "")
+            MsgStop("Endereço origem invalido " + oMovimento:GetErro() ,"Erro!!!")
             lRet := .F.
         EndIf
-    EndIf
+        If lRet .And. !Empty(oOrdServ:oOrdEndDes:GetEnder())
+            If !oMovimento:ChkEndDes()
 
-	// Efetua a execução automática quando serviço configurado 
-	If lRet
-		
-        //Trocar o unitizador e endereço do movimento 
-        nRecD12 := TrocaUnit(cAlias, 1)
-        If nRecD12 > 0
-            D12->(DbGoTo(nRecD12))
+                MsgStop("Endereço de destino " + SZ3->Z3_ENDDES + " invalido. " + oMovimento:GetErro() + ". Endereçando para BALANCA ", "Atencao!!!")
 
-            //Localizar D12 e tirar o previsto de saida
-            DbSetOrder(1) //D14_FILIAL+D14_LOCAL+D14_ENDER+D14_PRDORI+D14_PRODUT+D14_LOTECT+D14_NUMLOT+D14_NUMSER+D14_IDUNIT                                                                
-            If D14->(DbSeek(xFilial("D14")+D12->(D12_LOCORI+D12_ENDORI+D12_PRODUT+D12_PRODUT+D12_LOTECT+D12_NUMLOT+D12_NUMSER+D12_IDUNIT) ))
-                If D14->D14_QTDSPR >= D12->D12_QTDORI 
-                    RecLock("D14",.F.)
-                    D14->D14_QTDSPR -= D12->D12_QTDORI 
-                    D14->D14_QTDPEM -= D12->D12_QTDORI
-                    D14->(MsUnlock()) 
-                    nRecD14 := D14->(RecNo())
-                EndIf  
+                oMovimento:oMovEndDes:SetEnder("BALANCA")        
+
+                If oMovimento:ChkEndDes()
+                    oOrdServ:oOrdEndDes:SetEnder("BALANCA")     
+                Else
+                    MsgStop("Endereco BALANCA invalido, verifique e reprocesse a pesagem" + oMovimento:GetErro()  ,"Erro!")  
+                    Disarmtransaction()
+                    lRet := .F.    
+                EndIf       
+            EndIf      
+        EndIf
+
+        If lRet
+            If !oOrdServ:CreateDCF()
+                MsgStop("Erro ao criar/executar ordem de serviço no endereço " + SZ3->Z3_ENDDES + " " + oOrdServ:GetErro() + " tentr outro endereço? ")
+                Disarmtransaction()
+                lRet := .F.
             EndIf
         EndIf
-        /*
-        If nRecD12 > 0
-            oOrdSerRev:GoToDCF(aOrdSerEst[nI])
-            If oOrdSerRev:CanReverse()
-                If !oOrdSerRev:ReverseDCF()
-                    //DisarmTransaction()
-                EndIf
-            EndIf
-        EndIf
-        */
-       /* If nRecD12 > 0
-            If oMovRequis:GoToD12(nRecD12)
-                
-                lRet := Self:RevMovPrev()
-                
-            EndIf
-        EndIf
-        
-*/
 
-        lRetExe := WmsExeServ()
-        
-        If !lRetExe
-            MsgStop("Erro ao executar ordem de serviço no endereço " + SZ3->Z3_ENDDES + " " + oOrdServ:GetErro() + " tentar outro endereço? ")
-            DisarmTransaction()
-        EndIf
-
-        lRet := lRetExe
-    EndIf
-
-    //Se chegou ate aqui gravar os dados do unitizador
-    If lRet .AND. lRetExe
-
-        //Voltar previsto de saida
-
-       //lRet := GerarOS(cUnitiz)
-        RecLock("SZ3",.F.)
-        SZ3->Z3_IDUNITZ  := cIdUnitiz
-        SZ3->Z3_CODETI   := cIdUnitiz
-        SZ3->(MsUnlock())
-
-        cEtiqueta := SZ3->Z3_IDUNITZ
- 
- 
-    EndIf
-
-    If lRet
-        DbSelectArea("D12")
-        DbSetorder(4)//D12_FILIAL+D12_IDDCF+D12_IDMOV+D12_IDOPER+D12_STATUS+D12_SERVIC+D12_TAREFA                                                                                      
-        If D12->(DbSeek(xFilial("D12")+SZ3->Z3_IDDCF))
-        
-            RecLock("SZ3",.F.)
-            SZ3->Z3_ENDDES  := D12->D12_ENDDES
-            SZ3->Z3_IDMOV   := D12->D12_IDMOV
-            SZ3->(MsUnlock())
-
+        // Efetua a execução automática quando serviço configurado 
+        If lRet
             
-
+            //Trocar o unitizador e endereço do movimento 
+            //nRecD12 := TrocaUnit(cAlias, 1)
+            /*
             If nRecD12 > 0
-                
-                nRecD12Atu := D12->(RecNo())
-                
                 D12->(DbGoTo(nRecD12))
-                RecLock("D12",.F.)
-                D12->D12_ENDORI  := SZ3->Z3_ENDDES //SZ3->Z3_ENDDES
-                D12->D12_IDUNIT  := SZ3->Z3_IDUNITZ  //SZ3->Z3_IDUNITZ 
-                D12->(MsUnlock())
 
-                //TrocaUnit(cAlias, 2)
                 //Localizar D12 e tirar o previsto de saida
                 DbSetOrder(1) //D14_FILIAL+D14_LOCAL+D14_ENDER+D14_PRDORI+D14_PRODUT+D14_LOTECT+D14_NUMLOT+D14_NUMSER+D14_IDUNIT                                                                
                 If D14->(DbSeek(xFilial("D14")+D12->(D12_LOCORI+D12_ENDORI+D12_PRODUT+D12_PRODUT+D12_LOTECT+D12_NUMLOT+D12_NUMSER+D12_IDUNIT) ))
-                    //If D14->D14_QTDSPR >= D12->D12_QTDORI 
+                    If D14->D14_QTDSPR >= D12->D12_QTDORI 
                         RecLock("D14",.F.)
-                        D14->D14_QTDSPR += D12->D12_QTDORI 
-                        D14->D14_QTDPEM += D12->D12_QTDORI 
+                        D14->D14_QTDSPR -= D12->D12_QTDORI 
+                        D14->D14_QTDPEM -= D12->D12_QTDORI
                         D14->(MsUnlock()) 
                         nRecD14 := D14->(RecNo())
-                    //EndIf  
+                    EndIf  
                 EndIf
-                
-                D12->(DbGoTo(nRecD12Atu))
+            EndIf
+            /*
+            If nRecD12 > 0
+                oOrdSerRev:GoToDCF(aOrdSerEst[nI])
+                If oOrdSerRev:CanReverse()
+                    If !oOrdSerRev:ReverseDCF()
+                        //DisarmTransaction()
+                    EndIf
+                EndIf
+            EndIf
+            */
+        /* If nRecD12 > 0
+                If oMovRequis:GoToD12(nRecD12)
+                    
+                    lRet := Self:RevMovPrev()
+                    
+                EndIf
+            EndIf
+            
+    */
 
+            lRetExe := WmsExeServ()
+            
+            If !lRetExe
+                MsgStop("Erro ao executar ordem de serviço no endereço " + SZ3->Z3_ENDDES + " " + oOrdServ:GetErro() + " tentar outro endereço? ")
+                DisarmTransaction()
             EndIf
 
-         // Para nao mexer nos dados da D14, tentar criar um D14 retirando a quantidade prevista de saida e empenho correspondente ao unitizador e apos finalizar Excluir
-          //  Trocar o unitizador da D12 autalizando o movimento 
-            //No caso de divisao de etiqueta ja deve Finalizar a atividade
-            //Para finalizar a transferencia preciso retirar a quantidade prevista de saida gerada pela requisiçao, equivalente a quantidade divididade e depois voltar
-
-            //Localizar a D14 do unitizador origem
-           // DbSetOrder(5)//D14_FILIAL+D14_IDUNIT                                                                                                                                           
-           // If DbSeek(xFilial("D14")+D12->D12_IDUNIT)
-           //     RecLock(.F.,"D14")
-           //     D14->D14_QTDSPR := (D14->D14_QTDSPR - SZ3->Z3_QUANT)
-           //     D14->(MsUnlock())
-           // EndIf
-
-
-           u_ALUAFAtiv()
-
-          //  DbSetOrder(5)//D14_FILIAL+D14_IDUNIT                                                                                                                                           
-          //  If DbSeek(xFilial("D14")+D12->D12_IDUNIT)
-          //      RecLock(.F.,"D14")
-          //      D14->D14_QTDSPR := (D14->D14_QTDSPR + SZ3->Z3_QUANT)
-          //      D14->(MsUnlock())
-          //  EndIf
-
-        Else
-            MsgStop("O movimento da Ordem de Serviço WMS não foi encontrado, verifique e reprocesse a pesagem","Erro!")
-            DisarmTransaction()
-            lRet := .F.
+            lRet := lRetExe
         EndIf
-    EndIf
- 
 
-Else
-    MsgStop("Impossivel pegar o ID novo de unitizador","Erro")
+        //Se chegou ate aqui gravar os dados do unitizador
+        If lRet .AND. lRetExe
+
+            //Voltar previsto de saida
+
+        //lRet := GerarOS(cUnitiz)
+            RecLock("SZ3",.F.)
+            SZ3->Z3_IDUNITZ  := cIdUnitiz
+            SZ3->Z3_CODETI   := cIdUnitiz
+            SZ3->(MsUnlock())
+
+            cEtiqueta := SZ3->Z3_IDUNITZ
+    
+    
+        EndIf
+
+        If lRet
+            DbSelectArea("D12")
+            DbSetorder(4)//D12_FILIAL+D12_IDDCF+D12_IDMOV+D12_IDOPER+D12_STATUS+D12_SERVIC+D12_TAREFA                                                                                      
+            If D12->(DbSeek(xFilial("D12")+SZ3->Z3_IDDCF))
+            
+                RecLock("SZ3",.F.)
+                SZ3->Z3_ENDDES  := D12->D12_ENDDES
+                SZ3->Z3_IDMOV   := D12->D12_IDMOV
+                SZ3->(MsUnlock())
+
+                
+
+                If nRecD12 > 0
+                    
+                    nRecD12Atu := D12->(RecNo())
+                    
+                    D12->(DbGoTo(nRecD12))
+                    RecLock("D12",.F.)
+                    D12->D12_ENDORI  := SZ3->Z3_ENDDES //SZ3->Z3_ENDDES
+                    D12->D12_IDUNIT  := SZ3->Z3_IDUNITZ  //SZ3->Z3_IDUNITZ 
+                    D12->(MsUnlock())
+
+                    //TrocaUnit(cAlias, 2)
+                    //Localizar D12 e tirar o previsto de saida
+                    DbSetOrder(1) //D14_FILIAL+D14_LOCAL+D14_ENDER+D14_PRDORI+D14_PRODUT+D14_LOTECT+D14_NUMLOT+D14_NUMSER+D14_IDUNIT                                                                
+                    If D14->(DbSeek(xFilial("D14")+D12->(D12_LOCORI+D12_ENDORI+D12_PRODUT+D12_PRODUT+D12_LOTECT+D12_NUMLOT+D12_NUMSER+D12_IDUNIT) ))
+                        //If D14->D14_QTDSPR >= D12->D12_QTDORI 
+                            RecLock("D14",.F.)
+                            D14->D14_QTDSPR += D12->D12_QTDORI 
+                            D14->D14_QTDPEM += D12->D12_QTDORI 
+                            D14->(MsUnlock()) 
+                            nRecD14 := D14->(RecNo())
+                        //EndIf  
+                    EndIf
+                    
+                    D12->(DbGoTo(nRecD12Atu))
+
+                EndIf
+
+            // Para nao mexer nos dados da D14, tentar criar um D14 retirando a quantidade prevista de saida e empenho correspondente ao unitizador e apos finalizar Excluir
+            //  Trocar o unitizador da D12 autalizando o movimento 
+                //No caso de divisao de etiqueta ja deve Finalizar a atividade
+                //Para finalizar a transferencia preciso retirar a quantidade prevista de saida gerada pela requisiçao, equivalente a quantidade divididade e depois voltar
+
+                //Localizar a D14 do unitizador origem
+            // DbSetOrder(5)//D14_FILIAL+D14_IDUNIT                                                                                                                                           
+            // If DbSeek(xFilial("D14")+D12->D12_IDUNIT)
+            //     RecLock(.F.,"D14")
+            //     D14->D14_QTDSPR := (D14->D14_QTDSPR - SZ3->Z3_QUANT)
+            //     D14->(MsUnlock())
+            // EndIf
+
+
+            u_ALUAFAtiv()
+
+            //  DbSetOrder(5)//D14_FILIAL+D14_IDUNIT                                                                                                                                           
+            //  If DbSeek(xFilial("D14")+D12->D12_IDUNIT)
+            //      RecLock(.F.,"D14")
+            //      D14->D14_QTDSPR := (D14->D14_QTDSPR + SZ3->Z3_QUANT)
+            //      D14->(MsUnlock())
+            //  EndIf
+
+            Else
+                MsgStop("O movimento da Ordem de Serviço WMS não foi encontrado, verifique e reprocesse a pesagem","Erro!")
+                DisarmTransaction()
+                lRet := .F.
+            EndIf
+        EndIf
+    
+
+    Else
+        MsgStop("Impossivel pegar o ID novo de unitizador","Erro")
+    EndIf
+
+    End Transaction
+
+    // Destroy objetos
+    oMovimento:Destroy()
+    oOrdServ:Destroy()
+    oEtiqUnit:Destroy()
+
+    // Deleção das tabelas temporárias para validação do unitizador
+    WMSDTPENDU()
 EndIf
 
-End Transaction
-
-// Destroy objetos
-oMovimento:Destroy()
-oOrdServ:Destroy()
-oEtiqUnit:Destroy()
-
-// Deleção das tabelas temporárias para validação do unitizador
-WMSDTPENDU()
-
 RestArea(aArea)
+
 Return lRet
 
 
-
-/*/{Protheus.doc} TrocaUnit
-Verificar movimentos pendentes no unitizador origem e trocar para o novo unitizador divvidido,
-caso seja mais deum perguntar pro ususario
+/*/{Protheus.doc} AtendReq
+description
 @type function
 @version  
 @author Deosdete Deo
-@since 30/07/2023
-@param D12->D12_ENDORI, date, param_description
-@param D12->D12_IDUNIT, date, param_description
-@param D12->D12_ENDDES, date, param_description
-@param SZ3->Z3_IDUNITZ, variant, param_description
+@since 12/21/2023
+@param cAlias, character, param_description
 @return variant, return_description
 /*/
-Static Function TrocaUnit(cAlias, nOpc)
+Static Function AtendReq(cAlias, cEtiqueta)
 Local cQuery   := ""
 Local cQryD12  := GetNextAlias()
 Local aMovSPR  := {}
@@ -2560,37 +2627,119 @@ Local aAreaD12 := D12->(GetArea())
 //Local oProcess
 //Local aErro
 Local nRecD12 := 0
- 
+Local oDlg
+Local cTitulo  := "Requisições pendentes"
+Local oOk      := LoadBitmap( GetResources(), "CHECKED" )   //CHECKED    //LBOK  //LBTIK
+Local oNo      := LoadBitmap( GetResources(), "UNCHECKED" ) //UNCHECKED  //LBNO
+Local nI 
+Local nOpc     := 0
+Local nEstorno := 0
+Local lRet     := .F. 
+Local cProduto := ""
+Local nSaldoEtq := 0
 
-// SZ3->SZ3->Z3_ENDENT,Z3_IDUZORI, SZ3->Z3_ENDDES,SZ3->Z3_IDUNITZ, SZ3->Z3_IDMOV
-If nOpc == 1
+
+Private lChk1 := .F.
+Private oLbx
+
+cEtiqueta := (cAlias)->Z3_IDUNITZ 
+nSaldoEtq := (cAlias)->Z3_QUANT
+cProduto   := (cAlias)->Z3_COD
+
+
     cQuery := "SELECT "
-    cQuery += "R_E_C_N_O_ AS RECNO, D12_IDMOV, D12_IDUNIT, D12_QTDORI, D12_ENDDES  "
+    cQuery += "R_E_C_N_O_ AS RECNO, D12_IDMOV, D12_DOC, D12_QTDMOV, D12_ENDDES, D12_PRODUT  "
     cQuery += "FROM " + RetSqlName("D12") + " D12 "
     cQuery += "WHERE D12_FILIAL = '" + xFilial("D12") + "' "
-    cQuery += " AND D12_ENDORI = '" + (cAlias)->Z3_ENDDES + "' "
-    cQuery += " AND D12_IDUNIT = '" + (cAlias)->Z3_IDUNITZ + "' "
+    //cQuery += " AND D12_ENDORI = '" + (cAlias)->Z3_ENDDES + "' "
+    cQuery += " AND D12_IDUNIT = '" +cEtiqueta + "' "
+    cQuery += " AND D12_PRODUT = '" +cProduto + "' "
     cQuery += " AND D12_STATUS <> '1' "
-    //cQuery += " AND D12_IDMOV <> '" + (cAlias)->Z3_IDMOV + "' "
-    cQuery += " AND D12_QTDORI <= '" + AllTrim(Str(SZ3->Z3_QUANT)) + "' "
     cQuery += " AND D12.D_E_L_E_T_ = '' "
 
     DbUseArea(.T.,"TOPCONN",TcGenQry(,,cQuery),cQryD12,.T.,.T.)
 
     While !(cQryD12)->(Eof())
 
-        aAdd(aMovSPR, {(cQryD12)->RECNO, (cQryD12)->D12_IDMOV, (cQryD12)->D12_IDUNIT, (cQryD12)->D12_QTDORI, (cQryD12)->D12_ENDDES })
+        aAdd(aMovSPR, {.F.,(cQryD12)->D12_DOC, (cQryD12)->D12_PRODUT, (cQryD12)->D12_QTDMOV, (cQryD12)->D12_ENDDES, (cQryD12)->RECNO })
 
         (cQryD12)->(DbSkip())
 
     EndDo
 
-    If Len(aMovSPR) > 1 
+    //+-----------------------------------------------+
+    //| Mostra a tela para usuario visualizar requisicoes |
+    //+-----------------------------------------------+
+    If Len( aMovSPR ) > 0
+    
+        DEFINE MSDIALOG oDlg TITLE cTitulo FROM 0,0 TO 240,550 PIXEL
+        
+        @ 10,10 LISTBOX oLbx FIELDS HEADER ;
+        " ", "Docto", "Produto","Quantidade","End Dest","Recno";
+        SIZE 238,095 OF oDlg PIXEL ON dblClick( Marca(aMovSPR, oLbx) )
+
+        oLbx:SetArray( aMovSPR )
+        oLbx:bLine := {|| {Iif(aMovSPR[oLbx:nAt,1],oOk,oNo),;
+                            aMovSPR[oLbx:nAt,2],;
+                            aMovSPR[oLbx:nAt,3],;
+                            aMovSPR[oLbx:nAt,4],;
+                            aMovSPR[oLbx:nAt,5],;
+                            aMovSPR[oLbx:nAt,6]}}
+            
+        @ 110,10 SAY "Atender requisição?" SIZE 160,7 PIXEL OF oDlg
+
+        DEFINE SBUTTON FROM 107,100 TYPE 1 ACTION (nOpc := 1, oDlg:End()) ENABLE OF oDlg
+        DEFINE SBUTTON FROM 107,130 TYPE 2 ACTION (nOpc := 2, oDlg:End()) ENABLE OF oDlg
+        ACTIVATE MSDIALOG oDlg CENTER
+
+        //Atender requisicao
+        If nOpc == 1
+
+            For nI := 1 To Len(aMovSPR)
+                
+                nRecD12 := aMovSPR[nI][6] 
+                If ValType(aMovSPR[nI]) == "A"
+                    
+                    If aMovSPR[nI][1] //Se estiver maracado
+                        //Finalizar Documento    
+                        D12->(DbGoto(nRecD12))
+                        
+                        If nSaldoEtq >= D12->D12_QTDMOV
+                            If u_ALUAFAtiv()
+                                lRet := .T. //Se tem requisicao pra e atendeu 
+                                //Ajusta a etiqueta
+                                MsgInfo("Requisicao atendida com Sucesso", ProcName())
+                            Else
+                                MsgStop("Erro na finalizacao da terefa de panhe", ProcName())
+                                lRet := .F.
+                            EndIf
+                        Else
+                            MsgStop("Saldo do unitizador insuficiente", ProcName())
+                            lRet := .F.
+                        EndIf
+                        
+                        //Reimprime a etiqueta do unitizador
+
+                    EndIf
+                
+                EndIf
+
+            Next nI
+
+        Else
+            //Se chegou ate aqui é porque tem requisicoes pendentes e o usuario cancelou, perguntar se quer continuar a divisao
+            lRet := Aviso(ProcName(),"Existem requisições pendentes. Dividir mesmo assim?", {"Sim","Não"})  == 2   
+
+        EndIf
+    EndIf
+
+
+   /* If Len(aMovSPR) > 1 
         
         aBot := {}
         aAdd(aBot,"NENHUM") 
         For nI := 1 To Len(aMovSPR)
-            aAdd(aBot,aMovSPR[nI][2] + "[" +  AllTrim(Str((cQryD12)->D12_QTDORI)) + "]")
+            aAdd(aBot,aMovSPR[nI][2] + "[" +  AllTrim(Str((cQryD12)->D12_)) + "]")
         Next nI4
 
 
@@ -2615,7 +2764,7 @@ If nOpc == 1
 
         //oMovimento := WMSDTCMovimentosServicoArmazem():New()
         //oMovimento:oEstEnder:EquatePrev(SZ3->Z3_LOCAL,SZ3->Z3_COD,oProcess,@aErro)
-            
+     */       
     /* 
         //Trocar EMPENHO - tirar do mov
         D14_QTDSPR -= D12-D12_QTDORI  
@@ -2662,14 +2811,52 @@ If nOpc == 1
         
         D14->(MsUnLock())
         */
-    EndIf
-EndIf
+    //EndIf
 
-//If nOpc == 2
-//	oMovimento := WMSDTCMovimentosServicoArmazem():New()
-//	oMovimento:oEstEnder:EquatePrev(SZ3->Z3_LOCAL,SZ3->Z3_COD,oProcess,@aErro)
-//EndIf
+
+
+//CONTROLE VERSAO
 
 RestArea(aAreaD12)
 
-Return nRecD12
+Return lRet
+
+
+
+
+
+/*/{Protheus.doc} Marca
+description
+@type function
+@version  
+@author Deosdete Deo
+@since 8/31/2023
+@return variant, return_description
+/*/
+Static Function Marca(aBeeps, oLbx)
+Local nPos := 0
+
+//Marcar todos
+//If oLbx:nColPos == 1
+
+//	aEval(aBeeps,{|x| x[1] := !x[1] })
+
+//EndIf
+
+nPos := AScan( aBeeps, {|x| x[1] == .T. } )
+
+If nPos == 0
+	aBeeps[ oLbx:nAt, 1 ] := .T.
+Else
+	If nPos == oLbx:nAt
+		aBeeps[ nPos, 1 ] := ! aBeeps[ nPos, 1 ]
+	Else
+		aBeeps[ nPos, 1 ] := .F.
+		aBeeps[ oLbx:nAt, 1 ] := .T.
+	Endif
+Endif
+
+oLbx:Refresh()
+Return
+
+

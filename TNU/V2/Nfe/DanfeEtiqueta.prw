@@ -74,6 +74,7 @@ user function ImpDfEtq(cUrl, cIdEnt, lUsaColab)
     local cCodCliFor := ""
     local cLoja      := ""
     local cMun       := ""
+    Local cVolParam  := ""
 
     default cUrl      := PARAMIXB[1]
     default cIdEnt    := PARAMIXB[2]
@@ -116,7 +117,7 @@ user function ImpDfEtq(cUrl, cIdEnt, lUsaColab)
     nTipoDoc := MV_PAR06 // Tipo de Operação (1 - Entrada / 2 - Saída)
     nTipImp := MV_PAR07 // Tipo de Impressora (1 - Térmica / 2 - Normal)
     cLocImp := MV_PAR08 // Impressora 
-
+    cVolParam := MV_PAR09 // Volume
     // Validações para impressoras termicas
 
     /*---------------------------------------*/
@@ -390,7 +391,7 @@ user function ImpDfEtq(cUrl, cIdEnt, lUsaColab)
             nContDanfe += 1
             if nTipImp == 1 .OR. nTipImp == 3 // 1 - Térmica  1 - Ter - Alumbra  // ALUMBRA DEO 20230903
 
-                impZebra(aNfe, aEmit, aDest,nTipImp)
+                impZebra(aNfe, aEmit, aDest,nTipImp,cVolParam)
 
             elseif nTipImp == 2 // 2 - Normal
 
@@ -585,7 +586,7 @@ Impressão de danfe simplificada - Etiqueta para impressora Zebra
 
 /*/ 
 //-------------------------------------------------------------------
-static function impZebra(aNFe, aEmit, aDest, nTipImp)
+static function impZebra(aNFe, aEmit, aDest, nTipImp, cVolParam)
 
     local cFontMaior := "016,013" //Fonte maior - títulos dos campos obrigatórios do DANFE ("altura da fonte, largura da fonte")
     local cFontMenor := "015,008" //Fonte menor - campos variáveis do DANFE ("altura da fonte, largura da fonte")
@@ -741,15 +742,18 @@ static function impZebra(aNFe, aEmit, aDest, nTipImp)
 
     ElseIf nTipImp == 3   //ALUMBRA DEO 20230903
 
-        aVol := PegVolumes(aNFe[nNumero])
+        aRet := PegVolumes(aNFe[nNumero], cVolParam)
         
-        nTotVol := Len(aVol)
+        aVol := aClone(aRet[1])
+
+        nTotVol := aRet[2]
 
         If nTotVol == 0
+            Alert("Volume " + cVolParam +  " não encontrado")
             nTotVol := 1
         EndIf
 
-        For nI := 1 To nTotVol
+        For nI := 1 To Len(aVol)
             
             cEtiqAlumbra :="CT~~CD,~CC^~CT~"
             cEtiqAlumbra +="^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR5,5~SD15^JUS^LRN^CI0^XZ"
@@ -761,20 +765,20 @@ static function impZebra(aNFe, aEmit, aDest, nTipImp)
             cEtiqAlumbra +="^FO16,18^GB764,562,2^FS"
             cEtiqAlumbra +="^BY2,3,79^FT111,357^BCB,,N,N"
             cEtiqAlumbra +="^FD>;"+aVol[nI][nNumPC]+"^FS"
-            cEtiqAlumbra +="^FT123,376^A0N,62,76^FH\^FDNF^FS"
+            cEtiqAlumbra +="^FT123,370^A0N,62,76^FH\^FDNF^FS"
             cEtiqAlumbra +="^FT123,67^A0N,34,40^FH\^FDCLIENTE^FS"
             cEtiqAlumbra +="^FT123,104^A0N,33,24^FH\^FD "+aDest[nNome]+"^FS" //LEROY MERLIN CIA BRAS DE BRICOLAGEM S/A 
             cEtiqAlumbra +="^FT123,158^A0N,34,38^FH\^FDMUNICIPIO^FS"
             cEtiqAlumbra +="^FT123,199^A0N,33,24^FH\^FD"+aDest[nMun]+"^FS"
             cEtiqAlumbra +="^FT123,259^A0N,34,38^FH\^FDTRANSPORTADORA^FS"
             cEtiqAlumbra +="^FT123,305^A0N,33,24^FH\^FD"+aNFe[nTransp]+"^FS" //TRANSFORM EMPRES DE TRANSPORTES LT
-            cEtiqAlumbra +="^FT430,376^A0N,62,64^FH\^FD" + aNFe[nNumero] + "^FS" //000345952
-            cEtiqAlumbra +="^FT123,436^A0N,62,76^FH\^FDVOLUME^FS"
+            cEtiqAlumbra +="^FT430,370^A0N,62,64^FH\^FD" + aNFe[nNumero] + "^FS" //000345952
+            cEtiqAlumbra +="^FT123,428^A0N,62,76^FH\^FDVOLUME^FS"
             nVol := Val(SubStr(aVol[nI][nCodVol],Len(aVol[nI][nCodVol])-2,3))
-            cEtiqAlumbra +="^FT480,436^A0N,62,76^FH\^FD"+StrZero(nVol,3)+"/"+StrZero(nTotVol,3)+"^FS"
-            cEtiqAlumbra +="^BY2,3,106^FT115,556^BCN,,N,N"
+            cEtiqAlumbra +="^FT480,428^A0N,62,76^FH\^FD"+StrZero(nVol,3)+"/"+StrZero(nTotVol,3)+"^FS"
+            cEtiqAlumbra +="^BY2,3,106^FT115,540^BCN,,N,N"
             cEtiqAlumbra +="^FD>;"+aNFe[nChave]+"^FS" //123456789012
-            cEtiqAlumbra +="^FT123,607^A0N,28,36^FH\^FDEm caso de ...... ligue 0800 192130^FS"
+            cEtiqAlumbra +="^FT123,570^A0N,28,36^FH\^FDEm caso de ...... ligue 0800 192130^FS"
             cEtiqAlumbra +="^FO687,18^GB93,124,2^FS"
             cEtiqAlumbra +="^FT699,103^A0N,61,62^FH\^FDSP^FS" 
             cEtiqAlumbra +="^PQ1,0,1,Y^XZ"
@@ -801,12 +805,20 @@ description
 @param cNF, character, param_description
 @return variant, return_description
 /*/
-Static Function PegVolumes(cNF)
+Static Function PegVolumes(cNF,cVolParam)
 Local aVol     := {}
 Local cQuery   := ""
 Local cQryDCV  := GetNextAlias()
+Local nTotVol  := 0 
 
-cQuery := "SELECT DCV_PEDIDO, DCV_CODVOL, C6_NUMPCOM, C6_ITEMPC  FROM " + RetSqlName("DCV") + " DCV " 
+cQuery := "SELECT DCV_PEDIDO, DCV_CODVOL, C6_NUMPCOM, C6_ITEMPC  "
+
+//Se for imprimir apenas 1 volume, trazer a quantidade de volumes para impprimir na etiqueta corretamente, se nao vai considaerar apenas 1
+If !Empty(cVolParam)
+    cQuery += ", (SELECT COUNT(*) FROM "+RetSqlName("DCV")+" DCV1 WHERE DCV1.DCV_PEDIDO = DCV.DCV_PEDIDO AND D_E_L_E_T_ = '') AS TOTVOL "
+EndIf
+
+cQuery += "FROM " + RetSqlName("DCV") + " DCV " 
 cQuery += "    JOIN " + RetSqlName("SC9") + " SC9 ON C9_FILIAL = DCV_FILIAL "
 cQuery += "      AND DCV_PEDIDO = C9_PEDIDO "
 cQuery += "      AND DCV_ITEM = C9_ITEM "
@@ -819,21 +831,40 @@ cQuery += "      AND C6_ITEM = C9_ITEM "
 cQuery += "      AND SC6.D_E_L_E_T_ = '' "
 cQuery += "WHERE DCV_FILIAL = '"+xFilial("SC6")+"' "
 cQuery += "        AND DCV.D_E_L_E_T_ = '' "
+
+
+//Filtrar apenss o volume solicitado. Usar a mesma regra de criacao do volume na montagem pedido + sequencia
+If !Empty(cVolParam)
+    cQuery += "AND DCV_CODVOL = RTRIM(DCV_PEDIDO) + '0"+cVolParam+"' "
+EndIf
+
 cQuery += "GROUP BY DCV_CODVOL, DCV_PEDIDO, C6_NUMPCOM, C6_ITEMPC "
 cQuery += "ORDER BY DCV_CODVOL "
 
 DbUseArea( .T., 'TOPCONN', TcGenQry(,,cQuery), cQryDCV, .T., .F. )
 
-While !(cQryDCV)->(Eof())
+If !(cQryDCV)->(Eof())
 
-    aAdd(aVol,{(cQryDCV)->DCV_CODVOL, (cQryDCV)->DCV_PEDIDO, (cQryDCV)->C6_NUMPCOM, (cQryDCV)->C6_ITEMPC})
-    (cQryDCV)->(DbSkip())
+    If !Empty(cVolParam)
+        nTotVol := (cQryDCV)->TOTVOL
+    EndIf
 
-EndDo
+    While !(cQryDCV)->(Eof())
+
+        aAdd(aVol,{(cQryDCV)->DCV_CODVOL, (cQryDCV)->DCV_PEDIDO, (cQryDCV)->C6_NUMPCOM, (cQryDCV)->C6_ITEMPC})
+        (cQryDCV)->(DbSkip())
+
+    EndDo
+    //Pegar a quantidade de etiq apos carregar o array
+    If Empty(cVolParam)
+        nTotVol := Len(aVol)
+    EndIf
+
+EndIf
 
 (cQryDCV)->(dbCloseArea())
 
-Return aVol
+Return {aVol,nTotVol}
 
 
 //-------------------------------------------------------------------

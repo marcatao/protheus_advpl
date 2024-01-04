@@ -711,7 +711,7 @@ User Function ALUAFAtiv() //cDocSD3, cCodPrd, cCodServ
         //--Intancia modelo
         oModel    := FWLoadModel("WMSA332A")
         WmsOpc332("4")
-        WmsAcao332('4')//--Finalizar Documento //se der erro tentar passar 1 que é finalizar atividade
+        WmsAcao332('3')//--Finalizar Documento //se der erro tentar passar 1 que é finalizar atividade
         
         oModel:SetOperation(MODEL_OPERATION_UPDATE) //oModel:SetOperation(MODEL_OPERATION_INSERT) //-- Seta operação de inclusão
         oModel:Activate() //-- Ativa o Modelo

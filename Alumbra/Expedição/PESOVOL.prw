@@ -26,6 +26,7 @@ user function PESOVOL(cPedido)
             SC5->C5_PBRUTO:=aPRet[1] + aVlret[2] //somando peso dos produtos com as embalagens
             SC5->C5_VOLUME1:=aVlret[1] // quantidade de volumes
             SC5->C5_ESPECI1:="Caixa"
+            SC5->C5_ESPECI4:=cValToChar(aVlret[3])
           MSUNLOCK()     // Destrava o registro
         
     ENDIF
@@ -60,10 +61,10 @@ return aPRet
 
 static function QtdVol(cPedido)
 Local cQuery     := ""
-local aVlret  := {0,0}
+local aVlret  := {0,0,0}
 
 cQuery      := " Select "
-cQuery      += " count(1) as VOLUMES, SUM(CB3.CB3_PESO) as PESO "
+cQuery      += " count(1) as VOLUMES, SUM(CB3.CB3_PESO) as PESO , SUM(DCU.DCU_XCUBAG) as CUBAGEM "
 cQuery      += " FROM "+RetSqlName("DCU")+" DCU "
 cQuery      += " INNER JOIN "+RetSqlName("CB3")+" CB3 on DCU.DCU_XCODEM = CB3.CB3_CODEMB "
 cQuery      += " WHERE DCU.DCU_PEDIDO ='"+cPedido+"' "
@@ -78,6 +79,7 @@ cQuery      += " AND DCU.D_E_L_E_T_ = ' ' "
     If (cAliasQry)->(!Eof())
         aVlret[1] := (cAliasQry)->VOLUMES
         aVlret[2] := (cAliasQry)->PESO
+        aVlret[3] := (cAliasQry)->CUBAGEM
     EndIf
 	(cAliasQry)->(dbCloseArea())
 return aVlret

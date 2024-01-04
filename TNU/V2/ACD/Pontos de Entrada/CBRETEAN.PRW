@@ -39,21 +39,21 @@ Local nQtdUser   := 0
 Local nSldMov    := 0
 Local lAchouPRD  := .F.
 
-//Tirar espaços , pois a rotina de montagem de volume esta  trazendo espaço
+//Tirar espaï¿½os , pois a rotina de montagem de volume esta  trazendo espaï¿½o
 cID := AllTrim(cID)
 
-//Se não é EAN 128, primeiro verifica se o usuário bipou o código do produto
+//Se nï¿½o ï¿½ EAN 128, primeiro verifica se o usuï¿½rio bipou o cï¿½digo do produto
 If Len(Alltrim(cID)) <= TamSX3("B1_COD")[1]
 	SB1->(DbSetOrder(1))
 	If SB1->(DbSeek(xFilial('SB1')+cID))
 		SB5->(DbSetOrder(1))
 		SB5->(DbSeek(xFilial("SB5")+SB1->B1_COD))
-		If SB5->B5_TIPUNIT <> '0' //produtos com controle unitário
+		If SB5->B5_TIPUNIT <> '0' //produtos com controle unitï¿½rio
 			nQE   := CBQEmb()
 		Else
 			nQE   := 1
 		EndIf
-		//Se encontrar pelo código do produto, retorna direto
+		//Se encontrar pelo cï¿½digo do produto, retorna direto
 		lAchouPRD := .T.
 	EndIf
 EndIf
@@ -183,14 +183,18 @@ If !lAchouPRD
 		EndIf
 	EndIf
 
-EndIf //Se não achou por codigo do produto
+EndIf //Se nï¿½o achou por codigo do produto
 
+If FunName() == "WMSV084" .OR. FunName() == "WMSV102"
+	aRet := {SB1->B1_COD,0,Padr(cLote,TamSX3("CB8_LOTECT")[1]),dValid,Padr(cNumSerie,20)}
+	Return aRet
+EndIf	
 
-If !(FunName() == "WMSA391"  .OR. FunName() == "WMSV095") // MOntagem de volume e transferencia nao precisa detalhe
+If !(FunName() == "WMSA391"  .OR. FunName() == "WMSV095")   // MOntagem de volume e transferencia nao precisa detalhe
 
 	lDetalhe  := !oMovimento:oMovServic:GetServico() $ SuperGetMv("MV_XWSERDET",.F.,"") //Exececao para nao mostrar a tela de detalhe na bepagem
 
-	//Verificar se o produto encontrado é o produto do movimento, passar o array vazio pro sistema solicitar novamente
+	//Verificar se o produto encontrado ï¿½ o produto do movimento, passar o array vazio pro sistema solicitar novamente
 	If oMovimento:oMovPrdLot:GetProduto() == SB1->B1_COD
 		aRet := {SB1->B1_COD,nQE,Padr(cLote,TamSX3("CB8_LOTECT")[1]),dValid,Padr(cNumSerie,20)}
 	Else
@@ -222,7 +226,7 @@ If !(FunName() == "WMSA391"  .OR. FunName() == "WMSV095") // MOntagem de volume 
 			@ 02,00 VtSay "|" + PadR("SKU: " + SB1->B1_COD,VTMaxCol())
 			@ 02,19 VtSay "|" 
 			@ 03,00 VtSay "|Qt:" 
-			@ 03,07 VtSay  AllTrim(Transform(nSldMov,  "@E 99,999,999" /*PesqPict('D12','D12_QTDMOV')*/)) +"/"+ AllTrim(Transform(oMovimento:GetQtdMov2(), PesqPict('D12','D12_QTDOR2')) )
+			@ 03,07 VtSay  AllTrim(Transform(nSldMov,  "@E 99,999,999" /*PesqPict('D12','D12_QTDMOV')*/)) +"/"+ AllTrim(Transform(oMovimento:GetQtdMov2(),  "@E 99,999,999" /*PesqPict('D12','D12_QTDOR2')*/) )
 			@ 03,19 VtSay "|" 
 			@ 04,00 VtSay "|Qt Lida:" 
 			@ 04,09 VtSay  AllTrim(Transform( nQE,   "@E 99,999,999" /*PesqPict('D12','D12_QTDMOV')*/))

@@ -2120,7 +2120,7 @@ Return
 
 
 
-/*/{Protheus.doc} LstBxMr2
+/*/{Protheus.doc} EstornarEmb
 description
 @type function
 @version  
