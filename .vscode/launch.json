@@ -69,7 +69,10 @@
 		},
 		{
 			"label": "apsdu"
+		},
+		{
+			"label": "vtdebug"
 		}
 	],
-	"lastProgramExecuted": "sigafat"
+	"lastProgramExecuted": "sigawms"
 }
