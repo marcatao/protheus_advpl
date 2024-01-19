@@ -286,14 +286,42 @@ Return.T.
 
 Static Function SalvaForm(oModel)
 
-Local lRet := .T.
+Local lRet   := .T.
+Local cQuery := ""
+Local nQtdT  := 0
    if(oModel:GetValue('FORMZZ8','ZZ8_QUANT') > oModel:GetValue('FORMZZ8','ZZ8_SALDO') )
       lRet := .F.
       Alert("Saldo insuficiente")  
    endif 
    
    if(lRet)
-     FWFormCommit(oModel)
+     if(FWFormCommit(oModel))
+            ////////SEPARANDO POR ENDERECO
+                         nQtdT  := ZZ8->ZZ8_QUANT
+
+                            cQuery:= " select D14.D14_ENDER as ENDERECO, sum((D14.D14_QTDEST - D14.D14_QTDSPR)) as SALDO , D14.D14_PRIOR "
+                            cQuery+= " from "+RetSqlName('D14')+"  as D14 "
+                            cQuery+= " join "+RetSqlName('DC8')+"  as DC8 "
+                            cQuery+= "      on D14.D14_ESTFIS = DC8.DC8_CODEST and DC8.DC8_TPESTR not in (7,8,5) "
+                            cQuery+= " where D14.D14_PRODUT = '"+ZZ8->ZZ8_CODPRO+"'  "
+                            cQuery+= "       and D14.D14_FILIAL = '010101' " 
+                            cQuery+= "       and D14.D14_LOCAL='"+ZZ8->ZZ8_LOCAL+"' "
+                            cQuery+= "       and D14.D_E_L_E_T_ = '' and  DC8.D_E_L_E_T_ = '' "
+                            cQuery+= "       and (D14.D14_QTDEST - D14.D14_QTDSPR) > 0 "
+                            cQuery+= " group by D14.D14_PRIOR,D14.D14_ENDER "
+                            cQuery+= " order by D14.D14_PRIOR, D14.D14_ENDER asc "
+                            cQuery := ChangeQuery(cQuery)
+                            cAliasQry := GetNextAlias()
+                            DbUseArea(.T.,'TOPCONN',TcGenQry(,,cQuery),cAliasQry,.F.,.T.)
+
+                            while (cAliasQry)->(!Eof() .and. nQtd > 0)
+                                 alert((cAliasQry)->ENDERECO)
+                            Enddo
+	                        (cAliasQry)->(dbCloseArea())
+
+
+            ///FIM SEPARACAO POR ENDERECO
+     endif
    end
 
    alert('TESTE')
