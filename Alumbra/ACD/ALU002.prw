@@ -276,8 +276,10 @@ Return.T.
 
 
 
-
-
+//finalizacao
+Static Function Salvou(oModel)
+ 
+Return .T.
 
 
 
@@ -289,6 +291,12 @@ Static Function SalvaForm(oModel)
 Local lRet   := .T.
 Local cQuery := ""
 Local nQtdT  := 0
+Local aPorEnd := {}
+Local nI 
+Local aArea   := GetArea()
+Local nRec := 0
+
+
    if(oModel:GetValue('FORMZZ8','ZZ8_QUANT') > oModel:GetValue('FORMZZ8','ZZ8_SALDO') )
       lRet := .F.
       Alert("Saldo insuficiente")  
@@ -296,6 +304,7 @@ Local nQtdT  := 0
    
    if(lRet)
      if(FWFormCommit(oModel))
+     nRec := ZZ8->(Recno())
             ////////SEPARANDO POR ENDERECO
                          nQtdT  := ZZ8->ZZ8_QUANT
 
@@ -314,22 +323,63 @@ Local nQtdT  := 0
                             cAliasQry := GetNextAlias()
                             DbUseArea(.T.,'TOPCONN',TcGenQry(,,cQuery),cAliasQry,.F.,.T.)
 
-                            while (cAliasQry)->(!Eof() .and. nQtd > 0)
-                                 alert((cAliasQry)->ENDERECO)
+                            Do while (cAliasQry)->(!Eof() )
+                                //distribuindo nos endereços
+                                if((cAliasQry)->SALDO < nQtdT) 
+                                   AAdd( aPorEnd, {(cAliasQry)->ENDERECO,   (cAliasQry)->SALDO} )
+                                   nQtdT-=(cAliasQry)->SALDO
+                                else
+                                   AAdd( aPorEnd, {(cAliasQry)->ENDERECO,   nQtdT} ) 
+                                   nQtdT:=0 
+                                endif
+                               (cAliasQry)->(DbSkip())
                             Enddo
 	                        (cAliasQry)->(dbCloseArea())
+            //trocando registros
+                  
+            BeginTran()
+               
+                //DisarmTransaction()
+                For nI := 1 to len(aPorEnd)
+                if(aPorEnd[nI][2] > 0)
+                 aArea   := GetArea()  
+                    RecLock("ZZ8",.T.)
+                     ZZ8->ZZ8_CODPRO:= M->ZZ8_CODPRO
+                     ZZ8->ZZ8_QUANT := aPorEnd[nI][2]
+                     ZZ8->ZZ8_SERVIC:= M->ZZ8_SERVIC
+                     ZZ8->ZZ8_LOCAL := M->ZZ8_LOCAL
+                     ZZ8->ZZ8_ENDER := aPorEnd[nI][1]
+                     ZZ8->ZZ8_UNITIZ:= M->ZZ8_UNITIZ
+                     ZZ8->ZZ8_LOCDES:= M->ZZ8_LOCDES
+                     ZZ8->ZZ8_ENDDES:= M->ZZ8_ENDDES
+                     ZZ8->ZZ8_RECORI := nRec
+                    ZZ8->(MsUnlock())
+	                ZZ8->(DbSkip(1)) 
+                    RestArea(aArea)	
+                ENDIF   
+                Next 
+                
 
+                aArea   := GetArea()		
+                //deletando o registro original
+    	        dbSelectArea('ZZ8')
+		           ZZ8->( dbGoTo( nRec ) )
+            	   ZZ8->(RecLock("ZZ8",.F.))
+				   ZZ8->(DbDelete())
+			       ZZ8->(MsUnLock())
+	            RestArea(aArea)	
+		   
+            EndTran()
 
             ///FIM SEPARACAO POR ENDERECO
      endif
-   end
 
-   alert('TESTE')
+
+   endif
+    
+   
 Return lRet
 
-Static Function Salvou(oModel)
- 
-Return .T.
 
 
 
@@ -339,6 +389,68 @@ Return .T.
 
 
 
+
+
+
+
+
+
+
+static Function zVid0045(aDados)
+    Local aArea     := FWGetArea()
+    Local cTabela   := "ZZ8"
+  
+    Local cTudoOk   := ""
+    Local cTransact := ""
+    Local nRetorno  := 0
+    Private lMsErroAuto := .F.
+  
+                //Local aDados    := {}
+
+                //aDados    := {}
+                //aAdd(aDados, {"ZZ8_CODPRO", M->ZZ8_CODPRO,     Nil})
+                //aAdd(aDados, {"ZZ8_QUANT", aPorEnd[nI][2],     Nil})
+                ///aAdd(aDados, {"ZZ8_SERVIC", M->ZZ8_SERVIC,     Nil})
+                //aAdd(aDados, {"ZZ8_LOCAL", M->ZZ8_LOCAL,       Nil})
+                //aAdd(aDados, {"ZZ8_ENDER", aPorEnd[nI][1],     Nil})
+                //aAdd(aDados, {"ZZ8_UNITIZ", M->ZZ8_UNITIZ,     Nil})
+                //aAdd(aDados, {"ZZ8_LOCDES", M->ZZ8_LOCDES,     Nil})
+                //aAdd(aDados, {"ZZ8_ENDDES", M->ZZ8_ENDDES,     Nil})
+                //zVid0045(aDados)
+
+    //Inicializa a transação
+
+        //Joga a tabela para a memória (M->)
+        RegToMemory(;
+            cTabela,; // cAlias - Alias da Tabela
+            .T.,;     // lInc   - Define se é uma operação de inclusão ou atualização
+            .F.;      // lDic   - Define se irá inicilizar os campos conforme o dicionário
+        )
+  
+        //Se conseguir fazer a execução automática
+        If EnchAuto(;
+            cTabela,; // cAlias  - Alias da Tabela
+            aDados,;  // aField  - Array com os campos e valores
+            cTudoOk,; // uTUDOOK - Validação do botão confirmar
+            3;        // nOPC    - Operação do Menu (3=inclusão, 4=alteração, 5=exclusão)
+        )
+  
+            //Aciona a efetivação da gravação
+            nRetorno := AxIncluiAuto(;
+                cTabela,;   // cAlias     - Alias da Tabela
+                ,;          // cTudoOk    - Operação do TudoOk (se usado no EnchAuto não precisa usar aqui)
+                cTransact,; // cTransact  - Operação acionada após a gravação mas dentro da transação
+                3;          // nOpcaoAuto - Operação do Menu (3=inclusão, 4=alteração, 5=exclusão)
+            )
+  
+        Else
+            DisarmTransaction()
+            return .F.
+        EndIf
+
+  
+    FWRestArea(aArea)
+Return
 
 
 
