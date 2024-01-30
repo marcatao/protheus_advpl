@@ -17,8 +17,8 @@ user function PESOVOL(cPedido)
       Stret  := xstex(cPedido)
           RECLOCK("SC5", .F.)
 
-          IF(Stret==0)//AX=AG.IMPRESSAO;AL=IMPRESSO;EX=EM_EXPEDICAO;AF=AG_FATURAMENTO
-            SC5->C5_XSTEX := "AF"
+          IF(Stret==0)//AX=AG.IMPRESSAO;AL=IMPRESSO;EX=EM_EXPEDICAO;AF=AG_FATURAMENTO;AT=AT_LOGISTICA
+            SC5->C5_XSTEX := "AT"
           ELSE
             SC5->C5_XSTEX := "EX"
           END
