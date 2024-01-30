@@ -353,6 +353,7 @@ Local nRec := 0
                      ZZ8->ZZ8_LOCDES:= M->ZZ8_LOCDES
                      ZZ8->ZZ8_ENDDES:= M->ZZ8_ENDDES
                      ZZ8->ZZ8_RECORI := nRec
+                     ZZ8->ZZ8_RESP:= alltrim(UsrRetName(RetCodUsr()))
                     ZZ8->(MsUnlock())
 	                ZZ8->(DbSkip(1)) 
                     RestArea(aArea)	

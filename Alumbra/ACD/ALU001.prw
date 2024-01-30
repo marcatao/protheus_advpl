@@ -21,83 +21,46 @@ https://centraldeatendimento.totvs.com/hc/pt-br/articles/235301627-Log%C3%ADstic
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 /*/
 User Function ALU001()
-Local nPos  := 1        
-Local aFields,aHeader
-Local nQtdAte := 0
-Local aArea   := GetArea()
+Local nPos  := 1  
+Local Continua := .T.
+VTSetSize(8,20)
 
-While .T.
  
-	VTSetSize(8,20)
+	
+while Continua
 	VTClear()
-	VTClearBuffer() 
+	npos := browse()
 
-	aFields := {"ZZ8_CODPRO","ZZ8_ENDER","ZZ8_QUANT","ZZ8_LOCAL"}
-	aSize   := {10,10,10,10}          
-	aHeader := {'PROD','ENDER','QUANT',"LOCAL"}       
-	npos := VTDBBrowse(,,,,"ZZ8",aHeader,aFields,aSize)
-	  	
+	   If VTLastKey() == 13
+			SelTran(npos)
+			VTClearBuffer()
+    		U_ALU001()
+   		EndIF
 
-
-   If VTLastKey() == 13
-		SelTran(npos)
-
-		VTClear()
-		aArea   := GetArea()
-    	dbSelectArea('ZZ8')
-		ZZ8->( dbGoTo( npos ) )
-
-		@ 0,0 VTSAY "Transf #" + cValToChar(ZZ8->(Recno()))
-		@ 1,0 VTSAY "Prod:  " + ZZ8->ZZ8_CODPRO
-		@ 2,0 VTSAY "Qtd:   " + cValToChar(ZZ8->ZZ8_QUANT)
-		@ 3,0 VTSAY "Ender: " + ZZ8->ZZ8_LOCAL+space(1)+ZZ8->ZZ8_ENDER
-		@ 4,0 VTSAY "---------------------"
-		@ 5,0 VTSAY "QTd:   " VTGET nQtdAte pict "@9999.9999"
-		VTRead     
-		if(AluTransWMS(1,nQtdAte))
-			ZZ8->(RecLock("ZZ8",.F.))
-
-				ZZ8->(DbDelete())
-			ZZ8->(MsUnLock())
-			ZZ8->(DbSkip(1))
-		else
-			VTAlert("Separação nao finalizada....","[-]",.T.,3500)
-			RECLOCK("ZZ8", .F.)
-       			ZZ8->ZZ8_ERRO := "Endereço sem saldo, serviço nao foi criado!!!"
-    		MSUNLOCK()     // Destrava o registro
-		ENDIF
-
-	  RestArea(aArea)			
-      VTClearBuffer()
-	  nQtdAte := 0 
-	  U_ALU001()
-   EndIF
-
-
-   If VTLastKey() == 27
-      Exit
-   EndIF
-
-
-EndDo // wile principal
-
-Return .T.
+   		If VTLastKey() == 27
+      		Continua := .F.
+			return
+   		EndIF
+end	 
+Return
 
 
 
 static function SelTran(npos)
-Local nLido := Space(8)
+Local nLido 
  	VTClear()
 		aArea   := GetArea()
     	dbSelectArea('ZZ8')
 		ZZ8->( dbGoTo( npos ) )
-		
-		 @ 0,0 VTSAY "Transf #" + cValToChar(ZZ8->(Recno()))
+		nLido := Space(Len(alltrim(ZZ8->ZZ8_ENDER)))
+
+		 @ 0,0 VTSAY "Transferencia: #" + cValToChar(ZZ8->(Recno()))
 		 @ 1,0 VTSAY "Leia:" + ZZ8->ZZ8_ENDER
 		 while nLido <> alltrim(ZZ8->ZZ8_ENDER)
-		   	@ 3,0 VTSAY "End.:   " VTGET nLido Pict "@!"
+		   	@ 3,0 VTSAY "Ender.:   " VTGET nLido Pict "@!"
 			VTRead 
-	    	     If VTLastKey() == 27      
+	    	     If VTLastKey() == 27
+				 	VTClear()      
 			     	Exit   
 			     EndIF    
 			if(nLido <> alltrim(ZZ8->ZZ8_ENDER))
@@ -115,10 +78,19 @@ return .T.
 
 
 
+
+
+
+
+/////////////////   LENDO ENDERECO ///////////////////
+/////////////////   LENDO ENDERECO ///////////////////
+/////////////////   LENDO ENDERECO ///////////////////
+/////////////////   LENDO ENDERECO ///////////////////
+/////////////////   LENDO ENDERECO ///////////////////
 static function lisEnd(npos)
 Local cQuery    := ""
 Local cLsUnitz := ""
-Local nCont := 3
+Local nCont := 1
 Local nLidoU := Space(12)
 Local nTotal := 0
 Local Continua := .T.
@@ -130,43 +102,63 @@ local RetUnSl := {"''","''"};
 
 		Do while Continua = .T.
 		VTClear()
-		If VTLastKey() == 27      
-			If VTYesNo("Deseja Salvar?","Pergunta")
-				 if(transAl() = .T.)
-					VTAlert("Transferencia realizada...","[-]Sucesso!",.T.,1500)
+				//Se precionar esc para sair 
+				If VTLastKey() == 27      
+					If VTYesNo("Deseja Salvar?","Pergunta")
+						 if(transAl(RetUnSl[1],npos) = .T.)
+							VTClear()
+							 VTAlert("Transferencia realizada...","[-]Sucesso!",.T.,1500)
+							VTClear()
+							U_ALU001()
+						 ENDIF
+					else
+						VTClear()
+   						U_ALU001()
+						Continua = .F.
+						exit
+   					EndIf   
+					Continua = .F.
 					exit
-				 ENDIF
-			else
-   				Exit
-   			EndIf   
-	    EndIF    
+				 EndIF    
 
-	    @ 0,0 VTSAY "#" + cValToChar(ZZ8->(Recno())) +" - " + ZZ8->ZZ8_CODPRO
-		@ 1,0 VTSAY "Qtd.: "+cValToChar(nTotal)+" / " + cValToChar(ZZ8->ZZ8_QUANT)
-		@ 2,0 VTSAY "|Unitizador   | QtD |"
-		nCont := 3
-			 cQuery:= " select D14.D14_IDUNIT,D14.D14_QTDEST,D14.R_E_C_N_O_ "
+
+			 cQuery:= " select D14.D14_IDUNIT, (D14.D14_QTDEST - D14.D14_QTDSPR) as D14_QTDEST,D14.R_E_C_N_O_ "
  			 cQuery+= " from "+RetSqlName('D14')+" as D14 "
 			 cQuery+= " where     D14.D14_PRODUT = '"+alltrim(ZZ8->ZZ8_CODPRO)+"' "  
              cQuery+= "       and D14.D14_FILIAL = '"+xFilial("D14")+"'"
-             cQuery+= "       and D14.D14_LOCAL  ='"+alltrim(ZZ8->ZZ8_LOCAL)+"' " 
+             cQuery+= "       and D14.D14_LOCAL  = '"+alltrim(ZZ8->ZZ8_LOCAL)+"' " 
 	         cQuery+= "       and D14.D_E_L_E_T_ = '' "  
              cQuery+= "       and (D14.D14_QTDEST - D14.D14_QTDSPR) > 0 "
 	         cQuery+= "       and D14.D14_ENDER = '"+alltrim(ZZ8->ZZ8_ENDER)+"' " "
-			 cQuery+= "       and D14.D14_IDUNIT not in ("+RetUnSl[1]+") "
+			 if(len(alltrim(RetUnSl[1])) > 10)
+			  cQuery+= "       and D14.D14_IDUNIT not in ("+RetUnSl[1]+") "
+			 ENDIF
 
 			 cQuery := ChangeQuery(cQuery)
 			 cLsUnitz := GetNextAlias()
 			 dbUseArea(.T.,'TOPCONN',TCGENQRY(,,cQuery),cLsUnitz,.F.,.T.)
 			//Listando Unitizadores Disponiveis//
 			 Do While  (cLsUnitz)->(!Eof())	
+					 if(len(alltrim((cLsUnitz)->D14_IDUNIT)) ==  0 )
+					 		//ler Quantidade manual
+							Continua = .F.
+							QtdManu(npos)
+							U_ALU001()
+					 ELSE
+					 	if(nCont == 1 )//Primeiro laço exibe cabeçalho
+						    @ 0,0 VTSAY "#" + cValToChar(ZZ8->(Recno())) +"| " + "Qtd:"+cValToChar(nTotal)+" / " + cValToChar(ZZ8->ZZ8_QUANT)
+							//@ 1,0 VTSAY "Qtd.: "+cValToChar(nTotal)+" / " + cValToChar(ZZ8->ZZ8_QUANT)
+							//@ 2,0 VTSAY "|Unitizador   | QtD |"
+					 
+						ENDIF
+					 endif
 				@ nCont, 0 VTSAY "|"+alltrim((cLsUnitz)->D14_IDUNIT)+" | "+alltrim(cValToChar((cLsUnitz)->D14_QTDEST))+"|"
 				nCont+= 1
 				(cLsUnitz)->(DbSkip())
 			 EndDo
 			
 
-			@ nCont + 1,0 VTSAY "Esc - Finalizar/Sair..."
+			//@ nCont + 1,0 VTSAY "Esc - Finalizar/Sair"
 			@ nCont,0 VTSAY "Caixa:" VTGET nLidoU Pict "@!"
 			    VTRead
 				if(alltrim(nLidoU)<> '')
@@ -174,22 +166,32 @@ local RetUnSl := {"''","''"};
 					nTotal += RetUnSl[2]
 			    	nLidoU :=Space(12)
 				endif
-			    //nCont+= 1
 
-			//@ nCont,0 VTSAY "---------------------"
-			//nCont+= 1
-	
-			
-
-		VTClearBuffer()
-		
+		nCont := 1
 		EndDo
 		 RestArea(aArea) 
 	
 return .T.
+///////////////// FIM LENDO ENDERECO ///////////////////
+///////////////// FIM LENDO ENDERECO ///////////////////
+///////////////// FIM LENDO ENDERECO ///////////////////
+///////////////// FIM LENDO ENDERECO ///////////////////
+///////////////// FIM LENDO ENDERECO ///////////////////
 
+
+
+
+
+
+//////////////// Selecionando UNITIZADOR PARA FILA ///////////////////
+//////////////// Selecionando UNITIZADOR PARA FILA ///////////////////
+//////////////// Selecionando UNITIZADOR PARA FILA ///////////////////
+//////////////// Selecionando UNITIZADOR PARA FILA ///////////////////
+//////////////// Selecionando UNITIZADOR PARA FILA ///////////////////
+//////////////// Selecionando UNITIZADOR PARA FILA ///////////////////
+//////////////// Selecionando UNITIZADOR PARA FILA ///////////////////
 static function setUnitz(cUnt,RetUnSl)
-cQuery:= " select D14.D14_IDUNIT,D14.D14_QTDEST,D14.R_E_C_N_O_ "
+cQuery:= " select D14.D14_IDUNIT, (D14.D14_QTDEST - D14.D14_QTDSPR) as D14_QTDEST,D14.R_E_C_N_O_ "
  			 cQuery+= " from "+RetSqlName('D14')+" as D14 "
 			 cQuery+= " where     D14.D14_PRODUT = '"+alltrim(ZZ8->ZZ8_CODPRO)+"' "  
              cQuery+= "       and D14.D14_FILIAL = '"+xFilial("D14")+"'"
@@ -206,23 +208,200 @@ cQuery:= " select D14.D14_IDUNIT,D14.D14_QTDEST,D14.R_E_C_N_O_ "
 			 if  (cLsUnitz)->(!Eof())	
 			    RetUnSl[1] += ",'"+(cLsUnitz)->D14_IDUNIT+"' "
 				RetUnSl[2] := (cLsUnitz)->D14_QTDEST
+			 else
+				RetUnSl[1] += ",''"
+				RetUnSl[2] := 0
+				VTAlert("Unitizador invalido ...","[-]Atencao!",.T.,,1)
 			 endif
 
 return RetUnSl
+//////////////// FIM Selecionando UNITIZADOR PARA FILA ///////////////////
+//////////////// FIM Selecionando UNITIZADOR PARA FILA ///////////////////
+//////////////// FIM Selecionando UNITIZADOR PARA FILA ///////////////////
+//////////////// FIM Selecionando UNITIZADOR PARA FILA ///////////////////
+//////////////// FIM Selecionando UNITIZADOR PARA FILA ///////////////////
+//////////////// FIM Selecionando UNITIZADOR PARA FILA ///////////////////
 
-static function transAl()
-	VTAlert("salvando:","Sanvando:",.T., 2000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+static function QtdManu(npos)
+	Local nQtdAte := 0
+	LOCAL aAreaMan   := GetArea()
+	Local nEstoq := 0
+	VTClear()
+
+    	dbSelectArea('ZZ8')
+		ZZ8->( dbGoTo( npos ) )
+		nEstoq := U_ALU003(ZZ8->ZZ8_CODPRO,ZZ8->ZZ8_LOCAL)
+		@ 0,0 VTSAY "Transf #" + cValToChar(ZZ8->(Recno()))
+		@ 1,0 VTSAY "Prod:  " + ZZ8->ZZ8_CODPRO
+		@ 2,0 VTSAY "Qtd:   " + cValToChar(ZZ8->ZZ8_QUANT) + " / " + cValToChar(nEstoq)
+		@ 3,0 VTSAY "Ender: " + ZZ8->ZZ8_LOCAL+space(1)+ZZ8->ZZ8_ENDER
+		@ 4,0 VTSAY "---------------------"
+		@ 5,0 VTSAY "QTd:   " VTGET nQtdAte pict "@9999.9999"
+		VTRead     
+		
+		if(nQtdAte > 0 .AND. nEstoq >= nQtdAte)
+			//atualizando quantidade informada
+			RECLOCK("ZZ8", .F.)
+       		ZZ8->ZZ8_QUANT := nQtdAte
+    		MSUNLOCK()    
+				if(AluTransWMS(npos))
+					ZZ8->( dbGoTo( npos ) )
+					ZZ8->(RecLock("ZZ8",.F.))
+					ZZ8->(DbDelete())
+					ZZ8->(MsUnLock())
+				else
+					VTClear()
+					 VTAlert("Separação nao finalizada....","[-]ERRO",.T.,,1)
+					    RECLOCK("ZZ8", .F.)
+       					ZZ8->ZZ8_ERRO := "Endereço sem saldo, serviço nao foi criado!!!"
+    					MSUNLOCK() 
+					
+				ENDIF
+		ELSE
+			VTAlert("Quantidade estoque invalida...","[-]Cancelado...",.T.,,1)
+		ENDIF
+	  RestArea(aAreaMan)			
+	VTClear()
+return
+
+
+
+
+/////////////////GERANDO TRANSFERENCIAS NO COLETOR///////////////////
+/////////////////GERANDO TRANSFERENCIAS NO COLETOR///////////////////
+/////////////////GERANDO TRANSFERENCIAS NO COLETOR///////////////////
+/////////////////GERANDO TRANSFERENCIAS NO COLETOR///////////////////
+/////////////////GERANDO TRANSFERENCIAS NO COLETOR///////////////////
+
+static function transAl(Unitz,pos)
+
+
+Local aArea   := GetArea()
+Local aArea1
+Local cQuery  := ""
+Local SERVIC,LOCDES,ENDDES,posAnt
+
+
+VTAlert("salvando:","Sanvando:",.T., 2000)
+
+	 dbSelectArea('ZZ8')
+	 ZZ8->( dbGoTo( pos ) )
+	 SERVIC := ZZ8->ZZ8_SERVIC
+	 LOCDES := ZZ8->ZZ8_LOCDES
+	 ENDDES := ZZ8->ZZ8_ENDDES
+
+	         cQuery:= " select D14.D14_ENDER , D14.D14_IDUNIT,  (D14.D14_QTDEST - D14.D14_QTDSPR) as D14_QTDEST, D14.D14_LOCAL,D14.D14_PRODUT"
+ 			 cQuery+= " from "+RetSqlName('D14')+" as D14 "
+			 cQuery+= " where     D14.D14_PRODUT = '"+alltrim(ZZ8->ZZ8_CODPRO)+"' "  
+             cQuery+= "       and D14.D14_FILIAL = '"+xFilial("D14")+"'"
+             cQuery+= "       and D14.D14_LOCAL  ='"+alltrim(ZZ8->ZZ8_LOCAL)+"' " 
+	         cQuery+= "       and D14.D_E_L_E_T_ = '' "  
+             cQuery+= "       and (D14.D14_QTDEST - D14.D14_QTDSPR) > 0 "
+	         cQuery+= "       and D14.D14_ENDER = '"+alltrim(ZZ8->ZZ8_ENDER)+"' " "
+			 cQuery+= "       and D14.D14_IDUNIT  in ("+Unitz+") "
+
+			 cQuery := ChangeQuery(cQuery)
+			 cLsUnitz := GetNextAlias()
+			 dbUseArea(.T.,'TOPCONN',TCGENQRY(,,cQuery),cLsUnitz,.F.,.T.)
+
+			 BeginTran()
+			 Do While  (cLsUnitz)->(!Eof())	
+				 		aArea1   := GetArea()  
+                   		RecLock("ZZ8",.T.)
+                    		 ZZ8->ZZ8_CODPRO:=  (cLsUnitz)->D14_PRODUT
+                     		 ZZ8->ZZ8_QUANT :=  (cLsUnitz)->D14_QTDEST
+                     		 ZZ8->ZZ8_SERVIC:=  SERVIC
+                     		 ZZ8->ZZ8_LOCAL :=  (cLsUnitz)->D14_LOCAL
+                     		 ZZ8->ZZ8_ENDER :=  (cLsUnitz)->D14_ENDER
+                     		 ZZ8->ZZ8_UNITIZ:=  (cLsUnitz)->D14_IDUNIT
+                             ZZ8->ZZ8_LOCDES:=  LOCDES
+                             ZZ8->ZZ8_ENDDES:=  alltrim(ENDDES)
+                             ZZ8->ZZ8_RECORI := pos
+                             ZZ8->ZZ8_RESP:= alltrim(UsrRetName(RetCodUsr()))
+                        ZZ8->(MsUnlock())
+						posAnt := ZZ8->(Recno())
+
+						if(AluTransWMS(ZZ8->(Recno())))
+						      ZZ8->( dbGoTo( posAnt ) )
+				              ZZ8->(RecLock("ZZ8",.F.))
+			  			      	ZZ8->(DbDelete())
+			  				  ZZ8->(MsUnLock())	
+							 
+						else 
+							 DisarmTransaction()
+							 U_ALU001()
+						endif
+	                //ZZ8->(DbSkip(1)) 
+                    RestArea(aArea1)	
+				(cLsUnitz)->(DbSkip())
+			 EndDo
+			//excluindo registro original
+			 dbSelectArea('ZZ8')
+		      ZZ8->( dbGoTo( pos ) )
+              ZZ8->(RecLock("ZZ8",.F.))
+			  ZZ8->(DbDelete())
+			  ZZ8->(MsUnLock())
+		EndTran()
+
+	 
+	 RestArea(aArea)
+
+ 
 return .T.
+/////////////////FIM GERANDO TRANSFERENCIAS NO COLETOR///////////////////
+/////////////////FIM GERANDO TRANSFERENCIAS NO COLETOR///////////////////
+/////////////////FIM GERANDO TRANSFERENCIAS NO COLETOR///////////////////
+/////////////////FIM GERANDO TRANSFERENCIAS NO COLETOR///////////////////
+/////////////////FIM GERANDO TRANSFERENCIAS NO COLETOR///////////////////
 
 
 
-Static Function AluTransWMS(nOpc,nQtdAte)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Static Function AluTransWMS(nPos)
 
 Local nModAux   := nModulo
 Local lRet      := .T.
 Local oTransf 
+Local aArea2   := GetArea()
 
 nModulo  := 42
+
+dbSelectArea('ZZ8')
+ZZ8->( dbGoTo( nPos ) )
+
+
 oTransf  := WMSBCCTransferencia():New()
 oTransf:oOrdServ := WMSDTCOrdemServicoCreate():New()
     
@@ -243,12 +422,12 @@ oTransf:oOrdServ:oOrdEndDes:SetArmazem(AllTrim(ZZ8->ZZ8_LOCDES))
 oTransf:oOrdServ:oOrdEndDes:SetEnder(AllTrim(ZZ8->ZZ8_ENDDES))
 oTransf:oOrdServ:SetIdUnit(ZZ8->ZZ8_UNITIZ)
 
-If nOpc == 2 //Armazem unitizado
-    oTransf:oOrdServ:SetUniDes("")
-    oTransf:oOrdServ:SetTipUni("")
-EndIf
+//If nOpc == 2 //Armazem unitizado
+//    oTransf:oOrdServ:SetUniDes("")
+//    oTransf:oOrdServ:SetTipUni("")
+//EndIf
 
-oTransf:oOrdServ:SetQuant(nQtdAte)
+oTransf:oOrdServ:SetQuant(ZZ8->ZZ8_QUANT)
 oTransf:oOrdServ:SetOrigem('DCF')
 
 If !oTransf:ChkEndOri()
@@ -281,7 +460,7 @@ EndTran()
 
 //Destroi objetos
 oTransf:Destroy()
-
+RestArea(aArea2)
 nModulo := nModAux
 
 Return lRet
@@ -349,6 +528,18 @@ Static oMovimento := WMSBCCMovimentoServico():New()
 	RestArea(aAreaAnt) // Restaura TUDO
 	
 Return(lRet)
+
+
+static function browse()
+Local aFields,aHeader
+Local aArea7   := GetArea()
+    aFields := {"ZZ8_CODPRO","ZZ8_ENDER","ZZ8_QUANT","ZZ8_LOCAL"}
+	aSize   := {10,10,10,10}          
+	aHeader := {'PROD','ENDER','QUANT',"LOCAL"}       
+	npos := VTDBBrowse(,,,,"ZZ8",aHeader,aFields,aSize)
+RestArea(aArea7) 
+return npos
+	  	
 	
  
 
