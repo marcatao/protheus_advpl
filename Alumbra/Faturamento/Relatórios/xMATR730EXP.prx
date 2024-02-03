@@ -32,7 +32,6 @@ STATIC FUNCTION REPORTDEF(aResps)
     LOCAL oSection1    := NIL
     LOCAL oSection2    := NIL
     LOCAL oSection3    := NIL
-    LOCAL oSection4    := NIL
     LOCAL nColSpace    := 0
     LOCAL nSize        := 25
     LOCAL nSize1       := 255
@@ -43,11 +42,10 @@ STATIC FUNCTION REPORTDEF(aResps)
     LOCAL cAliasCL     := ""
     LOCAL cAliasPD     := ""
     LOCAL cAliasOB     := ""
-    LOCAL cAliasDC     := ""
     LOCAL cNomeArq     := "PEDIDO POR CLIENTES"
     LOCAL cTitulo      := "PEDIDO POR CLIENTES"
 
-    oReport := TREPORT():NEW(cNomeArq, cTitulo, "", {|oReport| REPORTPRINT(oReport, @cAliasCL, @cAliasPD, @cAliasOB, @cAliasDC, aResps)}, "IMPRESSÃO DE RELATORIO")
+    oReport := TREPORT():NEW(cNomeArq, cTitulo, "", {|oReport| REPORTPRINT(oReport, @cAliasCL, @cAliasPD, @cAliasOB, aResps)}, "IMPRESSÃO DE RELATORIO")
    
     oSection1 := TRSECTION():NEW(oReport)
     TRCELL():NEW(oSection1, "A1_COD",      cAliasCL,  "COD.CLI"       ,,nSize,,{|| (cAliasCL)->A1_COD},cAlign,lLineBreak,cHeaderAlign,,nColSpace,lAutoSize)
@@ -67,28 +65,24 @@ STATIC FUNCTION REPORTDEF(aResps)
     TRCELL():NEW(oSection2, "C6_DESCRI",  cAliasPD, "DESCRIÇÃO DO ITEM" ,,nSize1,,{|| (cAliasPD)->C6_DESCRI},cAlign,,cHeaderAlign,,nColSpace)
     TRCELL():NEW(oSection2, "C6_PRCVEN",  cAliasPD, "PR.UNIT"           ,,nSize,,{|| (cAliasPD)->C6_PRCVEN},cAlign,,cHeaderAlign,,nColSpace)
     TRCELL():NEW(oSection2, "C6_VALOR",   cAliasPD, "VL.PED"            ,,nSize,,{|| (cAliasPD)->C6_VALOR},cAlign,,cHeaderAlign,,nColSpace)
+    TRCELL():NEW(oSection2, "C6_ENDPAD",  cAliasPD, "DOCA"              ,,nSize,,{|| (cAliasPD)->C6_ENDPAD},cAlign,,cHeaderAlign,,nColSpace)
 
     oSection3 := TRSECTION():NEW(oReport)
     TRCELL():NEW(oSection3, "C5_COMENT", cAliasOB, "OBSERVAÇÃO DO PEDIDO",,nSize1,,{|| (cAliasOB)->C5_COMENT},,lLineBreak,,,nColSpace,lAutoSize)
-
-    oSection4 := TRSECTION():NEW(oReport)
-    TRCELL():NEW(oSection4, "C6_ENDPAD", cAliasDC, "DOCA",,nSize1,,{|| (cAliasDC)->C6_ENDPAD},,lLineBreak,,,nColSpace,lAutoSize)
 
     TRFUNCTION():NEW(oSection2:CELL("C6_VALOR") ,,"SUM",,,"@E 9,999,999,999.99",,.T.,.F.,,oSection2)
     TRFUNCTION():NEW(oSection2:CELL("EMBAL")    ,,"SUM",,,"@E 9,999,999,999.99",,.T.,.F.,,oSection2) 
 
 RETURN oReport
 
-STATIC FUNCTION REPORTPRINT(oReport, cAliasCL, cAliasPD, cAliasOB, cAliasDC, aResps)
+STATIC FUNCTION REPORTPRINT(oReport, cAliasCL, cAliasPD, cAliasOB, aResps)
 
     LOCAL oSection1   := oReport:SECTION(1)
     LOCAL oSection2   := oReport:SECTION(2)
     LOCAL oSection3   := oReport:SECTION(3)
-    LOCAL oSection4   := oReport:SECTION(4)
     LOCAL cQuery      := ""
     LOCAL cQuery1     := ""
     LOCAL cQuery2     := ""
-    LOCAL cQuery3     := ""
     LOCAL cResult     := aResps[1]
     LOCAL aPedidoDE   := aResps[2]
     LOCAL aPedidoATE  := aResps[3]
@@ -137,6 +131,7 @@ STATIC FUNCTION REPORTPRINT(oReport, cAliasCL, cAliasPD, cAliasOB, cAliasDC, aRe
                 cQuery1 += " B.[C6_DESCRI], " + CRLF
                 cQuery1 += " B.[C6_PRCVEN], " + CRLF
                 cQuery1 += " B.[C6_VALOR], " + CRLF
+                cQuery1 += " B.[C6_ENDPAD], " + CRLF
                 cQuery1 += " B.[C6_NUM] " + CRLF
 	            cQuery1 += " FROM " + RETSQLNAME("SC5") + " A " + CRLF
                 cQuery1 += " LEFT JOIN " + RETSQLNAME("SC6") + " B " + CRLF 
@@ -181,46 +176,19 @@ STATIC FUNCTION REPORTPRINT(oReport, cAliasCL, cAliasPD, cAliasOB, cAliasDC, aRe
                                 ENDIF        
                                 (cAliasOB)->(DBSKIP())
                             ENDDO
-                                
-                                cQuery3 := " SELECT A.[C5_CLIENTE], " + CRLF
-                                cQuery3 += " A.[C5_NUM], " + CRLF
-                                cQuery3 += " B.[C6_ENDPAD], " + CRLF
-                                cQuery3 += " B.[C6_NUM] " + CRLF
-                     	        cQuery3 += " FROM " + RETSQLNAME("SC5") + " A " + CRLF
-                                cQuery3 += " LEFT JOIN " + RETSQLNAME("SC6") + " B " + CRLF 
-                                cQuery3 += " ON A.[C5_NUM] = B.[C6_NUM] " + CRLF
-                                IF !EMPTY(cResult)
-                                    cQuery3 += " WHERE A.[D_E_L_E_T_] = ' ' AND A.[C5_XSTEX] = '" + cResult +"'" + CRLF
-                                ELSE
-                                    cQuery3 += " WHERE A.[D_E_L_E_T_] = ' ' AND A.[C5_NUM] BETWEEN '"+ aPedidoDE +"' AND '"+ aPedidoATE +"'" + CRLF
-                                ENDIF      
-                                    cQuery3 += " ORDER BY A.[C5_NUM]"
-                                                           
-                                cAliasDC := MPSYSOPENQUERY(cQuery3)
-
-                                    WHILE (cAliasDC)->(!EOF())
-                                        IF (cAliasCL)->C5_NUM == (cAliasDC)->C5_NUM
-                                            oSection4:INIT()
-                                            oSection4:PRINTLINE()
-                                        ENDIF            
-                                        (cAliasDC)->(DBSKIP())
-                                            
-                                        DBSELECTAREA("SC5")
-                                        DBSETORDER(1)
-                                        DBSEEK(XFILIAL("SC5")+(cAliasCL)->C5_NUM)
-                                        IF FOUND()
-                                            IF SC5->C5_XSTEX == 'AX'
-                                                RECLOCK("SC5", .F.)
-                                                    SC5->C5_XSTEX := 'AL'
-                                                MSUNLOCK()
-                                            ENDIF
-                                        ENDIF
-                                        RESTAREA(aArea)
-                                    ENDDO
-
-                                    oSection4:FINISH()
-                                    (cAliasDC)->(DBCLOSEAREA())
-
+                            
+                            DBSELECTAREA("SC5")
+                            DBSETORDER(1)
+                            DBSEEK(XFILIAL("SC5")+(cAliasCL)->C5_NUM)
+                                IF FOUND()
+                                    IF SC5->C5_XSTEX == 'AX'
+                                        RECLOCK("SC5", .F.)
+                                            SC5->C5_XSTEX := 'AL'
+                                        MSUNLOCK()
+                                    ENDIF
+                                ENDIF
+                            RESTAREA(aArea)
+    
                             oSection3:FINISH()
                             (cAliasOB)->(DBCLOSEAREA()) 
 
