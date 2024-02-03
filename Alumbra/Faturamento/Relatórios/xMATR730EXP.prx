@@ -103,7 +103,8 @@ STATIC FUNCTION REPORTPRINT(oReport, cAliasCL, cAliasPD, cAliasOB, cAliasDC, aRe
     cQuery += " B.[A1_NREDUZ], " + CRLF
     cQuery += " TRIM(B.[A1_END]) + (' ' + '-' + ' ' + B.[A1_EST]) AS [A1_END], "  + CRLF
     cQuery += " A.[C5_NUM], " + CRLF
-    cQuery += " FORMAT(CONVERT(DATE, A.[C5_EMISSAO]), 'dd/MM/yyyy') AS [C5_EMISSAO], " + CRLF
+    cQuery += " A.[C5_TIPO], " + CRLF
+    cQuery += " FORMAT(CONVERT(DATE, A.[C5_EMISSAO]), 'dd/MM/yy') AS [C5_EMISSAO], " + CRLF
     cQuery += " C.[A4_NOME], " + CRLF
     cQuery += " D.[E4_DESCRI], " + CRLF
     cQuery += " E.[A3_NOME] " + CRLF
@@ -136,6 +137,7 @@ STATIC FUNCTION REPORTPRINT(oReport, cAliasCL, cAliasPD, cAliasOB, cAliasDC, aRe
                 cQuery1 += " B.[C6_DESCRI], " + CRLF
                 cQuery1 += " B.[C6_PRCVEN], " + CRLF
                 cQuery1 += " B.[C6_VALOR], " + CRLF
+                cQuery1 += " B.[C6_NUM] " + CRLF
 	            cQuery1 += " FROM " + RETSQLNAME("SC5") + " A " + CRLF
                 cQuery1 += " LEFT JOIN " + RETSQLNAME("SC6") + " B " + CRLF 
                 cQuery1 += " ON A.[C5_NUM] = B.[C6_NUM] " + CRLF
@@ -159,6 +161,7 @@ STATIC FUNCTION REPORTPRINT(oReport, cAliasCL, cAliasPD, cAliasOB, cAliasDC, aRe
                     ENDDO
 
                         cQuery2 := " SELECT A.[C5_COMENT], " + CRLF
+                        cQuery2 += " A.[C5_NUM] " + CRLF
                      	cQuery2 += " FROM " + RETSQLNAME("SC5") + " A " + CRLF
                         cQuery2 += " LEFT JOIN " + RETSQLNAME("SA1") + " B " + CRLF 
                         cQuery2 += " ON A.[C5_CLIENTE] = B.[A1_COD] " + CRLF
@@ -179,9 +182,10 @@ STATIC FUNCTION REPORTPRINT(oReport, cAliasCL, cAliasPD, cAliasOB, cAliasDC, aRe
                                 (cAliasOB)->(DBSKIP())
                             ENDDO
                                 
-                                cQuery3 := " SELECT TOP 1 A.[C5_CLIENTE], " + CRLF
+                                cQuery3 := " SELECT A.[C5_CLIENTE], " + CRLF
                                 cQuery3 += " A.[C5_NUM], " + CRLF
-                                cQuery3 += " B.[C6_ENDPAD] " + CRLF
+                                cQuery3 += " B.[C6_ENDPAD], " + CRLF
+                                cQuery3 += " B.[C6_NUM] " + CRLF
                      	        cQuery3 += " FROM " + RETSQLNAME("SC5") + " A " + CRLF
                                 cQuery3 += " LEFT JOIN " + RETSQLNAME("SC6") + " B " + CRLF 
                                 cQuery3 += " ON A.[C5_NUM] = B.[C6_NUM] " + CRLF
@@ -195,12 +199,12 @@ STATIC FUNCTION REPORTPRINT(oReport, cAliasCL, cAliasPD, cAliasOB, cAliasDC, aRe
                                 cAliasDC := MPSYSOPENQUERY(cQuery3)
 
                                     WHILE (cAliasDC)->(!EOF())
-                                        IF (cAliasCL)->C5_NUM == (cAliasDC)->C6_NUM
+                                        IF (cAliasCL)->C5_NUM == (cAliasDC)->C5_NUM
                                             oSection4:INIT()
                                             oSection4:PRINTLINE()
-                                        ENDIF        
+                                        ENDIF            
                                         (cAliasDC)->(DBSKIP())
-
+                                            
                                         DBSELECTAREA("SC5")
                                         DBSETORDER(1)
                                         DBSEEK(XFILIAL("SC5")+(cAliasCL)->C5_NUM)
