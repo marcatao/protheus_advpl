@@ -1,5 +1,6 @@
 #INCLUDE "PROTHEUS.ch"
-
+#INCLUDE "TOTVS.ch"
+#INCLUDE "prtopdef.ch"
 //----------------------------------------------------------------------------------------------------------------------
 /* {Protheus.doc} PEDIDOS POR CLIENTES
 RELATORIO - PEDIDOS POR CLIENTES
@@ -41,18 +42,18 @@ STATIC FUNCTION REPORTDEF(aResps)
     LOCAL cHeaderAlign := "LEFT"
     LOCAL cAliasCL     := ""
     LOCAL cAliasPD     := ""
-    LOCAL cAliasOB     := ""
+    LOCAL cAliasOB     := "" 
     LOCAL cNomeArq     := "PEDIDO POR CLIENTES"
     LOCAL cTitulo      := "PEDIDO POR CLIENTES"
 
     oReport := TREPORT():NEW(cNomeArq, cTitulo, "", {|oReport| REPORTPRINT(oReport, @cAliasCL, @cAliasPD, @cAliasOB, aResps)}, "IMPRESSÃO DE RELATORIO")
-   
+
     oSection1 := TRSECTION():NEW(oReport)
     TRCELL():NEW(oSection1, "A1_COD",      cAliasCL,  "COD.CLI"       ,,nSize,,{|| (cAliasCL)->A1_COD},cAlign,lLineBreak,cHeaderAlign,,nColSpace,lAutoSize)
     TRCELL():NEW(oSection1, "A1_NREDUZ",   cAliasCL,  "CLIENTE"       ,,nSize,,{|| (cAliasCL)->A1_NREDUZ},cAlign,lLineBreak,cHeaderAlign,,nColSpace,lAutoSize)
     TRCELL():NEW(oSection1, "A1_LOJA",     cAliasCL,  "LOJA"          ,,nSize,,{|| (cAliasCL)->A1_LOJA},cAlign,lLineBreak,cHeaderAlign,,nColSpace,lAutoSize)
-    TRCELL():NEW(oSection1, "A1_END",      cAliasCL,  "ENDEREÇO"      ,,nSize,,{|| (cAliasCL)->A1_END},cAlign,lLineBreak,cHeaderAlign,,nColSpace,lAutoSize)
-    TRCELL():NEW(oSection1, "C5_NUM",      cAliasCL,  "N° PEDIDO"     ,,nSize,,{|| (cAliasCL)->C5_NUM},cAlign,lLineBreak,cHeaderAlign,,nColSpace,lAutoSize)
+    TRCELL():NEW(oSection1, "A1_END",      cAliasCL,  "ENDERECO"      ,,nSize,,{|| (cAliasCL)->A1_END},cAlign,lLineBreak,cHeaderAlign,,nColSpace,lAutoSize) 
+    TRCELL():NEW(oSection1, "C5_NUM",      cAliasCL,  "N PEDIDO"      ,,nSize,,{|| (cAliasCL)->C5_NUM},cAlign,lLineBreak,cHeaderAlign,,nColSpace,lAutoSize)
     TRCELL():NEW(oSection1, "C5_EMISSAO",  cAliasCL,  "EMISSAO"       ,,nSize,,{|| (cAliasCL)->C5_EMISSAO},cAlign,lLineBreak,cHeaderAlign,,nColSpace,lAutoSize)
     TRCELL():NEW(oSection1, "E4_DESCRI",   cAliasCL,  "COND.PAG"      ,,nSize,,{|| (cAliasCL)->E4_DESCRI},cAlign,lLineBreak,cHeaderAlign,,nColSpace,lAutoSize)
     TRCELL():NEW(oSection1, "C5_TIPO",     cAliasCL,  "TIPO. PED"     ,,nSize,,{|| (cAliasCL)->C5_TIPO},cAlign,lLineBreak,cHeaderAlign,,nColSpace,lAutoSize)
@@ -71,7 +72,7 @@ STATIC FUNCTION REPORTDEF(aResps)
     TRCELL():NEW(oSection3, "C5_COMENT", cAliasOB, "OBSERVAÇÃO DO PEDIDO",,nSize1,,{|| (cAliasOB)->C5_COMENT},,lLineBreak,,,nColSpace,lAutoSize)
 
     TRFUNCTION():NEW(oSection2:CELL("C6_VALOR") ,,"SUM",,,"@E 9,999,999,999.99",,.T.,.F.,,oSection2)
-    TRFUNCTION():NEW(oSection2:CELL("EMBAL")    ,,"SUM",,,"@E 9,999,999,999.99",,.T.,.F.,,oSection2) 
+    TRFUNCTION():NEW(oSection2:CELL("EMBAL")    ,,"SUM",,,"@E 9,999,999,999.99",,.T.,.F.,,oSection2)
 
 RETURN oReport
 
@@ -91,6 +92,8 @@ STATIC FUNCTION REPORTPRINT(oReport, cAliasCL, cAliasPD, cAliasOB, aResps)
     IF cResult == "AGUARDANDO IMPRESSÃO"
        cResult := "AX" 
     ENDIF
+
+    FWDIRREMOVE("C:\imagem do pedido",.T.,.T.)
 
     cQuery := " SELECT B.[A1_COD], " + CRLF
     cQuery += " B.[A1_LOJA], " + CRLF
@@ -119,12 +122,19 @@ STATIC FUNCTION REPORTPRINT(oReport, cAliasCL, cAliasPD, cAliasOB, aResps)
     cQuery += " ORDER BY A.[C5_NUM]"
 
     cAliasCL := MPSYSOPENQUERY(cQuery)
-
+    
         WHILE (cAliasCL)->(!EOF())
             oSection1:INIT()
             oSection1:PRINTLINE()
             oSection1:SETPAGEBREAK(.T.)
-               
+
+            FWMAKEDIR("c:\imagem do pedido")
+
+            url  := "https://barcode.tec-it.com/barcode.ashx?data=" + (cAliasCL)->C5_NUM
+            Html := HTTPGET(url)
+            Html := MEMOWRITE(ALLTRIM("C:\imagem do pedido\barcode"+ (cAliasCL)->C5_NUM +".png"),Html)
+            oReport:SAYBITMAP(50,1700,"C:\imagem do pedido\barcode"+ (cAliasCL)->C5_NUM +".png",150,150) 
+
                 cQuery1 := " SELECT ROUND(COALESCE(B.[C6_QTDVEN] / NULLIF(C.[B1_CONV],0), 0), 1) AS [EMBAL], " + CRLF
                 cQuery1 += " REPLACE(CONVERT(VARCHAR, B.[C6_QTDVEN]), '', '') AS [C6_QTDVEN], " + CRLF
                 cQuery1 += " B.[C6_PRODUTO], " + CRLF
